@@ -1,0 +1,18 @@
+{% if includeJquery %}
+    {% javascripts
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.js'
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery-ui.min.js'
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.jeditable.js'
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.js'
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.validate.js'
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.editable.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% else %}
+    {% javascripts
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.js'
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.validate.js'
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.editable.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endif %}

@@ -1,0 +1,11 @@
+twentysteps_data_tables_update:
+    path:     /update
+    defaults: { _controller: twentystepsDataTablesBundle:Crud:update }
+
+twentysteps_data_tables_add:
+    path:     /add
+    defaults: { _controller: twentystepsDataTablesBundle:Crud:add }
+
+twentysteps_data_tables_remove:
+    path:     /remove
+    defaults: { _controller: twentystepsDataTablesBundle:Crud:remove }

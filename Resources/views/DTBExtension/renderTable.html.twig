@@ -1,0 +1,30 @@
+{% if entities %}
+    <table id='myDtTable'>
+    <thead>
+        {% for column in entities|first.columns %}
+            <th>{{ column.name|trans() }}</th>
+        {% endfor %}
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr id="{{ entity.id }}">
+            {% for column in entity.columns %}
+                    <td>{{ column.value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <form id="formAddNewRow" class="hide" action="#" title="{{ 'Add entry'|trans() }}">
+        <input type="hidden" name="oDtId" value="{{ dtId }}"/>
+        {% for column in entities|first.columns %}
+            <label for="{{ column.columnDescriptorId }}">{{ column.name|trans() }}</label><input type="text"
+                                                                                                 name="{{ column.columnDescriptorId }}"
+                                                                                                 id="{{ column.columnDescriptorId }}" class="required"
+                                                              rel="{{ loop.index0 }}"/>
+            <br/>
+        {% endfor %}
+    </form>
+
+{% endif %}
