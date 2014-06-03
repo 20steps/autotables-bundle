@@ -23,6 +23,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
+use utilphp\util;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -41,5 +43,14 @@ class twentystepsDataTablesExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $tables = util::array_get($config['tables']);
+        if ($tables) {
+            foreach($tables as $tableDef) {
+                $id = util::array_get($tableDef['id']);
+                Ensure::ensureNotEmpty($id, "Missing [id] option in twentysteps_data_tables table definition");
+                $container->setParameter('twentysteps_data_tables.config.'.$id, $tableDef);
+            }
+        }
     }
 }

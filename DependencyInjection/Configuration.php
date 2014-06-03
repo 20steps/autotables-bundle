@@ -37,6 +37,23 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('twentysteps_data_tables');
 
+        $rootNode
+            ->children()
+                ->arrayNode('tables')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('id')->end()
+                            ->scalarNode('serviceId')->end()
+                            ->scalarNode('repositoryId')->end()
+                            ->scalarNode('transScope')->end()
+                            ->scalarNode('dataTablesOptions')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+
+        return $treeBuilder;
+
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.

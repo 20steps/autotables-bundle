@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use twentysteps\Bundle\DataTablesBundle\Services\DataTablesCrudService;
 use twentysteps\Bundle\DataTablesBundle\Services\RepositoryDataTablesCrudService;
 use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
+use twentysteps\Bundle\DataTablesBundle\DependencyInjection\DataTablesConfiguration;
 use utilphp\util;
 
 class CrudController extends Controller
@@ -36,11 +37,12 @@ class CrudController extends Controller
         $columnId = $request->request->get('columnId');
         $columnMeta = $request->request->get('columnMeta');
         $columnDescriptorId = $columnMeta[$columnId]['columnDescriptorId'];
-        $dtId = $request->request->get('dtId');
+        $dtId = $this->fetchDtId($request);
 
         $this->get('logger')->info(sprintf('Update entity of type [%s] with id [%s] for column [%s] with value [%s]', $dtId, $id, $columnDescriptorId, $value));
 
-        $crudService = $this->fetchCrudService($dtId);
+        $config = $this->fetchDataTablesConfiguration($dtId);
+        $crudService = $this->fetchCrudService($config);
         $entity = $crudService->findEntity($id);
         Ensure::ensureNotNull($entity, 'Entity with id [%s] not found', $id);
         $entityInspector = $this->get('twentysteps_bundle.datatablesbundle.services.entityinspectionservice');
@@ -52,7 +54,8 @@ class CrudController extends Controller
     public function addAction(Request $request)
     {
         $dtId = $this->fetchDtId($request);
-        $crudService = $this->fetchCrudService($dtId);
+        $config = $this->fetchDataTablesConfiguration($dtId);
+        $crudService = $this->fetchCrudService($config);
         $entityInspector = $this->get('twentysteps_bundle.datatablesbundle.services.entityinspectionservice');
         $entity = $crudService->createEntity();
         foreach ($request->request->keys() as $paramName) {
@@ -71,7 +74,8 @@ class CrudController extends Controller
     public function removeAction(Request $request)
     {
         $dtId = $this->fetchDtId($request);
-        $crudService = $this->fetchCrudService($dtId);
+        $config = $this->fetchDataTablesConfiguration($dtId);
+        $crudService = $this->fetchCrudService($config);
         $id = $request->query->get('id');
         $this->get('logger')->info(sprintf('Remove entity of type [%s] with id [%s]', $dtId, $id));
         $entity = $crudService->findEntity($id);
@@ -80,7 +84,7 @@ class CrudController extends Controller
             $crudService->removeEntity($entity);
         } else {
             $translator = $request->get('translator');
-            $msg = $translator->trans('No entity with id [%id%] found', array('%id%' => $id), $this->fetchTransScope($dtId));
+            $msg = $translator->trans('No entity with id [%id%] found', array('%id%' => $id), $config->getTransScope());
         }
         return new Response($msg);
     }
@@ -100,28 +104,32 @@ class CrudController extends Controller
     }
 
     /**
+     * @return DataTablesConfiguration
+     */
+    private function fetchDataTablesConfiguration($dtId) {
+        $options = $this->container->getParameter('twentysteps_data_tables.config.'.$dtId);
+        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_data_tables table [%s]', $dtId);
+        return new DataTablesConfiguration($dtId, $options);
+    }
+
+    /**
      * @return DataTablesCrudService
      */
-    private function fetchCrudService($dtId)
+    private function fetchCrudService(DataTablesConfiguration $config)
     {
-        $serviceId = util::array_get($this->container->getParameter('datatables.' . $dtId)['serviceId']);
+        $serviceId = $config->getServiceId();
         if ($serviceId) {
             $crudService = $this->get($serviceId);
             Ensure::ensureNotNull($crudService, 'No service [%s] found', $crudService);
             Ensure::ensureTrue($crudService instanceof DataTablesCrudService, 'Service [%s] has to implement %s', $serviceId, 'DataTablesCrudService');
         } else {
             $doctrine = $this->get('doctrine');
-            $repositoryId = util::array_get($this->container->getParameter('datatables.' . $dtId)['repositoryId']);
-            Ensure::ensureNotEmpty($repositoryId, 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $dtId);
+            $repositoryId = $config->getRepositoryId();
+            Ensure::ensureNotEmpty($repositoryId, 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $config->getId());
             $repository = $doctrine->getRepository($repositoryId);
             Ensure::ensureNotNull($repository, 'Repository with id [%s] not found', $repositoryId);
             $crudService = new RepositoryDataTablesCrudService($doctrine->getManager(), $repository);
         }
         return $crudService;
-    }
-
-    private function fetchTransScope($dtId)
-    {
-        return util::array_get($this->container->getParameter('datatables.' . $dtId)['transScope']) ?: 'messages';
     }
 }

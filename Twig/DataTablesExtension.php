@@ -19,6 +19,7 @@
 
 namespace twentysteps\Bundle\DataTablesBundle\Twig;
 
+use twentysteps\Bundle\DataTablesBundle\DependencyInjection\DataTablesConfiguration;
 use twentysteps\Bundle\DataTablesBundle\Services\EntityInspectionService;
 use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
 use utilphp\util;
@@ -51,13 +52,14 @@ class DataTablesExtension extends AbstractExtension
      */
     public function renderTable($args)
     {
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderTable.html.twig',
-            array_merge($this->getConfig($args),
-            array(
-                'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
-                'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove')
-            ))
+        $config = $this->fetchDataTablesConfiguration($args);
+        $array = array(
+            'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
+            'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove'),
+            'dtId' => $config->getId(),
+            'transScope' => $config->getTransScope()
         );
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderTable.html.twig', $array);
     }
 
     /**
@@ -65,18 +67,18 @@ class DataTablesExtension extends AbstractExtension
      */
     public function renderTableJs($args)
     {
-        $dtId = $this->getDtId($args);
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderTableJs.html.twig',
-            array_merge($this->getConfig($args),
-            array(
-                'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
-                'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_data_tables_update'),
-                'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove'),
-                'addRoute' => $this->getParameter($args, 'addRoute', 'twentysteps_data_tables_add'),
-                'dtDefaultOpts' => $this->getDefaultOptions($dtId),
-                'dtOpts' => $this->getParameter($args, 'dtOptions', array())
-            ))
+        $config = $this->fetchDataTablesConfiguration($args);
+        $array = array(
+            'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
+            'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_data_tables_update'),
+            'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove'),
+            'addRoute' => $this->getParameter($args, 'addRoute', 'twentysteps_data_tables_add'),
+            'dtDefaultOpts' => $config->getDataTablesOptions(),
+            'dtOpts' => $this->getParameter($args, 'dtOptions', array()),
+            'dtId' => $config->getId(),
+            'transScope' => $config->getTransScope()
         );
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderTableJs.html.twig', $array);
     }
 
     /**
@@ -116,21 +118,16 @@ class DataTablesExtension extends AbstractExtension
     }
 
     /**
-     * Retrieves the default options for the given key.
+     * @return DataTablesConfiguration
      */
-    private function getDefaultOptions($dtId)
-    {
-        return util::array_get($this->container->getParameter('datatables.' . $dtId)['defaultOptions']) ? : array();
+    private function fetchDataTablesConfiguration($args) {
+        $dtId = $this->fetchDtId($args);
+        $options = $this->container->getParameter('twentysteps_data_tables.config.'.$dtId);
+        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_data_tables table [%s]', $dtId);
+        return new DataTablesConfiguration($dtId, $options);
     }
 
-    private function getConfig($args) {
-        $dtId = $this->getDtId($args);
-        return array(
-            'dtId' => $dtId,
-            'transScope' => util::array_get($this->container->getParameter('datatables.' . $dtId)['transScope']) ? : 'messages'
-        );
-    }
-    private function getDtId($args)
+    private function fetchDtId($args)
     {
         $dtId = util::array_get($args['dtId']);
         Ensure::ensureNotEmpty($dtId, "dtId must not be empty");
