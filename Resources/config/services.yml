@@ -2,8 +2,8 @@ services:
     twentysteps_bundle.datatablesbundle.services.entityinspectionservice:
         class: twentysteps\Bundle\DataTablesBundle\Services\EntityInspectionService
 
-    twentysteps_bundle.datatablesbundle.twig.dtb_extension:
-        class: twentysteps\Bundle\DataTablesBundle\Twig\DTBExtension
+    twentysteps_bundle.datatablesbundle.twig.datatables_extension:
+        class: twentysteps\Bundle\DataTablesBundle\Twig\DataTablesExtension
         arguments: [@twentysteps_bundle.datatablesbundle.services.entityinspectionservice, @service_container]
         tags:
             - { name: twig.extension }

@@ -18,7 +18,9 @@
  */
 
 namespace twentysteps\Bundle\DataTablesBundle\Twig;
-
+use InvalidArgumentException;
+use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
+use utilphp\util;
 
 /**
  * Extension base class offering a render method.
@@ -37,4 +39,27 @@ abstract class AbstractExtension extends \Twig_Extension
     {
         return $this->environment->render($templateName, $context);
     }
+
+    /**
+     * Tries to find parameter named $key in the $args array and throws an InvalidArgumentException
+     * if not found.
+     */
+    protected function getRequiredParameter($args, $key)
+    {
+        $value = util::array_get($args[$key]);
+        if (!$value) {
+            throw new InvalidArgumentException('Missing parameter: '.$key);
+        }
+        return $value;
+    }
+
+    /**
+     * Tries to find the optional parameter $key in the $args array and returns the $defaultValue if
+     * not found.
+     */
+    protected function getParameter($args, $key, $defaultValue = NULL)
+    {
+        return util::array_get($args[$key]) ?: $defaultValue;
+    }
+
 } 

@@ -23,7 +23,7 @@ use twentysteps\Bundle\DataTablesBundle\Services\EntityInspectionService;
 use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
 use utilphp\util;
 
-class DTBExtension extends AbstractExtension
+class DataTablesExtension extends AbstractExtension
 {
     private $entityInspectionService;
     private $container;
@@ -51,11 +51,11 @@ class DTBExtension extends AbstractExtension
      */
     public function renderTable($args)
     {
-        return $this->render('twentystepsDataTablesBundle:DTBExtension:renderTable.html.twig',
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderTable.html.twig',
             array_merge($this->getConfig($args),
             array(
-                'entities' => $this->entityInspectionService->parseEntities($args['entities']),
-                'deleteRoute' => util::array_get($args['deleteRoute']) ? : 'twentysteps_data_tables_remove',
+                'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
+                'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove')
             ))
         );
     }
@@ -66,15 +66,15 @@ class DTBExtension extends AbstractExtension
     public function renderTableJs($args)
     {
         $dtId = $this->getDtId($args);
-        return $this->render('twentystepsDataTablesBundle:DTBExtension:renderTableJs.html.twig',
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderTableJs.html.twig',
             array_merge($this->getConfig($args),
             array(
-                'entities' => $this->entityInspectionService->parseEntities($args['entities']),
-                'updateRoute' => util::array_get($args['updateRoute']) ? : 'twentysteps_data_tables_update',
-                'deleteRoute' => util::array_get($args['deleteRoute']) ? : 'twentysteps_data_tables_remove',
-                'addRoute' => util::array_get($args['addRoute']) ? : 'twentysteps_data_tables_add',
+                'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
+                'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_data_tables_update'),
+                'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove'),
+                'addRoute' => $this->getParameter($args, 'addRoute', 'twentysteps_data_tables_add'),
                 'dtDefaultOpts' => $this->getDefaultOptions($dtId),
-                'dtOpts' => util::array_get($args['dtOptions']) ? : array()
+                'dtOpts' => $this->getParameter($args, 'dtOptions', array())
             ))
         );
     }
@@ -84,7 +84,7 @@ class DTBExtension extends AbstractExtension
      */
     public function renderJsIncludes($includeJquery = false)
     {
-        return $this->render('twentystepsDataTablesBundle:DTBExtension:renderJsIncludes.html.twig',
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderJsIncludes.html.twig',
             array(
                 'includeJquery' => $includeJquery
             )
@@ -96,7 +96,7 @@ class DTBExtension extends AbstractExtension
      */
     public function renderStylesheetIncludes()
     {
-        return $this->render('twentystepsDataTablesBundle:DTBExtension:renderStylesheetIncludes.html.twig',
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderStylesheetIncludes.html.twig',
             array()
         );
     }
@@ -108,7 +108,7 @@ class DTBExtension extends AbstractExtension
      */
     public function getName()
     {
-        return 'dtb_extension';
+        return 'datatables_extension';
     }
 
     /**
