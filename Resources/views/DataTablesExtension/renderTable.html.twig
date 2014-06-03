@@ -25,7 +25,7 @@
     <button id="btnAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
 
     <form id="formAddNewRow" class="hide" action="#" title="{{ 'Add entry'|trans() }}">
-        <input type="hidden" name="oDtId" value="{{ dtId }}"/>
+        <input type="hidden" name="dtId" value="{{ dtId }}"/>
         <input type="hidden" name="id" id="id" rel="0" value="DATAROWID" />
         {% for column in entities|first.columns %}
             <label for="{{ column.columnDescriptorId }}">{{ column.name|trans({}, transScope) }}</label><input type="text"

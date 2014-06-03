@@ -5,7 +5,7 @@
             var columnMeta = [];
             columnMeta.push({});
             {% for column in entities|first.columns %}
-            columnMeta.push({columnDescriptorId: '{{ column.columnDescriptorId }}', mData: {{ loop.index }}});
+                columnMeta.push({columnDescriptorId: '{{ column.columnDescriptorId }}', mData: {{ loop.index }}});
             {%  endfor %}
             columnMeta.push({});
 

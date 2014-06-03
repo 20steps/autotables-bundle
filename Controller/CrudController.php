@@ -23,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use twentysteps\Bundle\DataTablesBundle\Services\DataTablesCrudService;
+use twentysteps\Bundle\DataTablesBundle\Services\RepositoryDataTablesCrudService;
 use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
 use utilphp\util;
 
@@ -98,13 +99,24 @@ class CrudController extends Controller
         return $dtId;
     }
 
+    /**
+     * @return DataTablesCrudService
+     */
     private function fetchCrudService($dtId)
     {
         $serviceId = util::array_get($this->container->getParameter('datatables.' . $dtId)['serviceId']);
-        Ensure::ensureNotEmpty($serviceId, 'No serviceId defined for datatables [%s]', $dtId);
-        $crudService = $this->get($serviceId);
-        Ensure::ensureNotNull($crudService, 'No service [%s] found', $crudService);
-        Ensure::ensureTrue($crudService instanceof DataTablesCrudService, 'Service [%s] has to implement %s', $serviceId, DataTablesCrudService::class);
+        if ($serviceId) {
+            $crudService = $this->get($serviceId);
+            Ensure::ensureNotNull($crudService, 'No service [%s] found', $crudService);
+            Ensure::ensureTrue($crudService instanceof DataTablesCrudService, 'Service [%s] has to implement %s', $serviceId, 'DataTablesCrudService');
+        } else {
+            $doctrine = $this->get('doctrine');
+            $repositoryId = util::array_get($this->container->getParameter('datatables.' . $dtId)['repositoryId']);
+            Ensure::ensureNotEmpty($repositoryId, 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $dtId);
+            $repository = $doctrine->getRepository($repositoryId);
+            Ensure::ensureNotNull($repository, 'Repository with id [%s] not found', $repositoryId);
+            $crudService = new RepositoryDataTablesCrudService($doctrine->getEntityManager(), $repository);
+        }
         return $crudService;
     }
 
