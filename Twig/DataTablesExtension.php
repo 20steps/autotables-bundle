@@ -82,11 +82,15 @@ class DataTablesExtension extends AbstractExtension
     /**
      * Renders the needed includes for the JavaScript files.
      */
-    public function renderJsIncludes($includeJquery = false)
+    public function renderJsIncludes($args)
     {
         return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderJsIncludes.html.twig',
             array(
-                'includeJquery' => $includeJquery
+                'includeJquery' => $this->getParameter($args, 'includeJquery', FALSE),
+                'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', TRUE),
+                'includeJqueryEditable' => $this->getParameter($args, 'includeJqueryEditable', TRUE),
+                'includeJqueryDataTables' => $this->getParameter($args, 'includeJqueryDataTables', TRUE),
+                'includeJqueryValidate' => $this->getParameter($args, 'includeJqueryValidate', TRUE)
             )
         );
     }

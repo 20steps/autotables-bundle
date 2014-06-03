@@ -1,18 +1,41 @@
+{#
+{% javascripts %}
 {% if includeJquery %}
-    {% javascripts
     '@twentystepsDataTablesBundle/Resources/public/js/jquery.js'
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery-ui.min.js'
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.jeditable.js'
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.js'
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.validate.js'
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.editable.js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% else %}
-    {% javascripts
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.js'
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.validate.js'
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.editable.js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 {% endif %}
+{% if includeJqueryUi %}
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery-ui.min.js'
+{% endif %}
+{% if includeJqueryEditable %}
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.jeditable.js'
+{% endif %}
+{% if includeJqueryDataTables %}
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.js'
+{% endif %}
+{% if includeJqueryValidate %}
+    '@twentystepsDataTablesBundle/Resources/public/js/jquery.validate.js'
+{% endif %}
+'@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.editable.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+#}
+
+
+{% block javascripts %}
+    {% if includeJquery %}
+        <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.js') }}"></script>
+    {% endif %}
+    {% if includeJqueryUi %}
+        <script src="{{ asset('bundles/twentystepsdatatables/js/jquery-ui.min.js') }}"></script>
+    {% endif %}
+    {% if includeJqueryEditable %}
+        <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.jeditable.js') }}"></script>
+    {% endif %}
+    {% if includeJqueryDataTables %}
+        <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.dataTables.js') }}"></script>
+    {% endif %}
+    {% if includeJqueryValidate %}
+        <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.validate.js') }}"></script>
+    {% endif %}
+    <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.dataTables.editable.js') }}"></script>
+{% endblock %}

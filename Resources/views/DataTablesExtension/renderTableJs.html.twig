@@ -20,6 +20,7 @@
                         "bSortable": false,
                         "mRender": function (foo, bar, dataSource) {
                             return "<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?dtId={{ dtId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans({}, transScope) }}</a>";
+
                         }
                     });
 

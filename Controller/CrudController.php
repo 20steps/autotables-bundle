@@ -72,7 +72,7 @@ class CrudController extends Controller
     {
         $dtId = $this->fetchDtId($request);
         $crudService = $this->fetchCrudService($dtId);
-        $id = $request->request->get('id');
+        $id = $request->query->get('id');
         $this->get('logger')->info(sprintf('Remove entity of type [%s] with id [%s]', $dtId, $id));
         $entity = $crudService->findEntity($id);
         $msg = 'ok';
@@ -115,7 +115,7 @@ class CrudController extends Controller
             Ensure::ensureNotEmpty($repositoryId, 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $dtId);
             $repository = $doctrine->getRepository($repositoryId);
             Ensure::ensureNotNull($repository, 'Repository with id [%s] not found', $repositoryId);
-            $crudService = new RepositoryDataTablesCrudService($doctrine->getEntityManager(), $repository);
+            $crudService = new RepositoryDataTablesCrudService($doctrine->getManager(), $repository);
         }
         return $crudService;
     }

@@ -20,9 +20,8 @@
 
 namespace twentysteps\Bundle\DataTablesBundle\Services;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Adapter for wrapping a repository to a DataTablesCrudService.
@@ -33,7 +32,7 @@ class RepositoryDataTablesCrudService implements  DataTablesCrudService {
     private $repository;
     private $reflClass;
 
-    public function __construct(EntityManager $em, ObjectRepository $repository) {
+    public function __construct(ObjectManager $em, ObjectRepository $repository) {
         $this->em = $em;
         $this->repository = $repository;
         $this->reflClass = new \ReflectionClass($repository->getClassName());
