@@ -73,8 +73,9 @@ class DataTablesExtension extends AbstractExtension
             'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_data_tables_update'),
             'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove'),
             'addRoute' => $this->getParameter($args, 'addRoute', 'twentysteps_data_tables_add'),
-            'dtDefaultOpts' => $config->getDataTablesOptions(),
-            'dtOpts' => $this->getParameter($args, 'dtOptions', array()),
+            'dtDefaultOpts' => $this->container->getParameter('twentysteps_data_tables.defaultDataTablesOptions'),
+            'dtOpts' => $config->getDataTablesOptions(),
+            'dtTagOpts' => $this->getParameter($args, 'dtOptions', array()),
             'dtId' => $config->getId(),
             'transScope' => $config->getTransScope()
         );

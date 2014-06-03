@@ -24,7 +24,7 @@
                         }
                     });
 
-            var dtOpts = $.extend({aoColumns: dataTablesColumns}, {{ dtDefaultOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }}, {{ dtOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
+            var dtOpts = $.extend(true, {aoColumns: dataTablesColumns}, {{ dtDefaultOpts|raw }}, {{ dtOpts|raw }}, {{ dtTagOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
             var dteOpts = {
                 submitButtonText: "{{ 'Save'|trans({}, transScope) }}",
                 cancelButtonText: "{{ 'Cancel'|trans({}, transScope) }}",

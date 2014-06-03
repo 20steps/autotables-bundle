@@ -52,5 +52,7 @@ class twentystepsDataTablesExtension extends Extension
                 $container->setParameter('twentysteps_data_tables.config.'.$id, $tableDef);
             }
         }
+
+        $container->setParameter('twentysteps_data_tables.defaultDataTablesOptions', util::array_get($config['defaultDataTablesOptions']) ?: '{}');
     }
 }

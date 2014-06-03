@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('defaultDataTablesOptions')->end()
                 ->arrayNode('tables')
                     ->prototype('array')
                         ->children()
