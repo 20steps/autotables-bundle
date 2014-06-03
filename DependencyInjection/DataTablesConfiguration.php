@@ -19,6 +19,7 @@
 
 namespace twentysteps\Bundle\DataTablesBundle\DependencyInjection;
 
+use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
 use utilphp\util;
 
 /**

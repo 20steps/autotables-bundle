@@ -49,10 +49,18 @@ class twentystepsDataTablesExtension extends Extension
             foreach($tables as $tableDef) {
                 $id = util::array_get($tableDef['id']);
                 Ensure::ensureNotEmpty($id, "Missing [id] option in twentysteps_data_tables table definition");
+                $json = util::array_get($tableDef['dataTablesOptions']) ?: '{}';
+                Ensure::ensureTrue($this->isValidJson($json), 'Encountered illegal JSON for twentysteps_data_tables table with id [%s] in config: %s', $id,  $json);
                 $container->setParameter('twentysteps_data_tables.config.'.$id, $tableDef);
             }
         }
 
-        $container->setParameter('twentysteps_data_tables.defaultDataTablesOptions', util::array_get($config['defaultDataTablesOptions']) ?: '{}');
+        $defaultOpts = util::array_get($config['defaultDataTablesOptions']) ?: '{}';
+        Ensure::ensureTrue($this->isValidJson($defaultOpts), 'Encountered illegal JSON in config: %s', $defaultOpts);
+        $container->setParameter('twentysteps_data_tables.defaultDataTablesOptions', $defaultOpts);
+    }
+
+    private function isValidJson($json) {
+        return !is_null(json_decode($json));
     }
 }
