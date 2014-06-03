@@ -1291,7 +1291,8 @@ var myConsole = console;
             // $(".table-action-deletelink", oTable).live("click", _fnOnRowDeleteInline);
 
 
-            // FIXME oTable.on("click", $(".table-action-deletelink", oTable), _fnOnRowDeleteInline);
+            //oTable.on("click", $(".table-action-deletelink", oTable), _fnOnRowDeleteInline);
+            $(document.body).on('click', '.table-action-deletelink', _fnOnRowDeleteInline);
 
             if (!properties.bUseKeyTable) {
             //Set selected class on row that is clicked

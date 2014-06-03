@@ -50,7 +50,7 @@ class CrudController extends Controller
 
     public function addAction(Request $request)
     {
-        $dtId = $request->request->get('oDtId');
+        $dtId = $this->fetchDtId($request);
         $crudService = $this->fetchCrudService($dtId);
         $entityInspector = $this->get('twentysteps_bundle.datatablesbundle.services.entityinspectionservice');
         $entity = $crudService->createEntity();
@@ -69,7 +69,7 @@ class CrudController extends Controller
 
     public function removeAction(Request $request)
     {
-        $dtId = $request->request->get('dtId');
+        $dtId = $this->fetchDtId($request);
         $crudService = $this->fetchCrudService($dtId);
         $id = $request->request->get('id');
         $this->get('logger')->info(sprintf('Remove entity of type [%s] with id [%s]', $dtId, $id));
@@ -79,7 +79,7 @@ class CrudController extends Controller
             $crudService->removeEntity($entity);
         } else {
             $translator = $request->get('translator');
-            $msg = $translator->trans('No entity with id [%id%] found', array('%id%' => $id));
+            $msg = $translator->trans('No entity with id [%id%] found', array('%id%' => $id), $this->fetchTransScope($dtId));
         }
         return new Response($msg);
     }
@@ -87,6 +87,15 @@ class CrudController extends Controller
     private function isColumnParameter($paramName)
     {
         return $paramName[0] == 'm' || $paramName[0] == 'p';
+    }
+
+    private function fetchDtId($request) {
+        $dtId = $request->request->get('dtId');
+        if (!$dtId) {
+            $dtId = $request->query->get('dtId');
+        }
+        Ensure::ensureNotEmpty($dtId, 'dtId must not be empty');
+        return $dtId;
     }
 
     private function fetchCrudService($dtId)
@@ -97,5 +106,10 @@ class CrudController extends Controller
         Ensure::ensureNotNull($crudService, 'No service [%s] found', $crudService);
         Ensure::ensureTrue($crudService instanceof DataTablesCrudService, 'Service [%s] has to implement %s', $serviceId, DataTablesCrudService::class);
         return $crudService;
+    }
+
+    private function fetchTransScope($dtId)
+    {
+        return util::array_get($this->container->getParameter('datatables.' . $dtId)['transScope']) ?: 'messages';
     }
 }

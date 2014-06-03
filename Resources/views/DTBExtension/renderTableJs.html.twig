@@ -1,18 +1,48 @@
 {% if entities %}
 
-    var columnMeta = [];
-    {% for column in entities|first.columns %}
-        columnMeta.push({columnDescriptorId: '{{ column.columnDescriptorId }}', mData: {{ loop.index0 }}});
-    {%  endfor %}
-    var dtOpts = $.extend({}, {{ dtDefaultOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }}, {{ dtOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
-    var dteOpts = {
-    sUpdateURL: '{{ path(updateRoute) }}',
-    sDeleteURL: '{{ path(deleteRoute) }}',
-    sAddURL: '{{ path(addRoute) }}',
-    oDeleteParameters: {dtId: '{{ dtId }}'},
-    oUpdateParameters: {dtId: '{{ dtId }}', columnMeta: columnMeta}
-    };
-    $('#myDtTable').dataTable(dtOpts).makeEditable(dteOpts);
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var columnMeta = [];
+            columnMeta.push({});
+            {% for column in entities|first.columns %}
+            columnMeta.push({columnDescriptorId: '{{ column.columnDescriptorId }}', mData: {{ loop.index }}});
+            {%  endfor %}
+            columnMeta.push({});
+
+            var dataTablesColumns = [];
+            dataTablesColumns.push({ "bVisible": false});
+            {% for column in entities|first.columns %}
+                dataTablesColumns.push({});
+            {%  endfor %}
+            dataTablesColumns.push( // Delete-Link
+                    { "sName": "ID",
+                        "bSearchable": false,
+                        "bSortable": false,
+                        "mRender": function (foo, bar, dataSource) {
+                            return "<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?dtId={{ dtId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans }}</a>";
+                        }
+                    });
+
+            var jqueryEditableColumns = [];
+            jqueryEditableColumns.push({});
+            {% for column in entities|first.columns %}
+                jqueryEditableColumns.push({submit: "Save", cancel: "Cancel"});
+            {%  endfor %}
+            jqueryEditableColumns.push({});
+
+            var dtOpts = $.extend({aoColumns: dataTablesColumns}, {{ dtDefaultOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }}, {{ dtOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
+            var dteOpts = {
+                aoColumns: jqueryEditableColumns,
+                sUpdateURL: '{{ path(updateRoute) }}',
+                sDeleteURL: '{{ path(deleteRoute) }}',
+                sAddURL: '{{ path(addRoute) }}',
+                oDeleteParameters: {dtId: '{{ dtId }}'},
+                oUpdateParameters: {dtId: '{{ dtId }}', columnMeta: columnMeta}
+            };
+            $('#myDtTable').dataTable(dtOpts).makeEditable(dteOpts);
+        });
+    </script>
+
 {% endif %}
 
 

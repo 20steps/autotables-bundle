@@ -51,12 +51,12 @@ class DTBExtension extends AbstractExtension
      */
     public function renderTable($args)
     {
-        $dtId = $this->getDtId($args);
         return $this->render('twentystepsDataTablesBundle:DTBExtension:renderTable.html.twig',
+            array_merge($this->getConfig($args),
             array(
                 'entities' => $this->entityInspectionService->parseEntities($args['entities']),
-                'dtId' => $dtId
-            )
+                'deleteRoute' => util::array_get($args['deleteRoute']) ? : 'twentysteps_data_tables_remove',
+            ))
         );
     }
 
@@ -67,15 +67,15 @@ class DTBExtension extends AbstractExtension
     {
         $dtId = $this->getDtId($args);
         return $this->render('twentystepsDataTablesBundle:DTBExtension:renderTableJs.html.twig',
+            array_merge($this->getConfig($args),
             array(
                 'entities' => $this->entityInspectionService->parseEntities($args['entities']),
-                'dtId' => $dtId,
                 'updateRoute' => util::array_get($args['updateRoute']) ? : 'twentysteps_data_tables_update',
                 'deleteRoute' => util::array_get($args['deleteRoute']) ? : 'twentysteps_data_tables_remove',
                 'addRoute' => util::array_get($args['addRoute']) ? : 'twentysteps_data_tables_add',
                 'dtDefaultOpts' => $this->getDefaultOptions($dtId),
                 'dtOpts' => util::array_get($args['dtOptions']) ? : array()
-            )
+            ))
         );
     }
 
@@ -114,11 +114,18 @@ class DTBExtension extends AbstractExtension
     /**
      * Retrieves the default options for the given key.
      */
-    private function getDefaultOptions($dtKey)
+    private function getDefaultOptions($dtId)
     {
-        return util::array_get($this->container->getParameter('datatables.' . $dtKey)['defaultOptions']) ? : array();
+        return util::array_get($this->container->getParameter('datatables.' . $dtId)['defaultOptions']) ? : array();
     }
 
+    private function getConfig($args) {
+        $dtId = $this->getDtId($args);
+        return array(
+            'dtId' => $dtId,
+            'transScope' => util::array_get($this->container->getParameter('datatables.' . $dtId)['transScope']) ? : 'messages'
+        );
+    }
     private function getDtId($args)
     {
         $dtId = util::array_get($args['dtId']);
