@@ -121,16 +121,11 @@ class DataTablesExtension extends AbstractExtension
      * @return DataTablesConfiguration
      */
     private function fetchDataTablesConfiguration($args) {
-        $dtId = $this->fetchDtId($args);
-        $options = $this->container->getParameter('twentysteps_data_tables.config.'.$dtId);
+        $dtId = $this->getRequiredParameter($args, 'dtId');
+        $confKey = 'twentysteps_data_tables.config.'.$dtId;
+        Ensure::ensureTrue($this->container->hasParameter($confKey), 'Missing twentysteps_data_tables table configuration with id [%s]', $dtId);
+        $options = $this->container->getParameter($confKey);
         Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_data_tables table [%s]', $dtId);
         return new DataTablesConfiguration($dtId, $options);
-    }
-
-    private function fetchDtId($args)
-    {
-        $dtId = util::array_get($args['dtId']);
-        Ensure::ensureNotEmpty($dtId, "dtId must not be empty");
-        return $dtId;
     }
 }
