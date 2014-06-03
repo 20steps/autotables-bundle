@@ -4,9 +4,9 @@
         <tr>
             <th>ID</th>
             {% for column in entities|first.columns %}
-                <th>{{ column.name|trans() }}</th>
+                <th>{{ column.name|trans({}, transScope) }}</th>
             {% endfor %}
-            <th>{{ 'Edit'|trans }}</th>
+            <th>{{ 'Edit'|trans({}, transScope) }}</th>
         </tr>
         </thead>
         <tbody>
@@ -22,20 +22,20 @@
         </tbody>
     </table>
 
-    <button id="btnAddNewRow">Hinzufügen</button>
+    <button id="btnAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
 
     <form id="formAddNewRow" class="hide" action="#" title="{{ 'Add entry'|trans() }}">
         <input type="hidden" name="oDtId" value="{{ dtId }}"/>
         <input type="hidden" name="id" id="id" rel="0" value="DATAROWID" />
         {% for column in entities|first.columns %}
-            <label for="{{ column.columnDescriptorId }}">{{ column.name|trans() }}</label><input type="text"
+            <label for="{{ column.columnDescriptorId }}">{{ column.name|trans({}, transScope) }}</label><input type="text"
                                                                                                  name="{{ column.columnDescriptorId }}"
                                                                                                  id="{{ column.columnDescriptorId }}"
                                                                                                  class="required"
                                                                                                  rel="{{ loop.index }}"/>
             <br/>
         {% endfor %}
-        <span class="datafield" rel="{{ ((entities|first.columns)|length) + 1 }}" style="display:none"><a class="table-action-deletelink" href="{{ deleteRoute }}?test=test&id=DATAROWID">Edit</a></span>
+        <span rel="{{ ((entities|first.columns)|length) + 1 }}" style="display:none"><a class="table-action-deletelink" href="#"></a></span>
     </form>
 
 {% endif %}

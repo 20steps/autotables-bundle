@@ -59,6 +59,10 @@ returns true if plugin should continue with sending AJAX request, false will abo
 * @sIDToken                         String      Token in the add new row dialog that will be replaced with a returned id of the record that is created eg DT_RowId
 * @sSuccessResponse                 String        Text returned from the server if record is successfully deleted or edited. Default "ok" 
 * @sFailureResponsePrefix            String        Prefix of the error message returned form the server during edit action
+*
+* ADDED:
+* @submitButtonText                 String      Optional text for a jquery.editable "submit" button
+* @cancelButtonText                 String      Optional text for a jquery.editable "cancel" button
 */
 
 var myConsole = console;
@@ -202,6 +206,9 @@ var myConsole = console;
                 return;
             var oDefaultEditableSettings = {
                 event: 'dblclick',
+
+                submit: properties.submitButtonText,
+                cancel: properties.cancelButtonText,
 
                 "onsubmit": function (settings, original) {
                     sOldValue = original.revert;
@@ -545,7 +552,7 @@ var myConsole = console;
             ///Function that disables delete button
             ///</summary>
 
-           if (properties.bUseKeyTable) {
+           if (properties.bUseKeyTable || !oDeleteRowButton) {
                 return;
             }
             if (properties.oDeleteRowButtonOptions != null) {
@@ -561,11 +568,13 @@ var myConsole = console;
             ///Function that enables delete button
             ///</summary>
 
-            if (properties.oDeleteRowButtonOptions != null) {
-                //oDeleteRowButton.enable();
-                oDeleteRowButton.button("option", "disabled", false);
-            } else {
-                oDeleteRowButton.removeAttr("disabled");
+            if (oDeleteRowButton) {
+                if (properties.oDeleteRowButtonOptions != null) {
+                    //oDeleteRowButton.enable();
+                    oDeleteRowButton.button("option", "disabled", false);
+                } else {
+                    oDeleteRowButton.removeAttr("disabled");
+                }
             }
         }
 
@@ -1059,17 +1068,13 @@ var myConsole = console;
             bUseFormsPlugin: false,
             fnOnActionCompleted: _fnOnActionCompleted,
             sSuccessResponse: "ok",
-        sFailureResponsePrefix: "ERROR",
+            sFailureResponsePrefix: "ERROR",
             oKeyTable: null        //KEYTABLE
 
         };
 
         properties = $.extend(defaults, options);
         oSettings = oTable.fnSettings();
-
-        console.log('SETTINGS');
-        console.log(oSettings);
-        console.log(options);
 
         properties.bUseKeyTable = (properties.oKeyTable != null);
 

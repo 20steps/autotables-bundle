@@ -19,20 +19,14 @@
                         "bSearchable": false,
                         "bSortable": false,
                         "mRender": function (foo, bar, dataSource) {
-                            return "<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?dtId={{ dtId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans }}</a>";
+                            return "<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?dtId={{ dtId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans({}, transScope) }}</a>";
                         }
                     });
 
-            var jqueryEditableColumns = [];
-            jqueryEditableColumns.push({});
-            {% for column in entities|first.columns %}
-                jqueryEditableColumns.push({submit: "Save", cancel: "Cancel"});
-            {%  endfor %}
-            jqueryEditableColumns.push({});
-
             var dtOpts = $.extend({aoColumns: dataTablesColumns}, {{ dtDefaultOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }}, {{ dtOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
             var dteOpts = {
-                aoColumns: jqueryEditableColumns,
+                submitButtonText: "{{ 'Save'|trans({}, transScope) }}",
+                cancelButtonText: "{{ 'Cancel'|trans({}, transScope) }}",
                 sUpdateURL: '{{ path(updateRoute) }}',
                 sDeleteURL: '{{ path(deleteRoute) }}',
                 sAddURL: '{{ path(addRoute) }}',
