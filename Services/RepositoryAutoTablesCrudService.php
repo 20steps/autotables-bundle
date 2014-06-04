@@ -24,9 +24,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
- * Adapter for wrapping a repository to a DataTablesCrudService.
+ * Adapter for wrapping a repository to a AutoTablesCrudService.
  */
-class RepositoryDataTablesCrudService implements  DataTablesCrudService {
+class RepositoryAutoTablesCrudService implements AutoTablesCrudService {
 
     private $em;
     private $repository;

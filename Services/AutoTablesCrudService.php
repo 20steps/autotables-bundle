@@ -19,14 +19,30 @@
 
 namespace twentysteps\Bundle\AutoTablesBundle\Services;
 
-
-interface DataTablesCrudService
+/**
+ * Access point for the AutoTablesBundle to perform any needed CRUD operation for a given
+ * entity type.
+ */
+interface AutoTablesCrudService
 {
+    /**
+     * Simply returns a fresh entity for inserting values.
+     */
     public function createEntity();
 
+    /**
+     * Returns the entity with the given id or null if not found.
+     */
     public function findEntity($id);
 
+    /**
+     * Persists the given entity. The id may be still null, if this is the first time
+     * the entity is persisted.
+     */
     public function persistEntity($entity);
 
+    /**
+     * Removes the given entity from persistency.
+     */
     public function removeEntity($entity);
 } 

@@ -25,7 +25,7 @@ use utilphp\util;
 /**
  * Handle for accessing a specific DataTables config entry.
  */
-class DataTablesConfiguration {
+class AutoTablesConfiguration {
 
     private $id;
     private $serviceId;

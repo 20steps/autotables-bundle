@@ -43,12 +43,6 @@ final class ColumnMeta extends Annotation
     public $order;
 
     /**
-     * Name of the property for setting values. This makes only sense when annotating methods.
-     * @var string
-     */
-    public $property;
-
-    /**
      * Should the column be unmodifyable.
      * @var boolean
      */
@@ -76,14 +70,6 @@ final class ColumnMeta extends Annotation
     public function getOrder()
     {
         return $this->order;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProperty()
-    {
-        return $this->property;
     }
 
     /**

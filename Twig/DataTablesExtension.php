@@ -19,7 +19,7 @@
 
 namespace twentysteps\Bundle\AutoTablesBundle\Twig;
 
-use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\DataTablesConfiguration;
+use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Services\EntityInspectionService;
 use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use utilphp\util;
@@ -49,7 +49,7 @@ class DataTablesExtension extends AbstractExtension
      */
     public function renderTable($args = array())
     {
-        $config = $this->fetchDataTablesConfiguration($args);
+        $config = $this->fetchAutoTablesConfiguration($args);
         $array = array(
             'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
             'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
@@ -65,7 +65,7 @@ class DataTablesExtension extends AbstractExtension
      */
     public function renderTableJs($args = array())
     {
-        $config = $this->fetchDataTablesConfiguration($args);
+        $config = $this->fetchAutoTablesConfiguration($args);
         $array = array(
             'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
             'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_auto_tables_update'),
@@ -109,14 +109,14 @@ class DataTablesExtension extends AbstractExtension
     }
 
     /**
-     * @return DataTablesConfiguration
+     * @return AutoTablesConfiguration
      */
-    private function fetchDataTablesConfiguration($args) {
+    private function fetchAutoTablesConfiguration($args) {
         $tableId = $this->getRequiredParameter($args, 'tableId');
         $confKey = 'twentysteps_auto_tables.config.'.$tableId;
         Ensure::ensureTrue($this->container->hasParameter($confKey), 'Missing twentysteps_auto_tables table configuration with id [%s]', $tableId);
         $options = $this->container->getParameter($confKey);
         Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
-        return new DataTablesConfiguration($tableId, $options);
+        return new AutoTablesConfiguration($tableId, $options);
     }
 }
