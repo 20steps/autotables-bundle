@@ -2,7 +2,7 @@
 
 ## About
 
-The 20steps DataTables Bundle provides an easy way for displaying entities in Symfony2 applications in editable tables. The tables are rendered by [DataTables](https://datatables.net/) and are made editable with a patched version of [jquery.datatables.editable](https://code.google.com/p/jquery-datatables-editable/).
+The 20steps DataTables Bundle provides an easy way for displaying entities in Symfony2 applications in auto-generated and editable tables. The tables are rendered by [DataTables](https://datatables.net/) and are made editable with a patched version of [jquery.datatables.editable](https://code.google.com/p/jquery-datatables-editable/).
 
 ## Features
 
@@ -12,8 +12,8 @@ The 20steps DataTables Bundle provides an easy way for displaying entities in Sy
 * Integration of custom CRUD services
 * Annotating entities with Doctrine annotations
 * Annotating entities with AutoTablesBundle annotations
-* Displaying columns either for properties and methods
-* Modifying columns by either properties and methods
+* Displaying columns of either properties or methods
+* Modifying columns for either properties or methods
 * Declaring columns as read-only
 * Many customization options
 
@@ -78,7 +78,7 @@ twentysteps_auto_tables:
 
 ### Table specific configuration
 
-Now the tables to be rendered by the bundle has to be configured. This happens as a list under a *tables* section.
+Now the tables to be rendered by the bundle has to be configured. This happens as a list in a *tables* section.
 Each table configuration has to have an *id* property. This is used to reference the configurations in later calls
 to the bundle.
 
@@ -136,7 +136,7 @@ The information needed to render any column into a table is taken from annotatio
 The bundle searches for Doctrine annotations like *@Doctrine\ORM\Mapping\Column* and *@Doctrine\ORM\Mapping\Id*.
 If you want to give a different name, set an order value or for some other reason you can use the bundle's
 annotation *twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnMeta*. Even getter methods may be annotated
-with the annotation, to create a column displaying the value returned by the getter. To be able to update the value,
+with this annotation, to create a column displaying the value returned by the getter. To be able to update the value in this case,
 a setter of the same name has to be created (getFoo/setFoo). It's even possible to disable the editing of a column by using the
 *readOnly* property of the annotation.
 
@@ -152,14 +152,14 @@ Twig templates.
 The needed assets of the bundle are included with the Twig function *ts_dataTable_assets*. This will
 include the needed stylesheet and javascript files. If you want to exclude all javascript files you
 can use the option ```{'javascript': false}``` the same applies to the stylesheets: ```{'stylesheet': false}```. By using
-this you cann call the function twice, once for the javascript includes and once for the stylesheet includes.
+this you can call the function twice, once for the javascript includes and once for the stylesheet includes.
 
 By default all needed javascript libraries are loaded excepting the jquery library. This behaviour can be configured by the
 following options: *includeJquery, includeJqueryUi, includeJqueryEditable, includeJqueryDataTables* and *includeJqueryValidate*
 
 Now it's time to render the JavaScript code for your entity's table. This is done by the Twig function *ts_dataTable_js*.
 The call has to include the list of entities to be rendered in the option *entities* and the id of the table configuration
-given by the option *tableId*. The configured [DataTables](https://datatables.net/) may be extended here with the option *dtOptions*.
+given by the option *tableId*. The [DataTables](https://datatables.net/) configuration may be extended here with the option *dtOptions*.
 
 Furthermore the *transScope* may be overwritten here and the routes for the CRUD controller actions with the options
 *updateRoute, deleteRoute* and *addRoute*.
