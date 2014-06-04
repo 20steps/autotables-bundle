@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTablesBundle
+ * AutoTablesBundle
  * Copyright (c) 2014, 20steps Digital Full Service Boutique, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -17,15 +17,15 @@
  * License along with this library.
  */
 
-namespace twentysteps\Bundle\DataTablesBundle\Controller;
+namespace twentysteps\Bundle\AutoTablesBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use twentysteps\Bundle\DataTablesBundle\Services\DataTablesCrudService;
-use twentysteps\Bundle\DataTablesBundle\Services\RepositoryDataTablesCrudService;
-use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
-use twentysteps\Bundle\DataTablesBundle\DependencyInjection\DataTablesConfiguration;
+use twentysteps\Bundle\AutoTablesBundle\Services\DataTablesCrudService;
+use twentysteps\Bundle\AutoTablesBundle\Services\RepositoryDataTablesCrudService;
+use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
+use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\DataTablesConfiguration;
 use utilphp\util;
 
 class CrudController extends Controller
@@ -45,7 +45,7 @@ class CrudController extends Controller
         $crudService = $this->fetchCrudService($config);
         $entity = $crudService->findEntity($id);
         Ensure::ensureNotNull($entity, 'Entity with id [%s] not found', $id);
-        $entityInspector = $this->get('twentysteps_bundle.datatablesbundle.services.entityinspectionservice');
+        $entityInspector = $this->get('twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice');
         $entityInspector->setValue($entity, $columnDescriptorId, $value);
         $crudService->persistEntity($entity);
         return new Response($entityInspector->getValue($entity, $columnDescriptorId));
@@ -56,7 +56,7 @@ class CrudController extends Controller
         $dtId = $this->fetchDtId($request);
         $config = $this->fetchDataTablesConfiguration($dtId);
         $crudService = $this->fetchCrudService($config);
-        $entityInspector = $this->get('twentysteps_bundle.datatablesbundle.services.entityinspectionservice');
+        $entityInspector = $this->get('twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice');
         $entity = $crudService->createEntity();
         foreach ($request->request->keys() as $paramName) {
             if ($this->isColumnParameter($paramName)) {
@@ -119,8 +119,8 @@ class CrudController extends Controller
      * @return DataTablesConfiguration
      */
     private function fetchDataTablesConfiguration($dtId) {
-        $options = $this->container->getParameter('twentysteps_data_tables.config.'.$dtId);
-        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_data_tables table [%s]', $dtId);
+        $options = $this->container->getParameter('twentysteps_auto_tables.config.'.$dtId);
+        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $dtId);
         return new DataTablesConfiguration($dtId, $options);
     }
 

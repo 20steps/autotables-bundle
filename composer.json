@@ -1,9 +1,9 @@
 {
-    "name": "20steps/datatables-bundle",
+    "name": "20steps/autotables-bundle",
     "type": "symfony-bundle",
     "description": "TBD",
     "keywords": ["datatables", "sf2"],
-    "homepage": "https://github.com/20steps/datatables-bundle",
+    "homepage": "https://github.com/20steps/autotables-bundle",
     "license": "LGPL-3.0+",
     "authors": [
         {
@@ -21,8 +21,8 @@
     },
     "autoload": {
         "psr-0": {
-            "twentysteps\\Bundle\\DataTablesBundle": ""
+            "twentysteps\\Bundle\\AutoTablesBundle": ""
         }
     },
-    "target-dir": "twentysteps/Bundle/DataTablesBundle"
+    "target-dir": "twentysteps/Bundle/AutoTablesBundle"
 }

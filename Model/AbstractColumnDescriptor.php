@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTablesBundle
+ * AutoTablesBundle
  * Copyright (c) 2014, 20steps Digital Full Service Boutique, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
  * License along with this library.
  */
 
-namespace twentysteps\Bundle\DataTablesBundle\Model;
+namespace twentysteps\Bundle\AutoTablesBundle\Model;
 
 
 abstract class AbstractColumnDescriptor

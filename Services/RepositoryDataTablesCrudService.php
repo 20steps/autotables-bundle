@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTablesBundle
+ * AutoTablesBundle
  * Copyright (c) 2014, 20steps Digital Full Service Boutique, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
  */
 
 
-namespace twentysteps\Bundle\DataTablesBundle\Services;
+namespace twentysteps\Bundle\AutoTablesBundle\Services;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;

@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTablesBundle
+ * AutoTablesBundle
  * Copyright (c) 2014, 20steps Digital Full Service Boutique, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -17,17 +17,17 @@
  * License along with this library.
  */
 
-namespace twentysteps\Bundle\DataTablesBundle\Services;
+namespace twentysteps\Bundle\AutoTablesBundle\Services;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Bridge\Monolog\Logger;
-use twentysteps\Bundle\DataTablesBundle\Model\AbstractColumnDescriptor;
-use twentysteps\Bundle\DataTablesBundle\Model\Column;
-use twentysteps\Bundle\DataTablesBundle\Model\Entity;
-use twentysteps\Bundle\DataTablesBundle\Model\EntityDescriptor;
-use twentysteps\Bundle\DataTablesBundle\Model\MethodColumnDescriptor;
-use twentysteps\Bundle\DataTablesBundle\Model\PropertyColumnDescriptor;
-use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
+use twentysteps\Bundle\AutoTablesBundle\Model\AbstractColumnDescriptor;
+use twentysteps\Bundle\AutoTablesBundle\Model\Column;
+use twentysteps\Bundle\AutoTablesBundle\Model\Entity;
+use twentysteps\Bundle\AutoTablesBundle\Model\EntityDescriptor;
+use twentysteps\Bundle\AutoTablesBundle\Model\MethodColumnDescriptor;
+use twentysteps\Bundle\AutoTablesBundle\Model\PropertyColumnDescriptor;
+use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use utilphp\util;
 use Stringy\StaticStringy;
 
@@ -141,17 +141,17 @@ class EntityInspectionService
             $ignore = false;
             $readOnly = false;
             foreach ($this->reader->getPropertyAnnotations($property) as $annot) {
-                if (($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnMeta) ||
+                if (($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnMeta) ||
                     ($annot instanceof \Doctrine\ORM\Mapping\Column and !$name)
                 ) {
                     $name = $annot->name ? : $property->getName();
                     $type = $annot->type ? : $type;
-                    if ($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnMeta) {
+                    if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnMeta) {
                         $order = $annot->getOrder();
                         $readOnly = $annot->isReadOnly();
                     }
                 }
-                if ($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnIgnore) {
+                if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnIgnore) {
                     $ignore = true;
                     break;
                 }
@@ -173,7 +173,7 @@ class EntityInspectionService
             $ignore = false;
             $readOnly = false;
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                if ($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnMeta) {
+                if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnMeta) {
                     Ensure::ensureTrue(count($method->getParameters()) == 0, 'Failed to use [%s] as getter method, only parameterless methods supported for @ColumnMeta', $method->getName());
                     Ensure::ensureTrue(StaticStringy::startsWith($method->getName(), 'get'), 'Illegal method name [%s], getter methods must start with a get prefix', $method->getName());
                     $name = $annot->getName() ? : $method->getName();
@@ -181,7 +181,7 @@ class EntityInspectionService
                     $order = $annot->getOrder() ? : 0;
                     $readOnly = $annot->isReadOnly();
                 }
-                if ($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnIgnore) {
+                if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnIgnore) {
                     $ignore = true;
                     break;
                 }

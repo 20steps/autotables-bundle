@@ -1,4 +1,4 @@
-# 20steps/datatables-bundle (twentystepsDataTablesBundle)
+# 20steps/datatables-bundle (twentystepsAutoTablesBundle)
 
 ## About
 
@@ -11,7 +11,7 @@ The 20steps DataTables Bundle provides an easy way for displaying entities in Sy
 * Integration of Doctrine repositories
 * Integration of custom CRUD services
 * Annotating entities with Doctrine annotations
-* Annotating entities with DataTablesBundle annotations
+* Annotating entities with AutoTablesBundle annotations
 * Displaying columns either for properties and methods
 * Modifying columns by either properties and methods
 * Declaring columns as read-only
@@ -31,19 +31,19 @@ php composer.phar update 20steps/datatables-bundle
 
 Register the bundle in your application by adding the following line to the registerBundles() method of your AppKernel.php:  
 ```
-new twentysteps\Bundle\DataTablesBundle\twentystepsDataTablesBundle()
+new twentysteps\Bundle\AutoTablesBundle\twentystepsAutoTablesBundle()
 ```
 
 Add the bundle to your assetic configuration in config.yml:  
 ```
 assetic:
-    bundles:        [ 'twentystepsDataTablesBundle' ]
+    bundles:        [ 'twentystepsAutoTablesBundle' ]
 ```
 
 Add the bundle's routes to your routing.yml
 ```
-twentysteps_data_tables:
-    resource: "@twentystepsDataTablesBundle/Resources/config/routing.yml"
+twentysteps_auto_tables:
+    resource: "@twentystepsAutoTablesBundle/Resources/config/routing.yml"
     prefix:   /
 ```
 

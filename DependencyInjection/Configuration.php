@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTablesBundle
+ * AutoTablesBundle
  * Copyright (c) 2014, 20steps Digital Full Service Boutique, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
  * License along with this library.
  */
 
-namespace twentysteps\Bundle\DataTablesBundle\DependencyInjection;
+namespace twentysteps\Bundle\AutoTablesBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -35,7 +35,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('twentysteps_data_tables');
+        $rootNode = $treeBuilder->root('twentysteps_auto_tables');
 
         $rootNode
             ->children()

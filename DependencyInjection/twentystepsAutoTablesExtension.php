@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTablesBundle
+ * AutoTablesBundle
  * Copyright (c) 2014, 20steps Digital Full Service Boutique, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -17,13 +17,13 @@
  * License along with this library.
  */
 
-namespace twentysteps\Bundle\DataTablesBundle\DependencyInjection;
+namespace twentysteps\Bundle\AutoTablesBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
+use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use utilphp\util;
 
 /**
@@ -31,7 +31,7 @@ use utilphp\util;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class twentystepsDataTablesExtension extends Extension
+class twentystepsAutoTablesExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -48,16 +48,16 @@ class twentystepsDataTablesExtension extends Extension
         if ($tables) {
             foreach($tables as $tableDef) {
                 $id = util::array_get($tableDef['id']);
-                Ensure::ensureNotEmpty($id, "Missing [id] option in twentysteps_data_tables table definition");
+                Ensure::ensureNotEmpty($id, "Missing [id] option in twentysteps_auto_tables table definition");
                 $json = util::array_get($tableDef['dataTablesOptions']) ?: '{}';
-                Ensure::ensureTrue($this->isValidJson($json), 'Encountered illegal JSON for twentysteps_data_tables table with id [%s] in config: %s', $id,  $json);
-                $container->setParameter('twentysteps_data_tables.config.'.$id, $tableDef);
+                Ensure::ensureTrue($this->isValidJson($json), 'Encountered illegal JSON for twentysteps_auto_tables table with id [%s] in config: %s', $id,  $json);
+                $container->setParameter('twentysteps_auto_tables.config.'.$id, $tableDef);
             }
         }
 
         $defaultOpts = util::array_get($config['defaultDataTablesOptions']) ?: '{}';
         Ensure::ensureTrue($this->isValidJson($defaultOpts), 'Encountered illegal JSON in config: %s', $defaultOpts);
-        $container->setParameter('twentysteps_data_tables.defaultDataTablesOptions', $defaultOpts);
+        $container->setParameter('twentysteps_auto_tables.defaultDataTablesOptions', $defaultOpts);
     }
 
     private function isValidJson($json) {

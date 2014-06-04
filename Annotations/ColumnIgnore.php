@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTablesBundle
+ * AutoTablesBundle
  * Copyright (c) 2014, 20steps Digital Full Service Boutique, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -17,12 +17,12 @@
  * License along with this library.
  */
 
-namespace twentysteps\Bundle\DataTablesBundle\Annotations;
+namespace twentysteps\Bundle\AutoTablesBundle\Annotations;
 
 use Doctrine\Common\Annotations\Annotation;
 
 /**
- * Flags a method or property to be ignored by the DataTablesBundle, regardless
+ * Flags a method or property to be ignored by the AutoTablesBundle, regardless
  * which other annotations are found for the given element.
  * @Annotation
  * @Target({"METHOD","PROPERTY"})

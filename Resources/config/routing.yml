@@ -1,11 +1,11 @@
-twentysteps_data_tables_update:
+twentysteps_auto_tables_update:
     path:     /update
-    defaults: { _controller: twentystepsDataTablesBundle:Crud:update }
+    defaults: { _controller: twentystepsAutoTablesBundle:Crud:update }
 
-twentysteps_data_tables_add:
+twentysteps_auto_tables_add:
     path:     /add
-    defaults: { _controller: twentystepsDataTablesBundle:Crud:add }
+    defaults: { _controller: twentystepsAutoTablesBundle:Crud:add }
 
-twentysteps_data_tables_remove:
+twentysteps_auto_tables_remove:
     path:     /remove
-    defaults: { _controller: twentystepsDataTablesBundle:Crud:remove }
+    defaults: { _controller: twentystepsAutoTablesBundle:Crud:remove }

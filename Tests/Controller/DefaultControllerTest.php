@@ -1,6 +1,6 @@
 <?php
 
-namespace twentysteps\Bundle\DataTablesBundle\Tests\Controller;
+namespace twentysteps\Bundle\AutoTablesBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

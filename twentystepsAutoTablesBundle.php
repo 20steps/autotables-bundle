@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTablesBundle
+ * AutoTablesBundle
  * Copyright (c) 2014, 20steps Digital Full Service Boutique, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -17,10 +17,10 @@
  * License along with this library.
  */
 
-namespace twentysteps\Bundle\DataTablesBundle;
+namespace twentysteps\Bundle\AutoTablesBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class twentystepsDataTablesBundle extends Bundle
+class twentystepsAutoTablesBundle extends Bundle
 {
 }

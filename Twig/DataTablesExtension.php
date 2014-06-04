@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTablesBundle
+ * AutoTablesBundle
  * Copyright (c) 2014, 20steps Digital Full Service Boutique, All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
@@ -17,11 +17,11 @@
  * License along with this library.
  */
 
-namespace twentysteps\Bundle\DataTablesBundle\Twig;
+namespace twentysteps\Bundle\AutoTablesBundle\Twig;
 
-use twentysteps\Bundle\DataTablesBundle\DependencyInjection\DataTablesConfiguration;
-use twentysteps\Bundle\DataTablesBundle\Services\EntityInspectionService;
-use twentysteps\Bundle\DataTablesBundle\Util\Ensure;
+use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\DataTablesConfiguration;
+use twentysteps\Bundle\AutoTablesBundle\Services\EntityInspectionService;
+use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use utilphp\util;
 
 class DataTablesExtension extends AbstractExtension
@@ -52,12 +52,12 @@ class DataTablesExtension extends AbstractExtension
         $config = $this->fetchDataTablesConfiguration($args);
         $array = array(
             'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
-            'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove'),
+            'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
             'dtId' => $config->getId(),
             'transScope' => $config->getTransScope(),
-            'formAddNewRowTemplate' => $this->getParameter($args, 'formAddNewRowTemplate', 'twentystepsDataTablesBundle:DataTablesExtension:formAddNewRow.html.twig')
+            'formAddNewRowTemplate' => $this->getParameter($args, 'formAddNewRowTemplate', 'twentystepsAutoTablesBundle:DataTablesExtension:formAddNewRow.html.twig')
         );
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:dataTable.html.twig', $array);
+        return $this->render('twentystepsAutoTablesBundle:DataTablesExtension:dataTable.html.twig', $array);
     }
 
     /**
@@ -68,16 +68,16 @@ class DataTablesExtension extends AbstractExtension
         $config = $this->fetchDataTablesConfiguration($args);
         $array = array(
             'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
-            'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_data_tables_update'),
-            'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove'),
-            'addRoute' => $this->getParameter($args, 'addRoute', 'twentysteps_data_tables_add'),
-            'dtDefaultOpts' => $this->container->getParameter('twentysteps_data_tables.defaultDataTablesOptions'),
+            'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_auto_tables_update'),
+            'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
+            'addRoute' => $this->getParameter($args, 'addRoute', 'twentysteps_auto_tables_add'),
+            'dtDefaultOpts' => $this->container->getParameter('twentysteps_auto_tables.defaultDataTablesOptions'),
             'dtOpts' => $config->getDataTablesOptions(),
             'dtTagOpts' => $this->getParameter($args, 'dtOptions', array()),
             'dtId' => $config->getId(),
             'transScope' => $config->getTransScope()
         );
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:dataTableJs.html.twig', $array);
+        return $this->render('twentystepsAutoTablesBundle:DataTablesExtension:dataTableJs.html.twig', $array);
     }
 
     /**
@@ -85,7 +85,7 @@ class DataTablesExtension extends AbstractExtension
      */
     public function renderAssets($args)
     {
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:dataTableAssets.html.twig',
+        return $this->render('twentystepsAutoTablesBundle:DataTablesExtension:dataTableAssets.html.twig',
             array(
                 'javascriptAssets' => $this->getParameter($args, 'javascriptAssets', TRUE),
                 'stylesheetAssets' => $this->getParameter($args, 'stylesheetAssets', TRUE),
@@ -113,10 +113,10 @@ class DataTablesExtension extends AbstractExtension
      */
     private function fetchDataTablesConfiguration($args) {
         $dtId = $this->getRequiredParameter($args, 'dtId');
-        $confKey = 'twentysteps_data_tables.config.'.$dtId;
-        Ensure::ensureTrue($this->container->hasParameter($confKey), 'Missing twentysteps_data_tables table configuration with id [%s]', $dtId);
+        $confKey = 'twentysteps_auto_tables.config.'.$dtId;
+        Ensure::ensureTrue($this->container->hasParameter($confKey), 'Missing twentysteps_auto_tables table configuration with id [%s]', $dtId);
         $options = $this->container->getParameter($confKey);
-        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_data_tables table [%s]', $dtId);
+        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $dtId);
         return new DataTablesConfiguration($dtId, $options);
     }
 }
