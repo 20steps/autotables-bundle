@@ -38,11 +38,9 @@ class DataTablesExtension extends AbstractExtension
     public function getFunctions()
     {
         return array(
-            // TODO switch to:
-            // new \Twig_SimpleFunction('code', array($this, 'getCode'), array('is_safe' => array('html'))),
-            'ts_dataTable_includes' => new \Twig_Function_Method($this, 'renderIncludes', array('is_safe' => array('html'))),
-            'ts_dataTable' => new \Twig_Function_Method($this, 'renderTable', array('is_safe' => array('html'))),
-            'ts_dataTable_js' => new \Twig_Function_Method($this, 'renderTableJs', array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('ts_dataTable_includes', array($this, 'renderIncludes'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ts_dataTable', array($this, 'renderTable'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ts_dataTable_js', array($this, 'renderTableJs'), array('is_safe' => array('html')))
         );
     }
 
