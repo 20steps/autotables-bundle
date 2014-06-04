@@ -37,11 +37,11 @@ class CrudController extends Controller
         $columnId = $request->request->get('columnId');
         $columnMeta = $request->request->get('columnMeta');
         $columnDescriptorId = $columnMeta[$columnId]['columnDescriptorId'];
-        $dtId = $this->fetchDtId($request);
+        $tableId = $this->fetchtableId($request);
 
-        $this->get('logger')->info(sprintf('Update entity of type [%s] with id [%s] for column [%s] with value [%s]', $dtId, $id, $columnDescriptorId, $value));
+        $this->get('logger')->info(sprintf('Update entity of type [%s] with id [%s] for column [%s] with value [%s]', $tableId, $id, $columnDescriptorId, $value));
 
-        $config = $this->fetchDataTablesConfiguration($dtId);
+        $config = $this->fetchDataTablesConfiguration($tableId);
         $crudService = $this->fetchCrudService($config);
         $entity = $crudService->findEntity($id);
         Ensure::ensureNotNull($entity, 'Entity with id [%s] not found', $id);
@@ -53,8 +53,8 @@ class CrudController extends Controller
 
     public function addAction(Request $request)
     {
-        $dtId = $this->fetchDtId($request);
-        $config = $this->fetchDataTablesConfiguration($dtId);
+        $tableId = $this->fetchtableId($request);
+        $config = $this->fetchDataTablesConfiguration($tableId);
         $crudService = $this->fetchCrudService($config);
         $entityInspector = $this->get('twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice');
         $entity = $crudService->createEntity();
@@ -66,7 +66,7 @@ class CrudController extends Controller
         $crudService->persistEntity($entity);
         $id = $entityInspector->fetchId($entity);
 
-        $this->get('logger')->info(sprintf('Added new entity of type [%s] with id [%s]', $dtId, $id));
+        $this->get('logger')->info(sprintf('Added new entity of type [%s] with id [%s]', $tableId, $id));
 
         $entityDesc = $entityInspector->parseEntity($entity);
         $this->get('logger')->info(sprintf('Entity desc: [%s]', print_r($entityDesc, TRUE)));
@@ -85,11 +85,11 @@ class CrudController extends Controller
 
     public function removeAction(Request $request)
     {
-        $dtId = $this->fetchDtId($request);
-        $config = $this->fetchDataTablesConfiguration($dtId);
+        $tableId = $this->fetchtableId($request);
+        $config = $this->fetchDataTablesConfiguration($tableId);
         $crudService = $this->fetchCrudService($config);
         $id = $request->query->get('id');
-        $this->get('logger')->info(sprintf('Remove entity of type [%s] with id [%s]', $dtId, $id));
+        $this->get('logger')->info(sprintf('Remove entity of type [%s] with id [%s]', $tableId, $id));
         $entity = $crudService->findEntity($id);
         $msg = 'ok';
         if ($entity) {
@@ -106,22 +106,22 @@ class CrudController extends Controller
         return $paramName[0] == 'm' || $paramName[0] == 'p';
     }
 
-    private function fetchDtId($request) {
-        $dtId = $request->request->get('dtId');
-        if (!$dtId) {
-            $dtId = $request->query->get('dtId');
+    private function fetchtableId($request) {
+        $tableId = $request->request->get('tableId');
+        if (!$tableId) {
+            $tableId = $request->query->get('tableId');
         }
-        Ensure::ensureNotEmpty($dtId, 'dtId must not be empty');
-        return $dtId;
+        Ensure::ensureNotEmpty($tableId, 'tableId must not be empty');
+        return $tableId;
     }
 
     /**
      * @return DataTablesConfiguration
      */
-    private function fetchDataTablesConfiguration($dtId) {
-        $options = $this->container->getParameter('twentysteps_auto_tables.config.'.$dtId);
-        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $dtId);
-        return new DataTablesConfiguration($dtId, $options);
+    private function fetchDataTablesConfiguration($tableId) {
+        $options = $this->container->getParameter('twentysteps_auto_tables.config.'.$tableId);
+        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
+        return new DataTablesConfiguration($tableId, $options);
     }
 
     /**

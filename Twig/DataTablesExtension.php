@@ -47,13 +47,13 @@ class DataTablesExtension extends AbstractExtension
     /**
      * Prints a table with the given entities.
      */
-    public function renderTable($args)
+    public function renderTable($args = array())
     {
         $config = $this->fetchDataTablesConfiguration($args);
         $array = array(
             'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
             'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
-            'dtId' => $config->getId(),
+            'tableId' => $config->getId(),
             'transScope' => $config->getTransScope(),
             'formAddNewRowTemplate' => $this->getParameter($args, 'formAddNewRowTemplate', 'twentystepsAutoTablesBundle:DataTablesExtension:formAddNewRow.html.twig')
         );
@@ -63,7 +63,7 @@ class DataTablesExtension extends AbstractExtension
     /**
      * Prints the JavaScript code needed for the datatables of the given entities.
      */
-    public function renderTableJs($args)
+    public function renderTableJs($args = array())
     {
         $config = $this->fetchDataTablesConfiguration($args);
         $array = array(
@@ -71,10 +71,10 @@ class DataTablesExtension extends AbstractExtension
             'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_auto_tables_update'),
             'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
             'addRoute' => $this->getParameter($args, 'addRoute', 'twentysteps_auto_tables_add'),
-            'dtDefaultOpts' => $this->container->getParameter('twentysteps_auto_tables.defaultDataTablesOptions'),
+            'dtDefaultOpts' => $this->container->getParameter('twentysteps_auto_tables.default_datatables_options'),
             'dtOpts' => $config->getDataTablesOptions(),
             'dtTagOpts' => $this->getParameter($args, 'dtOptions', array()),
-            'dtId' => $config->getId(),
+            'tableId' => $config->getId(),
             'transScope' => $config->getTransScope()
         );
         return $this->render('twentystepsAutoTablesBundle:DataTablesExtension:dataTableJs.html.twig', $array);
@@ -83,12 +83,12 @@ class DataTablesExtension extends AbstractExtension
     /**
      * Renders the needed JavaScript and stylesheet includes.
      */
-    public function renderAssets($args)
+    public function renderAssets($args = array())
     {
         return $this->render('twentystepsAutoTablesBundle:DataTablesExtension:dataTableAssets.html.twig',
             array(
-                'javascriptAssets' => $this->getParameter($args, 'javascriptAssets', TRUE),
-                'stylesheetAssets' => $this->getParameter($args, 'stylesheetAssets', TRUE),
+                'javascriptAssets' => $this->getParameter($args, 'javascript', TRUE),
+                'stylesheetAssets' => $this->getParameter($args, 'stylesheet', TRUE),
                 'includeJquery' => $this->getParameter($args, 'includeJquery', FALSE),
                 'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', TRUE),
                 'includeJqueryEditable' => $this->getParameter($args, 'includeJqueryEditable', TRUE),
@@ -112,11 +112,11 @@ class DataTablesExtension extends AbstractExtension
      * @return DataTablesConfiguration
      */
     private function fetchDataTablesConfiguration($args) {
-        $dtId = $this->getRequiredParameter($args, 'dtId');
-        $confKey = 'twentysteps_auto_tables.config.'.$dtId;
-        Ensure::ensureTrue($this->container->hasParameter($confKey), 'Missing twentysteps_auto_tables table configuration with id [%s]', $dtId);
+        $tableId = $this->getRequiredParameter($args, 'tableId');
+        $confKey = 'twentysteps_auto_tables.config.'.$tableId;
+        Ensure::ensureTrue($this->container->hasParameter($confKey), 'Missing twentysteps_auto_tables table configuration with id [%s]', $tableId);
         $options = $this->container->getParameter($confKey);
-        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $dtId);
-        return new DataTablesConfiguration($dtId, $options);
+        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
+        return new DataTablesConfiguration($tableId, $options);
     }
 }

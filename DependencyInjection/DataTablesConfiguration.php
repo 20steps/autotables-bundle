@@ -35,10 +35,10 @@ class DataTablesConfiguration {
 
     public function __construct($id, $args) {
         $this->id = $id;
-        $this->serviceId = $this->getOption($args, 'serviceId');
-        $this->repositoryId = $this->getOption($args, 'repositoryId');
-        $this->transScope = $this->getOption($args, 'transScope', 'messages');
-        $this->dataTablesOptions = $this->getOption($args, 'dataTablesOptions', '{}');
+        $this->serviceId = $this->getOption($args, 'service_id');
+        $this->repositoryId = $this->getOption($args, 'repository_id');
+        $this->transScope = $this->getOption($args, 'trans_scope', 'messages');
+        $this->dataTablesOptions = $this->getOption($args, 'datatables_options', '{}');
     }
 
     /**

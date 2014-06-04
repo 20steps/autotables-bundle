@@ -19,7 +19,7 @@
                         "bSearchable": false,
                         "bSortable": false,
                         "mRender": function (foo, bar, dataSource) {
-                            return "<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?dtId={{ dtId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans({}, transScope) }}</a>";
+                            return "<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?tableId={{ tableId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans({}, transScope) }}</a>";
 
                         }
                     });
@@ -31,8 +31,8 @@
                 sUpdateURL: '{{ path(updateRoute) }}',
                 sDeleteURL: '{{ path(deleteRoute) }}',
                 sAddURL: '{{ path(addRoute) }}',
-                oDeleteParameters: {dtId: '{{ dtId }}'},
-                oUpdateParameters: {dtId: '{{ dtId }}', columnMeta: columnMeta}
+                oDeleteParameters: {tableId: '{{ tableId }}'},
+                oUpdateParameters: {tableId: '{{ tableId }}', columnMeta: columnMeta}
             };
             $('#myDtTable').dataTable(dtOpts).makeEditable(dteOpts);
         });
