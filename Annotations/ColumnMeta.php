@@ -28,22 +28,25 @@ use Doctrine\Common\Annotations\Annotation;
 final class ColumnMeta extends Annotation
 {
     /**
+     * Sets the type of the annotated column.
      * @var string
      */
     public $type;
 
     /**
+     * Sets the name of the annotated column, which may be translated later.
      * @var string
      */
     public $name;
 
     /**
+     * Selects the ordering of the column. Smaller values will come first.
      * @var int
      */
     public $order;
 
     /**
-     * Should the column be unmodifyable.
+     * Sets whether the column should be immutable.
      * @var boolean
      */
     public $readOnly;
