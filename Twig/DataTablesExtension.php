@@ -38,7 +38,7 @@ class DataTablesExtension extends AbstractExtension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('ts_dataTable_includes', array($this, 'renderIncludes'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ts_dataTable_assets', array($this, 'renderAssets'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('ts_dataTable', array($this, 'renderTable'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('ts_dataTable_js', array($this, 'renderTableJs'), array('is_safe' => array('html')))
         );
@@ -54,9 +54,10 @@ class DataTablesExtension extends AbstractExtension
             'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
             'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_data_tables_remove'),
             'dtId' => $config->getId(),
-            'transScope' => $config->getTransScope()
+            'transScope' => $config->getTransScope(),
+            'formAddNewRowTemplate' => $this->getParameter($args, 'formAddNewRowTemplate', 'twentystepsDataTablesBundle:DataTablesExtension:formAddNewRow.html.twig')
         );
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderTable.html.twig', $array);
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:dataTable.html.twig', $array);
     }
 
     /**
@@ -76,16 +77,18 @@ class DataTablesExtension extends AbstractExtension
             'dtId' => $config->getId(),
             'transScope' => $config->getTransScope()
         );
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderTableJs.html.twig', $array);
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:dataTableJs.html.twig', $array);
     }
 
     /**
      * Renders the needed JavaScript and stylesheet includes.
      */
-    public function renderIncludes($args)
+    public function renderAssets($args)
     {
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderIncludes.html.twig',
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:dataTableAssets.html.twig',
             array(
+                'javascriptAssets' => $this->getParameter($args, 'javascriptAssets', TRUE),
+                'stylesheetAssets' => $this->getParameter($args, 'stylesheetAssets', TRUE),
                 'includeJquery' => $this->getParameter($args, 'includeJquery', FALSE),
                 'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', TRUE),
                 'includeJqueryEditable' => $this->getParameter($args, 'includeJqueryEditable', TRUE),

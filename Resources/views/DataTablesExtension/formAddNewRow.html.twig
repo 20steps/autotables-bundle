@@ -1,0 +1,20 @@
+{% if entities %}
+
+    <form id="formAddNewRow" class="hide" action="#" title="{{ 'Add entry'|trans() }}">
+        <input type="hidden" name="dtId" value="{{ dtId }}"/>
+        <input type="hidden" name="id" id="id" rel="0" value="DATAROWID"/>
+        {% for column in entities|first.columns %}
+            <label for="{{ column.columnDescriptorId }}">{{ column.name|trans({}, transScope) }}</label>
+            <input type="text" name="{{ column.columnDescriptorId }}"
+                   id="{{ column.columnDescriptorId }}"
+                   class="required"
+                   rel="{{ loop.index }}"/>
+            <br/>
+        {% endfor %}
+        <span rel="{{ ((entities|first.columns)|length) + 1 }}" style="display:none"><a class="table-action-deletelink"
+                                                                                        href="#"></a></span>
+    </form>
+
+{% endif %}
+
+

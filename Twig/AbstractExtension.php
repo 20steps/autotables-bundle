@@ -59,7 +59,8 @@ abstract class AbstractExtension extends \Twig_Extension
      */
     protected function getParameter($args, $key, $defaultValue = NULL)
     {
-        return util::array_get($args[$key]) ?: $defaultValue;
+        $value = util::array_get($args[$key]);
+        return is_null($value) ? $defaultValue : $value;
     }
 
 } 

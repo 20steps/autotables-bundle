@@ -1,0 +1,29 @@
+{% if entities %}
+    <table id='myDtTable'>
+        <thead>
+        <tr>
+            <th>ID</th>
+            {% for column in entities|first.columns %}
+                <th>{{ column.name|trans({}, transScope) }}</th>
+            {% endfor %}
+            <th>{{ 'Edit'|trans({}, transScope) }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr id="{{ entity.id }}">
+                <td>{{ entity.id }}</td>
+                {% for column in entity.columns %}
+                    <td>{{ column.value }}</td>
+                {% endfor %}
+                <td></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button id="btnAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
+
+    {{ include(formAddNewRowTemplate) }}
+
+{% endif %}
