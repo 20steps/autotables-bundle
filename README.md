@@ -1,4 +1,4 @@
-# 20steps/datatables-bundle (twentystepsAutoTablesBundle)
+# 20steps/autotables-bundle (twentystepsAutoTablesBundle)
 
 ## About
 
@@ -21,12 +21,12 @@ The 20steps DataTables Bundle provides an easy way for displaying entities in Sy
 
 Require the bundle by adding the following entry to the respective section of your composer.json:
 ```
-"20steps/datatables-bundle": "dev-master"
+"20steps/autotables-bundle": "dev-master"
 ```
 
 Get the bundle via packagist from GitHub by calling:
 ```
-php composer.phar update 20steps/datatables-bundle
+php composer.phar update 20steps/autotables-bundle
 ```
 
 Register the bundle in your application by adding the following line to the registerBundles() method of your AppKernel.php:  
