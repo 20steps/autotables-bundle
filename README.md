@@ -40,6 +40,13 @@ assetic:
     bundles:        [ 'twentystepsDataTablesBundle' ]
 ```
 
+Add the bundle's routes to your routing.yml
+```
+twentysteps_data_tables:
+    resource: "@twentystepsDataTablesBundle/Resources/config/routing.yml"
+    prefix:   /
+```
+
 ## Usage
 
 * TBD Configure your tables in config.yml
