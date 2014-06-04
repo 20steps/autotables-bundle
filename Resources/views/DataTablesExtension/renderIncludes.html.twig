@@ -1,24 +1,11 @@
-{#
-{% javascripts %}
-{% if includeJquery %}
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.js'
-{% endif %}
-{% if includeJqueryUi %}
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery-ui.min.js'
-{% endif %}
-{% if includeJqueryEditable %}
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.jeditable.js'
-{% endif %}
-{% if includeJqueryDataTables %}
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.js'
-{% endif %}
-{% if includeJqueryValidate %}
-    '@twentystepsDataTablesBundle/Resources/public/js/jquery.validate.js'
-{% endif %}
-'@twentystepsDataTablesBundle/Resources/public/js/jquery.dataTables.editable.js' %}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
-#}
+{# TODO using the @twentystepsDataTablesBundle notation here will break the image link inside of the CSS!? #}
+{% stylesheets
+'bundles/twentystepsdatatables/css/jquery.dataTables.css'
+'bundles/twentystepsdatatables/css/jquery-ui.css'
+filter='cssrewrite' %}
+<link rel="stylesheet" href="{{ asset_url }}"/>
+{% endstylesheets %}
+
 
 
 {% block javascripts %}

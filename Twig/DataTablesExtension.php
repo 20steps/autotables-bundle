@@ -40,10 +40,9 @@ class DataTablesExtension extends AbstractExtension
         return array(
             // TODO switch to:
             // new \Twig_SimpleFunction('code', array($this, 'getCode'), array('is_safe' => array('html'))),
-            'ts_dt_jsIncludes' => new \Twig_Function_Method($this, 'renderJsIncludes', array('is_safe' => array('html'))),
-            'ts_dt_stylesheetIncludes' => new \Twig_Function_Method($this, 'renderStylesheetIncludes', array('is_safe' => array('html'))),
-            'ts_dt_render_table' => new \Twig_Function_Method($this, 'renderTable', array('is_safe' => array('html'))),
-            'ts_dt_render_table_js' => new \Twig_Function_Method($this, 'renderTableJs', array('is_safe' => array('html')))
+            'ts_dataTable_includes' => new \Twig_Function_Method($this, 'renderIncludes', array('is_safe' => array('html'))),
+            'ts_dataTable' => new \Twig_Function_Method($this, 'renderTable', array('is_safe' => array('html'))),
+            'ts_dataTable_js' => new \Twig_Function_Method($this, 'renderTableJs', array('is_safe' => array('html')))
         );
     }
 
@@ -83,11 +82,11 @@ class DataTablesExtension extends AbstractExtension
     }
 
     /**
-     * Renders the needed includes for the JavaScript files.
+     * Renders the needed JavaScript and stylesheet includes.
      */
-    public function renderJsIncludes($args)
+    public function renderIncludes($args)
     {
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderJsIncludes.html.twig',
+        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderIncludes.html.twig',
             array(
                 'includeJquery' => $this->getParameter($args, 'includeJquery', FALSE),
                 'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', TRUE),
@@ -95,16 +94,6 @@ class DataTablesExtension extends AbstractExtension
                 'includeJqueryDataTables' => $this->getParameter($args, 'includeJqueryDataTables', TRUE),
                 'includeJqueryValidate' => $this->getParameter($args, 'includeJqueryValidate', TRUE)
             )
-        );
-    }
-
-    /**
-     * Renders the needed includes for the stylesheet files.
-     */
-    public function renderStylesheetIncludes()
-    {
-        return $this->render('twentystepsDataTablesBundle:DataTablesExtension:renderStylesheetIncludes.html.twig',
-            array()
         );
     }
 
