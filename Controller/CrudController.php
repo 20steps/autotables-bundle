@@ -68,7 +68,19 @@ class CrudController extends Controller
 
         $this->get('logger')->info(sprintf('Added new entity of type [%s] with id [%s]', $dtId, $id));
 
-        return new Response($id);
+        $entityDesc = $entityInspector->parseEntity($entity);
+        $this->get('logger')->info(sprintf('Entity desc: [%s]', print_r($entityDesc, TRUE)));
+
+        $columns = array();
+        $columns[] = $entityDesc->getId();
+        foreach ($entityDesc->getColumns() as $column) {
+            $columns[] = $column->getValue();
+        }
+
+        $response = new Response(json_encode($columns));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+        //return new Response($id);
     }
 
     public function removeAction(Request $request)

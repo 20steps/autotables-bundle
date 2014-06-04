@@ -49,29 +49,37 @@ class EntityInspectionService
     }
 
     /**
-     * Inspects the given entities and returns a list of Column descriptions for each of them.
+     * Inspects the given entities and returns a list of Entity objects for each of them.
      */
     public function parseEntities($entities)
     {
         $entityList = array();
         foreach ($entities as $entity) {
-            $reflClass = new \ReflectionClass($entity);
-            $entityDescriptor = util::array_get($this->entityDescriptorMap[$reflClass->getName()]);
-            if (!$entityDescriptor) {
-                $entityDescriptor = $this->initDescriptors($reflClass, $entity);
-            }
-            $columns = array();
-            foreach ($entityDescriptor->getColumnDescriptors() as $columnDescriptor) {
-                /* @var $columnDescriptor AbstractColumnDescriptor */
-                $columns[] = new Column($columnDescriptor, $columnDescriptor->getValue($entity));
-            }
-            usort($columns, function (Column $a, Column $b) {
-                return $a->getOrder() - $b->getOrder();
-            });
-            $entityList[] = new Entity($entityDescriptor->fetchId($entity), $entityDescriptor, $columns);
-
+            $entityList[] = $this->parseEntity($entity);
         }
         return $entityList;
+    }
+
+    /**
+     * Inspects the given entity and returns an Entity object for it.
+     * @return Entity
+     */
+    public function parseEntity($entity)
+    {
+        $reflClass = new \ReflectionClass($entity);
+        $entityDescriptor = util::array_get($this->entityDescriptorMap[$reflClass->getName()]);
+        if (!$entityDescriptor) {
+            $entityDescriptor = $this->initDescriptors($reflClass, $entity);
+        }
+        $columns = array();
+        foreach ($entityDescriptor->getColumnDescriptors() as $columnDescriptor) {
+            /* @var $columnDescriptor AbstractColumnDescriptor */
+            $columns[] = new Column($columnDescriptor, $columnDescriptor->getValue($entity));
+        }
+        usort($columns, function (Column $a, Column $b) {
+            return $a->getOrder() - $b->getOrder();
+        });
+        return new Entity($entityDescriptor->fetchId($entity), $entityDescriptor, $columns);
     }
 
     /**

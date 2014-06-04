@@ -65,8 +65,6 @@ returns true if plugin should continue with sending AJAX request, false will abo
 * @cancelButtonText                 String      Optional text for a jquery.editable "cancel" button
 */
 
-var myConsole = console;
-
 (function ($) {
 
     $.fn.makeEditable = function (options) {
@@ -262,8 +260,6 @@ var myConsole = console;
                     var sColumnName = oTable.fnSettings().aoColumns[columnId].sName;
                     if (sColumnName == null || sColumnName == "")
                         sColumnName = oTable.fnSettings().aoColumns[columnId].sTitle;
-                    console.log('determined column name: ' + sColumnName + ' orig: ' + oTable.fnSettings().aoColumns[columnId].sName + ' columnId: ' + columnId);
-                    console.log(oTable.fnSettings());
 
                     var updateData = null;
                     if (properties.aoColumns == null || properties.aoColumns[columnId] == null) {
@@ -409,15 +405,12 @@ var myConsole = console;
             ///</summary>
             ///<param name="event">Event that caused the action</param>
 
-            myConsole.log('fnOnRowAdding');
-
             if (properties.fnOnAdding()) {
                 if (oAddNewRowForm.valid()) {
                     iDisplayStart = fnGetDisplayStart();
                     properties.fnStartProcessingMode();
 
                     if (properties.bUseFormsPlugin) {
-                        console.log('ADD ROW 1');
                         //Still in beta(development)
                         $(oAddNewRowForm).ajaxSubmit({
                             dataType: 'xml',
@@ -440,13 +433,11 @@ var myConsole = console;
                         );
 
                     } else {
-                        myConsole.log('ADD ROW 2');
                         var params = oAddNewRowForm.serialize();
-
                         $.ajax({ 'url': properties.sAddURL,
                             'data': params,
                             'type': properties.sAddHttpMethod,
-                            'dataType': properties.sAddDataType,
+                            'dataType': 'json',
                             success: fnOnRowAdded,
                             error: function (response) {
                                 properties.fnEndProcessingMode();
@@ -472,9 +463,15 @@ var myConsole = console;
         function fnOnRowAdded(data) {
             ///<summary>
             ///Function that is called when a new row is added, and Ajax response is returned from server
-            /// This function takes data from the add form and adds them into the table.
+            /// The data is an array of the column values. The first column is the id.
             ///</summary>
-            ///<param name="data" type="int">Id of the new row that is returned from the server</param>
+            ///<param name="data" type="int">Column values of the new row that is returned from the server</param>
+
+            // transform into an object
+            var values = {}
+            for (var i = 0; i < data.length; i++) {
+                values[i] = data[i];
+            }
 
             properties.fnEndProcessingMode();
 
@@ -482,14 +479,12 @@ var myConsole = console;
 
                 var oSettings = oTable.fnSettings();
                 if (!oSettings.oFeatures.bServerSide) {
-                    jQuery.data(oAddNewRowForm, 'DT_RowId', data);
-                    var values = fnTakeRowDataFromFormElements(oAddNewRowForm);
+                    //jQuery.data(oAddNewRowForm, 'DT_RowId', data);
+                    //var values = fnTakeRowDataFromFormElements(oAddNewRowForm);
                    
 
                     var rtn;
                     //Add values from the form into the table
-                    myConsole.info('about to add values');
-                    myConsole.info(values);
                     if (oSettings.aoColumns != null && isNaN(parseInt(oSettings.aoColumns[0].mDataProp))) {
                         //rtn = oTable.fnAddData(rowData);
                         rtn = oTable.fnAddData(values);
@@ -500,7 +495,7 @@ var myConsole = console;
 
                     var oTRAdded = oTable.fnGetNodes(rtn);
                     //add id returned by server page as an TR id attribute
-                    properties.fnSetRowID($(oTRAdded), data, true);
+                    properties.fnSetRowID($(oTRAdded), data[0], true);
                     //Apply editable plugin on the cells of the table
                     fnApplyEditable(oTRAdded);
 
@@ -898,8 +893,6 @@ var myConsole = console;
                     //Deprecated
                     sCellValue = sCellValue.replace("DATAROWID", iDT_RowId);
                     sCellValue = sCellValue.replace(properties.sIDToken, iDT_RowId);
-                    myConsole.info('found column value: ' + sCellValue);
-                    myConsole.info('column is: ' + oSettings.aoColumns[rel].mDataProp);
                     if (oSettings.aoColumns != null
                                 && oSettings.aoColumns[rel] != null
                                 && isNaN(parseInt(oSettings.aoColumns[0].mDataProp))) {
@@ -913,7 +906,6 @@ var myConsole = console;
             });
 
             if (oSettings.aoColumns != null && isNaN(parseInt(oSettings.aoColumns[0].mDataProp))) {
-                myConsole.info('return rowData');
                 return rowData;
             }
             else {
@@ -930,8 +922,6 @@ var myConsole = console;
 
             ///<summary>Updates table row using  form fields</summary>
             ///<param name="nActionForm" type="DOM">Form used to enter data</param>
-
-            console.log('fnSendFormUpdateRequest');
 
             var jActionForm = $(nActionForm);
             var sAction = jActionForm.attr("id");
@@ -1008,7 +998,6 @@ var myConsole = console;
                     sCellValue = values[rel];
                 }
                 if (sCellValue != undefined) {
-                    console.log('updated to ' + sCellValue);
                     oTable.fnUpdate(sCellValue, iRowID, rel);
                 }
             }
