@@ -12,9 +12,9 @@
         <tbody>
         {% for entity in entities %}
             <tr id="{{ entity.id }}">
-                <td>{{ entity.id }}</td>
+                <td class="read_only">{{ entity.id }}</td>
                 {% for column in entity.columns %}
-                    <td>{{ column.value }}</td>
+                    <td class="{{ column.readOnly ? 'read_only' : '' }}">{{ column.value }}</td>
                 {% endfor %}
                 <td></td>
             </tr>

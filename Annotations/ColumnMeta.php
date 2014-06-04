@@ -48,6 +48,11 @@ final class ColumnMeta extends Annotation
      */
     public $property;
 
+    /**
+     * Should the column be unmodifyable.
+     * @var boolean
+     */
+    public $readOnly;
 
     /**
      * @return string
@@ -79,5 +84,13 @@ final class ColumnMeta extends Annotation
     public function getProperty()
     {
         return $this->property;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isReadOnly()
+    {
+        return $this->readOnly;
     }
 }

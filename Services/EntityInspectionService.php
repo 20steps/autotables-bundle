@@ -139,6 +139,7 @@ class EntityInspectionService
             $type = null;
             $order = 0;
             $ignore = false;
+            $readOnly = false;
             foreach ($this->reader->getPropertyAnnotations($property) as $annot) {
                 if (($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnMeta) ||
                     ($annot instanceof \Doctrine\ORM\Mapping\Column and !$name)
@@ -146,7 +147,8 @@ class EntityInspectionService
                     $name = $annot->name ? : $property->getName();
                     $type = $annot->type ? : $type;
                     if ($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnMeta) {
-                        $order = $annot->order ? : 0;
+                        $order = $annot->getOrder();
+                        $readOnly = $annot->isReadOnly();
                     }
                 }
                 if ($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnIgnore) {
@@ -155,7 +157,7 @@ class EntityInspectionService
                 }
             }
             if (!$ignore && $name && $type) {
-                $columnDescriptor = new PropertyColumnDescriptor('p' . $property->getName(), $name, $type, $order, $property);
+                $columnDescriptor = new PropertyColumnDescriptor('p' . $property->getName(), $name, $type, $order, $readOnly, $property);
                 $this->columnDescriptorMap[$columnDescriptor->getId()] = $columnDescriptor;
                 $columnDescriptors[] = $columnDescriptor;
             }
@@ -169,6 +171,7 @@ class EntityInspectionService
             $type = null;
             $order = 0;
             $ignore = false;
+            $readOnly = false;
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
                 if ($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnMeta) {
                     Ensure::ensureTrue(count($method->getParameters()) == 0, 'Failed to use [%s] as getter method, only parameterless methods supported for @ColumnMeta', $method->getName());
@@ -176,6 +179,7 @@ class EntityInspectionService
                     $name = $annot->getName() ? : $method->getName();
                     $type = $annot->getType() ? : $type;
                     $order = $annot->getOrder() ? : 0;
+                    $readOnly = $annot->isReadOnly();
                 }
                 if ($annot instanceof \twentysteps\Bundle\DataTablesBundle\Annotations\ColumnIgnore) {
                     $ignore = true;
@@ -187,7 +191,7 @@ class EntityInspectionService
                 if ($setterMethod) {
                     Ensure::ensureEquals(1, count($setterMethod->getParameters()), 'setter method [%s] needs to have exactly one parameter', $setterMethod->getName());
                 }
-                $columnDescriptor = new MethodColumnDescriptor('m' . $method->getName(), $name, $type, $order, $method, $setterMethod);
+                $columnDescriptor = new MethodColumnDescriptor('m' . $method->getName(), $name, $type, $order, $readOnly, $method, $setterMethod);
                 $this->columnDescriptorMap[$columnDescriptor->getId()] = $columnDescriptor;
                 $columnDescriptors[] = $columnDescriptor;
             }

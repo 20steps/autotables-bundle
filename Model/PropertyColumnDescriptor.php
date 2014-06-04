@@ -33,9 +33,9 @@ class PropertyColumnDescriptor extends AbstractColumnDescriptor
      */
     private $order;
 
-    public function __construct($columnId, $name, $type, $order, \ReflectionProperty $property)
+    public function __construct($columnId, $name, $type, $order, $readOnly, \ReflectionProperty $property)
     {
-        parent::__construct($columnId, $name, $type, $order);
+        parent::__construct($columnId, $name, $type, $order, $readOnly);
         $this->property = $property;
         $this->property->setAccessible(TRUE);
     }

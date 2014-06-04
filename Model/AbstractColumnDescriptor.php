@@ -43,12 +43,18 @@ abstract class AbstractColumnDescriptor
      */
     private $order;
 
-    protected function __construct($id, $name, $type, $order)
+    /**
+     * @var boolean
+     */
+    private $readOnly;
+
+    protected function __construct($id, $name, $type, $order, $readOnly)
     {
         $this->id = $id;
         $this->name = $name;
         $this->type = $type;
         $this->order = $order;
+        $this->readOnly = $readOnly;
     }
 
     /**
@@ -81,6 +87,14 @@ abstract class AbstractColumnDescriptor
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isReadOnly()
+    {
+        return $this->readOnly;
     }
 
     public abstract function getValue($entity);

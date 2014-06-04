@@ -25,7 +25,6 @@ namespace twentysteps\Bundle\DataTablesBundle\Model;
  */
 class Column
 {
-
     /**
      * @var AbstractColumnDescriptor
      */
@@ -79,5 +78,9 @@ class Column
     public function getEntityClassName()
     {
         return $this->columnDescriptor->getEntityClassName();
+    }
+
+    public function isReadOnly() {
+        return $this->columnDescriptor->isReadOnly();
     }
 }
