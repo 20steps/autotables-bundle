@@ -2,7 +2,7 @@
 
 ## About
 
-The 20steps DataTables Bundle provides an easy way for displaying entities in Symfony2 applications in auto-generated and editable tables. The tables are rendered by [DataTables](https://datatables.net/) and are made editable with a patched version of [jquery.datatables.editable](https://code.google.com/p/jquery-datatables-editable/).
+The 20steps AutoTables Bundle provides an easy way for displaying entities in Symfony2 applications in auto-generated and editable tables. The tables are rendered by [DataTables](https://datatables.net/) and are made editable with a patched version of [jquery.datatables.editable](https://code.google.com/p/jquery-datatables-editable/).
 
 ## Features
 
@@ -104,26 +104,15 @@ twentysteps_auto_tables:
     -
       id: "products"
       repository_id: 'AcmeStoreBundle:Product'
-      trans_scope: 'dataTables'
+      trans_scope: 'autoTables'
       datatables_options: >
         {
           "oLanguage": {
-            "sLengthMenu": "_MENU_ Einträge pro Seite",
-            "sSearch": "Suchen",
-            "oPaginate": {
-              "sPrevious": "Zurück",
-              "sNext": "Vor"
-            },
-            "sInfo": "Zeige Einträge _START_ bis _END_ von insgesamt _TOTAL_ Einträgen",
-            "oColVis": {
-              "buttonText": "Spalten ein-/ausblenden"
-            },
+            "sLengthMenu": "_MENU_ entries per page",
+            "sSearch": "Search",
             "oTableTools": {
-                "sSwfPath": "/bundles/twentystepspagespages/swf/copy_csv_xls_pdf.swf",
                 "aButtons": [
-                  {"sExtends": "copy", "sButtonText": "Kopieren"},
-                  {"sExtends": "collection", "sButtonText": "Exportieren <span class='caret' />"},
-                  {"aButtons": ["csv", "xls", "pdf"], "sExtends": "print", "sButtonText": "Drucken"}
+                  {"sExtends": "copy", "sButtonText": "Copy"},
                 ]
             }
           }
@@ -149,7 +138,7 @@ is ignored by the bundle.
 Now your view has to be modified to render the table for your entities. We are assuming here that you are using
 Twig templates.
 
-The needed assets of the bundle are included with the Twig function *ts_dataTable_assets*. This will
+The needed assets of the bundle are included with the Twig function *ts_autoTable_assets*. This will
 include the needed stylesheet and javascript files. If you want to exclude all javascript files you
 can use the option ```{'javascript': false}``` the same applies to the stylesheets: ```{'stylesheet': false}```. By using
 this you can call the function twice, once for the javascript includes and once for the stylesheet includes.
@@ -157,14 +146,14 @@ this you can call the function twice, once for the javascript includes and once 
 By default all needed javascript libraries are loaded excepting the jquery library. This behaviour can be configured by the
 following options: *includeJquery, includeJqueryUi, includeJqueryEditable, includeJqueryDataTables* and *includeJqueryValidate*
 
-Now it's time to render the JavaScript code for your entity's table. This is done by the Twig function *ts_dataTable_js*.
+Now it's time to render the JavaScript code for your entity's table. This is done by the Twig function *ts_autoTable_js*.
 The call has to include the list of entities to be rendered in the option *entities* and the id of the table configuration
 given by the option *tableId*. The [DataTables](https://datatables.net/) configuration may be extended here with the option *dtOptions*.
 
 Furthermore the *transScope* may be overwritten here and the routes for the CRUD controller actions with the options
 *updateRoute, deleteRoute* and *addRoute*.
 
-Finally the HTML for the table has to be rendered with the Twig function *ts_dataTable*. Here the options
+Finally the HTML for the table has to be rendered with the Twig function *ts_autoTable*. Here the options
 *entities* and *tableId* are needed again.
 
 In the following example you can see how to build a view displaying the entity *products*:
@@ -175,7 +164,7 @@ In the following example you can see how to build a view displaying the entity *
 {% block head %}
     <link rel="icon" sizes="16x16" href="{{ asset('favicon.ico') }}"/>
     <link rel="stylesheet" href="{{ asset('bundles/acmedemo/css/demo.css') }}"/>
-    {{ ts_dataTable_assets({'includeJquery': TRUE}) }}
+    {{ ts_autoTable_assets({'includeJquery': TRUE}) }}
 {% endblock %}
 
 {% block title 'Product list' %}
@@ -184,9 +173,9 @@ In the following example you can see how to build a view displaying the entity *
     <div class="block">
         List of products
 
-        {{ ts_dataTable({'entities': products, 'tableId': 'products' }) }}
+        {{ ts_autoTable({'entities': products, 'tableId': 'products' }) }}
 
-        {{ ts_dataTable_js({
+        {{ ts_autoTable_js({
             'entities': products, 'tableId': 'products',
             'dtOptions': {
                 'oLanguage': {

@@ -24,7 +24,7 @@ use twentysteps\Bundle\AutoTablesBundle\Services\EntityInspectionService;
 use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use utilphp\util;
 
-class DataTablesExtension extends AbstractExtension
+class AutoTablesExtension extends AbstractExtension
 {
     private $entityInspectionService;
     private $container;
@@ -38,9 +38,9 @@ class DataTablesExtension extends AbstractExtension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('ts_dataTable_assets', array($this, 'renderAssets'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ts_dataTable', array($this, 'renderTable'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ts_dataTable_js', array($this, 'renderTableJs'), array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('ts_autoTable_assets', array($this, 'renderAssets'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ts_autoTable', array($this, 'renderTable'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ts_autoTable_js', array($this, 'renderTableJs'), array('is_safe' => array('html')))
         );
     }
 
@@ -55,9 +55,9 @@ class DataTablesExtension extends AbstractExtension
             'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
             'tableId' => $config->getId(),
             'transScope' => $config->getTransScope(),
-            'formAddNewRowTemplate' => $this->getParameter($args, 'formAddNewRowTemplate', 'twentystepsAutoTablesBundle:DataTablesExtension:formAddNewRow.html.twig')
+            'formAddNewRowTemplate' => $this->getParameter($args, 'formAddNewRowTemplate', 'twentystepsAutoTablesBundle:AutoTablesExtension:formAddNewRow.html.twig')
         );
-        return $this->render('twentystepsAutoTablesBundle:DataTablesExtension:dataTable.html.twig', $array);
+        return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTable.html.twig', $array);
     }
 
     /**
@@ -77,7 +77,7 @@ class DataTablesExtension extends AbstractExtension
             'tableId' => $config->getId(),
             'transScope' => $config->getTransScope()
         );
-        return $this->render('twentystepsAutoTablesBundle:DataTablesExtension:dataTableJs.html.twig', $array);
+        return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableJs.html.twig', $array);
     }
 
     /**
@@ -85,7 +85,7 @@ class DataTablesExtension extends AbstractExtension
      */
     public function renderAssets($args = array())
     {
-        return $this->render('twentystepsAutoTablesBundle:DataTablesExtension:dataTableAssets.html.twig',
+        return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableAssets.html.twig',
             array(
                 'javascriptAssets' => $this->getParameter($args, 'javascript', TRUE),
                 'stylesheetAssets' => $this->getParameter($args, 'stylesheet', TRUE),
