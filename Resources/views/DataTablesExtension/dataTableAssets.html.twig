@@ -1,7 +1,7 @@
 {% if stylesheetAssets %}
     {% stylesheets
-    'bundles/twentystepsdatatables/css/jquery.dataTables.css'
-    'bundles/twentystepsdatatables/css/jquery-ui.css'
+    'bundles/twentystepsautotables/css/jquery.dataTables.css'
+    'bundles/twentystepsautotables/css/jquery-ui.css'
     filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
@@ -10,20 +10,20 @@
 {% if javascriptAssets %}
     {% block javascripts %}
         {% if includeJquery %}
-            <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.js') }}"></script>
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.js') }}"></script>
         {% endif %}
         {% if includeJqueryUi %}
-            <script src="{{ asset('bundles/twentystepsdatatables/js/jquery-ui.min.js') }}"></script>
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery-ui.min.js') }}"></script>
         {% endif %}
         {% if includeJqueryEditable %}
-            <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.jeditable.js') }}"></script>
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.jeditable.js') }}"></script>
         {% endif %}
         {% if includeJqueryDataTables %}
-            <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.dataTables.js') }}"></script>
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.dataTables.js') }}"></script>
         {% endif %}
         {% if includeJqueryValidate %}
-            <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.validate.js') }}"></script>
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.validate.js') }}"></script>
         {% endif %}
-        <script src="{{ asset('bundles/twentystepsdatatables/js/jquery.dataTables.editable.js') }}"></script>
+        <script src="{{ asset('bundles/twentystepsautotables/js/jquery.dataTables.editable.js') }}"></script>
     {% endblock %}
 {% endif %}
