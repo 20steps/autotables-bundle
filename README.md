@@ -49,7 +49,7 @@ Add the bundle's routes to your routing.yml
 ```
 twentysteps_auto_tables:
     resource: "@twentystepsAutoTablesBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /autoTables
 ```
 
 ## Usage
@@ -119,7 +119,7 @@ twentysteps_auto_tables:
         }
 ```
 
-### Annotation of the entities
+### Annotation of entities
 
 The information needed to render any column into a table is taken from annotations found in the entity.
 The bundle searches for Doctrine annotations like *@Doctrine\ORM\Mapping\Column* and *@Doctrine\ORM\Mapping\Id*.
@@ -132,6 +132,65 @@ a setter of the same name has to be created (getFoo/setFoo). It's even possible 
 If you want to prevent that a Doctrine property is displayed in the table of the entity you can annotate the property
 with the annotation  *twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnIgnore*. In this case the property
 is ignored by the bundle.
+
+The following code block shows a complete example of a properly annotated entity for AutoTablesBundle:
+
+```
+<?php
+
+namespace Acme\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use twentysteps\Bundle\AutoTablesBundle\Annotations as ATB;
+
+/**
+ * Product
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="Acme\StoreBundle\Entity\ProductRepository")
+ */
+class Product
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ATB\ColumnIgnore
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @ATB\ColumnIgnore
+     */
+    protected $name;
+
+    /**
+     * @ORM\Column(type="decimal", scale=2)
+     * @ATB\ColumnMeta(name="col_prize", order = 2, readOnly = true)
+     */
+    protected $price;
+
+    /**
+     * @ORM\Column(type="text")
+     * @ATB\ColumnMeta(name="col_description", order = 3)
+     */
+    protected $description;
+
+    /**
+     * @ATB\ColumnMeta(name="col_name", type="string", order=1)
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return '#' . $this->name . '#';
+    }
+
+    public function setDisplayName($name)
+    {
+        $this->name = trim($name, '#');
+    }
+```
 
 ### View integration
 
