@@ -198,9 +198,10 @@ Now your view has to be modified to render the table for your entities. We are a
 Twig templates.
 
 The needed assets of the bundle are included with the Twig function *ts_autoTable_assets*. This will
-include the needed stylesheet and javascript files. If you want to exclude all javascript files you
-can use the option ```{'javascript': false}``` the same applies to the stylesheets: ```{'stylesheet': false}```. By using
-this you can call the function twice, once for the javascript includes and once for the stylesheet includes.
+include both the needed stylesheet and javascript files. Some people prefer to include the stylesheets in the head of the HTML
+document and the javascript files just before the end of the body block. In this case you may use the *ts_autoTable_assets* function
+two times. The first time you would exclude the javascript files by using the option ```{'javascript': false}```. The
+second time you would exclude the stylesheet files by using the option ```{'stylesheet': false}```.
 
 By default all needed javascript libraries are loaded excepting the jquery library. This behaviour can be configured by the
 following options: *includeJquery, includeJqueryUi, includeJqueryEditable, includeJqueryDataTables* and *includeJqueryValidate*
