@@ -200,6 +200,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
             ///</summary>
             ///<param name="aoNodes" type="Array[TR]">Aray of table rows &lt;TR&gt; that should be initialized with editable plugin</param>
 
+            console.log('fnApplyEditable');
             if (properties.bDisableEditing)
                 return;
             var oDefaultEditableSettings = {
@@ -373,10 +374,14 @@ returns true if plugin should continue with sending AJAX request, false will abo
                             continue;
                         }
                         //Get all cells in the iDTEindex column (nth child is 1-indexed array)
-                        cells = $("td:nth-child(" + (iDTEindex + 1) + ")", aoNodes);
+                        cells = $("td:nth-child(" + (iDTEindex) + ")", aoNodes);
 
                         var oColumnSettings = oDefaultEditableSettings;
                         oColumnSettings = $.extend({}, oDefaultEditableSettings, properties.oEditableSettings, properties.aoColumns[iDTEindex]);
+                        //console.log('column settings for index ' + iDTEindex + ": ");
+                        //console.log(properties.aoColumns[iDTEindex]);
+                        //console.log(properties.aoColumns);
+                        //console.log(oColumnSettings);
                         iDTEindex++;
                         var sUpdateURL = properties.sUpdateURL;
                         try {
@@ -387,6 +392,8 @@ returns true if plugin should continue with sending AJAX request, false will abo
                         //cells.editable(sUpdateURL, oColumnSettings);
                         cells.each(function () {
                             if (!$(this).hasClass(properties.sReadOnlyCellClass)) {
+                                //console.log('call editable with id: ' + $(this).attr('id'));
+                                //console.log(oColumnSettings);
                                 $(this).editable(sUpdateURL, oColumnSettings);
                             }
                         });
@@ -1393,18 +1400,9 @@ returns true if plugin should continue with sending AJAX request, false will abo
                         oActionForm.dialog('option', 'buttons', aActionFormButtons);
                         }
                         */
-
-
-
                     }
-
-
-
-
                 } // end for (var i = 0; i < properties.aoTableActions.length; i++)
             } //end if (properties.aoTableActions != null)
-
-
         });
     };
 })(jQuery);

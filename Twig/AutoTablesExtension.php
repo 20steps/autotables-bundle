@@ -54,8 +54,7 @@ class AutoTablesExtension extends AbstractExtension
             'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
             'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
             'tableId' => $config->getId(),
-            'transScope' => $config->getTransScope(),
-            'formAddNewRowTemplate' => $this->getParameter($args, 'formAddNewRowTemplate', 'twentystepsAutoTablesBundle:AutoTablesExtension:formAddNewRow.html.twig')
+            'transScope' => $config->getTransScope()
         );
         return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTable.html.twig', $array);
     }

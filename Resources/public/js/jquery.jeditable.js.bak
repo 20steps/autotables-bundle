@@ -1,7 +1,7 @@
 /*
  * Jeditable - jQuery in place edit plugin
  *
- * Copyright (c) 2006-2013 Mika Tuupola, Dylan Verheul
+ * Copyright (c) 2006-2009 Mika Tuupola, Dylan Verheul
  *
  * Licensed under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
@@ -15,7 +15,7 @@
  */
 
 /**
-  * Version 1.7.3
+  * Version 1.7.1
   *
   * ** means there is basic unit tests for this parameter. 
   *
@@ -78,7 +78,9 @@
         }
         
         var settings = $.extend({}, $.fn.editable.defaults, {target:target}, options);
-        
+
+        console.log('type is: ' + settings.type);
+
         /* setup some functions */
         var plugin   = $.editable.types[settings.type].plugin || function() { };
         var submit   = $.editable.types[settings.type].submit || function() { };
@@ -95,8 +97,12 @@
         var onsubmit = settings.onsubmit || function() { };
         var onreset  = settings.onreset  || function() { };
         var onerror  = settings.onerror  || reset;
-          
-        /* Show tooltip. */
+
+        //console.dir($.editable.types[settings.type]);
+        //console.dir($.editable.types[settings.type].element);
+       // console.dir(element);
+
+        /* show tooltip */
         if (settings.tooltip) {
             $(this).attr('title', settings.tooltip);
         }
@@ -106,51 +112,52 @@
         
         return this.each(function() {
                         
-            /* Save this to self because this changes when scope changes. */
+            /* save this to self because this changes when scope changes */
             var self = this;  
                    
-            /* Inlined block elements lose their width and height after first edit. */
-            /* Save them for later use as workaround. */
+            /* inlined block elements lose their width and height after first edit */
+            /* save them for later use as workaround */
             var savedwidth  = $(self).width();
             var savedheight = $(self).height();
-
-            /* Save so it can be later used by $.editable('destroy') */
+            
+            /* save so it can be later used by $.editable('destroy') */
             $(this).data('event.editable', settings.event);
             
-            /* If element is empty add something clickable (if requested) */
+            /* if element is empty add something clickable (if requested) */
             if (!$.trim($(this).html())) {
                 $(this).html(settings.placeholder);
             }
-            
+
             $(this).bind(settings.event, function(e) {
                 
-                /* Abort if element is disabled. */
+                /* abort if disabled for this element */
                 if (true === $(this).data('disabled.editable')) {
                     return;
                 }
                 
-                /* Prevent throwing an exeption if edit field is clicked again. */
+                /* prevent throwing an exeption if edit field is clicked again */
                 if (self.editing) {
                     return;
                 }
                 
-                /* Abort if onedit hook returns false. */
+                /* abort if onedit hook returns false */
                 if (false === onedit.apply(this, [settings, self])) {
                    return;
                 }
                 
-                /* Prevent default action and bubbling. */
+                /* prevent default action and bubbling */
                 e.preventDefault();
                 e.stopPropagation();
                 
-                /* Remove tooltip. */
+                /* remove tooltip */
                 if (settings.tooltip) {
                     $(self).removeAttr('title');
                 }
                 
-                /* Figure out how wide and tall we are, saved width and height. */
-                /* Workaround for http://dev.jquery.com/ticket/2190 */
+                /* figure out how wide and tall we are, saved width and height */
+                /* are workaround for http://dev.jquery.com/ticket/2190 */
                 if (0 == $(self).width()) {
+                    //$(self).css('visibility', 'hidden');
                     settings.width  = savedwidth;
                     settings.height = savedheight;
                 } else {
@@ -163,10 +170,11 @@
                             settings.autoheight ? $(self).height() : settings.height;
                     }
                 }
+                //$(this).css('visibility', '');
                 
-                /* Remove placeholder text, replace is here because of IE. */
-                if ($(this).html().toLowerCase().replace(/(;|"|\/)/g, '') == 
-                    settings.placeholder.toLowerCase().replace(/(;|"|\/)/g, '')) {
+                /* remove placeholder text, replace is here because of IE */
+                if ($(this).html().toLowerCase().replace(/(;|")/g, '') == 
+                    settings.placeholder.toLowerCase().replace(/(;|")/g, '')) {
                         $(this).html('');
                 }
                                 
@@ -174,10 +182,10 @@
                 self.revert     = $(self).html();
                 $(self).html('');
 
-                /* Create the form object. */
+                /* create the form object */
                 var form = $('<form />');
                 
-                /* Apply css or style or both. */
+                /* apply css or style or both */
                 if (settings.cssclass) {
                     if ('inherit' == settings.cssclass) {
                         form.attr('class', $(self).attr('class'));
@@ -189,17 +197,19 @@
                 if (settings.style) {
                     if ('inherit' == settings.style) {
                         form.attr('style', $(self).attr('style'));
-                        /* IE needs the second line or display wont be inherited. */
+                        /* IE needs the second line or display wont be inherited */
                         form.css('display', $(self).css('display'));                
                     } else {
                         form.attr('style', settings.style);
                     }
                 }
 
-                /* Add main input element to form and store it in input. */
-                var input = element.apply(form, [settings, self]);
+                /* add main input element to form and store it in input */
+                console.log('here is the element');
 
-                /* Set input content via POST, GET, given data or existing value. */
+                console.log("setting are");
+                var input = element.apply(form, [settings, self]);
+                /* set input content via POST, GET, given data or existing value */
                 var input_content;
                 
                 if (settings.loadurl) {
@@ -238,19 +248,19 @@
 
                 input.attr('name', settings.name);
         
-                /* Add buttons to the form. */
+                /* add buttons to the form */
                 buttons.apply(form, [settings, self]);
          
-                /* Add created form to self. */
+                /* add created form to self */
                 $(self).append(form);
          
-                /* Attach 3rd party plugin if requested. */
+                /* attach 3rd party plugin if requested */
                 plugin.apply(form, [settings, self]);
 
-                /* Focus to first visible form element. */
+                /* focus to first visible form element */
                 $(':input:visible:enabled:first', form).focus();
 
-                /* Highlight input contents when requested. */
+                /* highlight input contents when requested */
                 if (settings.select) {
                     input.select();
                 }
@@ -259,23 +269,24 @@
                 input.keydown(function(e) {
                     if (e.keyCode == 27) {
                         e.preventDefault();
+                        //self.reset();
                         reset.apply(form, [settings, self]);
                     }
                 });
 
-                /* Discard, submit or nothing with changes when clicking outside. */
-                /* Do nothing is usable when navigating with tab. */
+                /* discard, submit or nothing with changes when clicking outside */
+                /* do nothing is usable when navigating with tab */
                 var t;
                 if ('cancel' == settings.onblur) {
                     input.blur(function(e) {
-                        /* Prevent canceling if submit was clicked. */
+                        /* prevent canceling if submit was clicked */
                         t = setTimeout(function() {
                             reset.apply(form, [settings, self]);
                         }, 500);
                     });
                 } else if ('submit' == settings.onblur) {
                     input.blur(function(e) {
-                        /* Prevent double submit if submit was clicked. */
+                        /* prevent double submit if submit was clicked */
                         t = setTimeout(function() {
                             form.submit();
                         }, 200);
@@ -296,17 +307,17 @@
                         clearTimeout(t);
                     }
 
-                    /* Do no submit. */
+                    /* do no submit */
                     e.preventDefault(); 
             
-                    /* Call before submit hook. */
-                    /* If it returns false abort submitting. */                    
+                    /* call before submit hook. */
+                    /* if it returns false abort submitting */                    
                     if (false !== onsubmit.apply(form, [settings, self])) { 
-                        /* Custom inputs call before submit hook. */
-                        /* If it returns false abort submitting. */
+                        /* custom inputs call before submit hook. */
+                        /* if it returns false abort submitting */
                         if (false !== submit.apply(form, [settings, self])) { 
 
-                          /* Check if given target is function */
+                          /* check if given target is function */
                           if ($.isFunction(settings.target)) {
                               var str = settings.target.apply(self, [input.val(), settings]);
                               $(self).html(str);
@@ -317,26 +328,26 @@
                                   $(self).html(settings.placeholder);
                               }
                           } else {
-                              /* Add edited content and id of edited element to POST. */
+                              /* add edited content and id of edited element to POST */
                               var submitdata = {};
                               submitdata[settings.name] = input.val();
                               submitdata[settings.id] = self.id;
-                              /* Add extra data to be POST:ed. */
+                              /* add extra data to be POST:ed */
                               if ($.isFunction(settings.submitdata)) {
                                   $.extend(submitdata, settings.submitdata.apply(self, [self.revert, settings]));
                               } else {
                                   $.extend(submitdata, settings.submitdata);
                               }
 
-                              /* Quick and dirty PUT support. */
+                              /* quick and dirty PUT support */
                               if ('PUT' == settings.method) {
                                   submitdata['_method'] = 'put';
                               }
 
-                              /* Show the saving indicator. */
+                              /* show the saving indicator */
                               $(self).html(settings.indicator);
                               
-                              /* Defaults for ajaxoptions. */
+                              /* defaults for ajaxoptions */
                               var ajaxoptions = {
                                   type    : 'POST',
                                   data    : submitdata,
@@ -357,33 +368,33 @@
                                   }
                               };
                               
-                              /* Override with what is given in settings.ajaxoptions. */
-                              $.extend(ajaxoptions, settings.ajaxoptions);   
-                              $.ajax(ajaxoptions);          
+                              /* override with what is given in settings.ajaxoptions */
+                              $.extend(ajaxoptions, settings.ajaxoptions);
+                              $.ajax(ajaxoptions);
                               
                             }
                         }
                     }
                     
-                    /* Show tooltip again. */
+                    /* show tooltip again */
                     $(self).attr('title', settings.tooltip);
                     
                     return false;
                 });
             });
             
-            /* Privileged methods */
+            /* privileged methods */
             this.reset = function(form) {
-                /* Prevent calling reset twice when blurring. */
+                /* prevent calling reset twice when blurring */
                 if (this.editing) {
-                    /* Before reset hook, if it returns false abort reseting. */
+                    /* before reset hook, if it returns false abort reseting */
                     if (false !== onreset.apply(form, [settings, self])) { 
                         $(self).html(self.revert);
                         self.editing   = false;
                         if (!$.trim($(self).html())) {
                             $(self).html(settings.placeholder);
                         }
-                        /* Show tooltip again. */
+                        /* show tooltip again */
                         if (settings.tooltip) {
                             $(self).attr('title', settings.tooltip);                
                         }
@@ -399,6 +410,7 @@
         types: {
             defaults: {
                 element : function(settings, original) {
+                    console.log('defaults element called');
                     var input = $('<input type="hidden"></input>');                
                     $(this).append(input);
                     return(input);
@@ -412,14 +424,14 @@
                 buttons : function(settings, original) {
                     var form = this;
                     if (settings.submit) {
-                        /* If given html string use that. */
+                        /* if given html string use that */
                         if (settings.submit.match(/>$/)) {
                             var submit = $(settings.submit).click(function() {
                                 if (submit.attr("type") != "submit") {
                                     form.submit();
                                 }
                             });
-                        /* Otherwise use button with given string as text. */
+                        /* otherwise use button with given string as text */
                         } else {
                             var submit = $('<button type="submit" />');
                             submit.html(settings.submit);                            
@@ -427,7 +439,7 @@
                         $(this).append(submit);
                     }
                     if (settings.cancel) {
-                        /* If given html string use that. */
+                        /* if given html string use that */
                         if (settings.cancel.match(/>$/)) {
                             var cancel = $(settings.cancel);
                         /* otherwise use button with given string as text */
@@ -438,6 +450,7 @@
                         $(this).append(cancel);
 
                         $(cancel).click(function(event) {
+                            //original.reset();
                             if ($.isFunction($.editable.types[settings.type].reset)) {
                                 var reset = $.editable.types[settings.type].reset;                                                                
                             } else {
@@ -451,9 +464,10 @@
             },
             text: {
                 element : function(settings, original) {
+                    console.log('text element called');
                     var input = $('<input />');
-                    if (settings.width  != 'none') { input.attr('width', settings.width);  }
-                    if (settings.height != 'none') { input.attr('height', settings.height); }
+                    if (settings.width  != 'none') { input.width(settings.width);  }
+                    if (settings.height != 'none') { input.height(settings.height); }
                     /* https://bugzilla.mozilla.org/show_bug.cgi?id=236791 */
                     //input[0].setAttribute('autocomplete','off');
                     input.attr('autocomplete','off');
@@ -463,6 +477,7 @@
             },
             textarea: {
                 element : function(settings, original) {
+                    console.log('text element called');
                     var textarea = $('<textarea />');
                     if (settings.rows) {
                         textarea.attr('rows', settings.rows);
@@ -480,6 +495,7 @@
             },
             select: {
                element : function(settings, original) {
+                   console.log('text element called');
                     var select = $('<select />');
                     $(this).append(select);
                     return(select);
@@ -509,24 +525,18 @@
                                 $(this).attr('selected', 'selected');
                         }
                     });
-                    /* Submit on change if no submit button defined. */
-                    if (!settings.submit) {
-                        var form = this;
-                        $('select', this).change(function() {
-                            form.submit();
-                        });
-                    }
                 }
             }
         },
 
         /* Add new input type */
         addInputType: function(name, input) {
+            console.log('add inputtype: ' + name);
             $.editable.types[name] = input;
         }
     };
 
-    /* Publicly accessible defaults. */
+    // publicly accessible defaults
     $.fn.editable.defaults = {
         name       : 'value',
         id         : 'id',

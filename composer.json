@@ -12,11 +12,10 @@
             "homepage": "http://20steps.de"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "symfony/framework-bundle": "~2.3",
         "misd/guzzle-bundle": "~1.0",
-        "brandonwamboldt/utilphp": "dev-master",
+        "brandonwamboldt/utilphp": "~1.0",
         "danielstjules/stringy": ">=1.5.1"
     },
     "autoload": {

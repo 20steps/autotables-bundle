@@ -14,7 +14,7 @@
             <tr id="{{ entity.id }}">
                 <td class="read_only">{{ entity.id }}</td>
                 {% for column in entity.columns %}
-                    <td class="{{ column.readOnly ? 'read_only' : '' }}">{{ column.value }}</td>
+                    <td id="td_{{ loop.index }}" class="{{ column.readOnly ? 'read_only' : '' }}">{{ include('twentystepsAutoTablesBundle:AutoTablesExtension:columnValue.html.twig', {column: column}) }}</td>
                 {% endfor %}
                 <td></td>
             </tr>
@@ -24,6 +24,6 @@
 
     <button id="btnAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
 
-    {{ include(formAddNewRowTemplate) }}
+    {{ include('twentystepsAutoTablesBundle:AutoTablesExtension:formAddNewRow.html.twig') }}
 
 {% endif %}

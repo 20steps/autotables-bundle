@@ -45,9 +45,9 @@ class CrudController extends Controller
         $entity = $crudService->findEntity($id);
         Ensure::ensureNotNull($entity, 'Entity with id [%s] not found', $id);
         $entityInspector = $this->get('twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice');
-        $entityInspector->setValue($entity, $columnDescriptorId, $value);
+        $entityInspector->setValue($entity, $columnDescriptorId, $value, $config);
         $crudService->persistEntity($entity);
-        return new Response($entityInspector->getValue($entity, $columnDescriptorId));
+        return new Response($entityInspector->getValue($entity, $columnDescriptorId, $config));
     }
 
     public function addAction(Request $request)
@@ -59,7 +59,7 @@ class CrudController extends Controller
         $entity = $crudService->createEntity();
         foreach ($request->request->keys() as $paramName) {
             if ($this->isColumnParameter($paramName)) {
-                $entityInspector->setValue($entity, $paramName, $request->request->get($paramName));
+                $entityInspector->setValue($entity, $paramName, $request->request->get($paramName), $config);
             }
         }
         $crudService->persistEntity($entity);
@@ -73,7 +73,7 @@ class CrudController extends Controller
         $columns = array();
         $columns[] = $entityDesc->getId();
         foreach ($entityDesc->getColumns() as $column) {
-            $columns[] = $column->getValue();
+            $columns[] = $entityInspector->getValue($entity, $column->getColumnDescriptorId(), $config);
         }
 
         $response = new Response(json_encode($columns));

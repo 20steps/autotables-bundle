@@ -21,6 +21,7 @@ namespace twentysteps\Bundle\AutoTablesBundle\Services;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Bridge\Monolog\Logger;
+use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Model\AbstractColumnDescriptor;
 use twentysteps\Bundle\AutoTablesBundle\Model\Column;
 use twentysteps\Bundle\AutoTablesBundle\Model\Entity;
@@ -40,12 +41,16 @@ class EntityInspectionService
     private $reader;
     private $entityDescriptorMap;
     private $columnDescriptorMap;
+    private $translator;
+    private $logger;
 
-    public function __construct()
+    public function __construct($translator, $logger)
     {
         $this->reader = new AnnotationReader();
         $this->entityDescriptorMap = array();
         $this->columnDescriptorMap = array();
+        $this->translator = $translator;
+        $this->logger = $logger;
     }
 
     /**
@@ -85,18 +90,31 @@ class EntityInspectionService
     /**
      * Updates the specified value in the given entity.
      */
-    public function setValue($entity, $columnDescriptorId, $value)
+    public function setValue($entity, $columnDescriptorId, $value, AutoTablesConfiguration $config)
     {
         Ensure::ensureNotNull($entity, 'entity musst not be null');
         $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId);
-        $columnDescriptor->setValue($entity, $value);
+        if ($columnDescriptor->getType() == 'datetime') {
+            $format = $this->translator->trans('php.date.format', array(), $config->getTransScope());
+            $date = \DateTime::createFromFormat($format, $value);
+            //$this->logger->info(sprintf('Created date [%s] from value [%s] with format [%s]', $date, $value, $format));
+            $columnDescriptor->setValue($entity, $date);
+        } else {
+            $columnDescriptor->setValue($entity, $value);
+        }
     }
 
-    public function getValue($entity, $columnDescriptorId)
+    public function getValue($entity, $columnDescriptorId, AutoTablesConfiguration $config)
     {
         Ensure::ensureNotNull($entity, 'entity musst not be null');
         $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId);
-        return $columnDescriptor->getValue($entity);
+        $value = $columnDescriptor->getValue($entity);
+        $rtn = $value;
+        if ($columnDescriptor->getType() == 'datetime') {
+            $format = $this->translator->trans('php.date.format', array(), $config->getTransScope());
+            $rtn = $value->format($format);
+        }
+        return $rtn;
     }
 
     // TODO there should be a better solution than using this... We want caching!

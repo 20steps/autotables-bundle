@@ -12,7 +12,13 @@
             var dataTablesColumns = [];
             dataTablesColumns.push({ "bVisible": false});
             {% for column in entities|first.columns %}
-                dataTablesColumns.push({});
+                {% if column.type == 'datetime' %}
+                    dataTablesColumns.push({type: 'datepicker', datepicker: {
+                        dateFormat: "{{ 'date.format'|trans({}, transScope) }}"
+                    }});
+                {%  else %}
+                    dataTablesColumns.push({type: 'text'});
+                {% endif %}
             {%  endfor %}
             dataTablesColumns.push( // Delete-Link
                     { "sName": "ID",
@@ -26,6 +32,7 @@
 
             var dtOpts = $.extend(true, {aoColumns: dataTablesColumns}, {{ dtDefaultOpts|raw }}, {{ dtOpts|raw }}, {{ dtTagOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
             var dteOpts = {
+                aoColumns: dataTablesColumns,
                 submitButtonText: "{{ 'Save'|trans({}, transScope) }}",
                 cancelButtonText: "{{ 'Cancel'|trans({}, transScope) }}",
                 sUpdateURL: '{{ path(updateRoute) }}',
