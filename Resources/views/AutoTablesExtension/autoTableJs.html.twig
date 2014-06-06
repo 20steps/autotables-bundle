@@ -23,11 +23,15 @@
             dataTablesColumns.push( // Delete-Link
                     { "sName": "ID",
                         "bSearchable": false,
-                        "bSortable": false,
+                        "bSortable": false
+            {#
                         "mRender": function (foo, bar, dataSource) {
-                            return "<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?tableId={{ tableId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans({}, transScope) }}</a>";
+                            var id = dataSource[0];
+                            //return {{ include('twentystepsAutoTablesBundle:AutoTablesExtension:columnActions.html.twig', {tableId: tableId, deleteRoute: deleteRoute, transScope: transScope}) }};
+                            //"<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?tableId={{ tableId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans({}, transScope) }}</a>";
 
                         }
+                #}
                     });
 
             var dtOpts = $.extend(true, {aoColumns: dataTablesColumns}, {{ dtDefaultOpts|raw }}, {{ dtOpts|raw }}, {{ dtTagOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});

@@ -32,6 +32,7 @@ class AutoTablesConfiguration {
     private $repositoryId;
     private $transScope;
     private $dataTablesOptions;
+    private $views;
 
     public function __construct($id, $args) {
         $this->id = $id;
@@ -39,6 +40,7 @@ class AutoTablesConfiguration {
         $this->repositoryId = $this->getOption($args, 'repository_id');
         $this->transScope = $this->getOption($args, 'trans_scope', 'messages');
         $this->dataTablesOptions = $this->getOption($args, 'datatables_options', '{}');
+        $this->views = $this->getOption($args, 'views', '');
     }
 
     /**
@@ -80,6 +82,15 @@ class AutoTablesConfiguration {
     {
         return $this->transScope;
     }
+
+    /**
+     * @return null
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
+
 
     private function getOption($args, $key, $defaultValue = NULL) {
         return util::array_get($args[$key]) ?: $defaultValue;

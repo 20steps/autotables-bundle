@@ -930,6 +930,8 @@ returns true if plugin should continue with sending AJAX request, false will abo
             ///<summary>Updates table row using  form fields</summary>
             ///<param name="nActionForm" type="DOM">Form used to enter data</param>
 
+            console.log('fnSendFormUpdateRequest');
+
             var jActionForm = $(nActionForm);
             var sAction = jActionForm.attr("id");
             
