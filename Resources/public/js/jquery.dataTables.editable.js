@@ -406,20 +406,31 @@ returns true if plugin should continue with sending AJAX request, false will abo
             }
         }
 
+        function fnGetForm(elem) {
+            var form = $(elem).find('form');
+            if (form.length == 0) {
+                form = elem;
+            }
+            console.log('form is');
+            console.log(form);
+            return form;
+        }
+
         function fnOnRowAdding(event) {
             ///<summary>
             ///Event handler called when a user click on the submit button in the "Add new row" form. 
             ///</summary>
             ///<param name="event">Event that caused the action</param>
 
+            var form = fnGetForm(oAddNewRowForm);
             if (properties.fnOnAdding()) {
-                if (oAddNewRowForm.valid()) {
+                if (form.valid()) {
                     iDisplayStart = fnGetDisplayStart();
                     properties.fnStartProcessingMode();
 
                     if (properties.bUseFormsPlugin) {
                         //Still in beta(development)
-                        $(oAddNewRowForm).ajaxSubmit({
+                        $(form).ajaxSubmit({
                             dataType: 'xml',
                             success: function (response, statusString, xhr) {
                                 if (xhr.responseText.toLowerCase().indexOf("error") != -1) {
@@ -440,7 +451,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
                         );
 
                     } else {
-                        var params = oAddNewRowForm.serialize();
+                        var params = form.serialize();
                         $.ajax({ 'url': properties.sAddURL,
                             'data': params,
                             'type': properties.sAddHttpMethod,
