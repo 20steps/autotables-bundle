@@ -15,7 +15,7 @@
     "require": {
         "symfony/framework-bundle": "~2.3",
         "misd/guzzle-bundle": "~1.0",
-        "brandonwamboldt/utilphp": "~1.0",
+        "brandonwamboldt/utilphp": "1.0.6",
         "danielstjules/stringy": ">=1.5.1"
     },
     "autoload": {
