@@ -43,7 +43,7 @@ final class ColumnMeta extends Annotation
      * Selects the ordering of the column. Smaller values will come first.
      * @var int
      */
-    public $order;
+    public $order = 10000;
 
     /**
      * Sets whether the column should be immutable.

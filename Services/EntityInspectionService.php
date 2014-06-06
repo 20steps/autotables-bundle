@@ -84,7 +84,7 @@ class EntityInspectionService
         usort($columns, function (Column $a, Column $b) {
             return $a->getOrder() - $b->getOrder();
         });
-        return new Entity($entityDescriptor->fetchId($entity), $entityDescriptor, $columns);
+        return new Entity($entityDescriptor->fetchId($entity), $entityDescriptor, $columns, $entity);
     }
 
     /**

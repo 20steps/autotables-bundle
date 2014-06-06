@@ -33,6 +33,7 @@ class AutoTablesConfiguration {
     private $transScope;
     private $dataTablesOptions;
     private $views;
+    private $frontendFramework;
 
     public function __construct($id, $args) {
         $this->id = $id;
@@ -41,6 +42,7 @@ class AutoTablesConfiguration {
         $this->transScope = $this->getOption($args, 'trans_scope', 'messages');
         $this->dataTablesOptions = $this->getOption($args, 'datatables_options', '{}');
         $this->views = $this->getOption($args, 'views', '');
+        $this->frontendFramework = $this->getOption($args, 'frontendFramework', 'default');
     }
 
     /**
@@ -91,6 +93,13 @@ class AutoTablesConfiguration {
         return $this->views;
     }
 
+    /**
+     * @return null
+     */
+    public function getFrontendFramework()
+    {
+        return $this->frontendFramework;
+    }
 
     private function getOption($args, $key, $defaultValue = NULL) {
         return util::array_get($args[$key]) ?: $defaultValue;

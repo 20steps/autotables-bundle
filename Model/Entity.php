@@ -25,12 +25,14 @@ class Entity
     private $id;
     private $entityDescriptor;
     private $columns;
+    private $obj;
 
-    public function __construct($id, EntityDescriptor $entityDescriptor, &$columns)
+    public function __construct($id, EntityDescriptor $entityDescriptor, &$columns, $obj)
     {
         $this->id = $id;
         $this->entityDescriptor = $entityDescriptor;
         $this->columns = $columns;
+        $this->obj = $obj;
     }
 
     /**
@@ -45,4 +47,14 @@ class Entity
     {
         return $this->columns;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObj()
+    {
+        return $this->obj;
+    }
+
+
 }

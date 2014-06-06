@@ -68,7 +68,7 @@ class CrudController extends Controller
         $this->get('logger')->info(sprintf('Added new entity of type [%s] with id [%s]', $tableId, $id));
 
         $entityDesc = $entityInspector->parseEntity($entity);
-        $this->get('logger')->info(sprintf('Entity desc: [%s]', print_r($entityDesc, TRUE)));
+        //$this->get('logger')->info(sprintf('Entity desc: [%s]', var_export($entityDesc, true)));
 
         $columns = array();
         $columns[] = $entityDesc->getId();

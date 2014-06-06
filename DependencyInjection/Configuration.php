@@ -49,6 +49,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('trans_scope')->end()
                             ->scalarNode('datatables_options')->end()
                             ->scalarNode('views')->end()
+                            ->scalarNode('frontendFramework')->end()
                         ->end()
                     ->end()
                 ->end()

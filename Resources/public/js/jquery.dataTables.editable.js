@@ -1137,13 +1137,18 @@ returns true if plugin should continue with sending AJAX request, false will abo
                         properties.fnShowError("In the form that is used for adding new records cannot be found an input element with rel=" + i + " that will be bound to the value in the column " + i + ". See http://code.google.com/p/jquery-datatables-editable/wiki/AddingNewRecords#Add_new_record_form for more details", "init");
                 }
 
+                var openDialog = oAddNewRowForm.attr('data-disable-popup') != "true";
+                console.log('openDialog: ' + openDialog);
 
                 if (properties.oAddNewRowFormOptions != null) {
                     properties.oAddNewRowFormOptions.autoOpen = false;
                 } else {
                     properties.oAddNewRowFormOptions = { autoOpen: false };
                 }
-                oAddNewRowForm.dialog(properties.oAddNewRowFormOptions);
+
+                if (openDialog) {
+                    oAddNewRowForm.dialog(properties.oAddNewRowFormOptions);
+                }
 
                 //Add button click handler on the "Add new row" button
                 oAddNewRowButton = $("#" + properties.sAddNewRowButtonId);
@@ -1152,7 +1157,9 @@ returns true if plugin should continue with sending AJAX request, false will abo
                         if(oAddNewRowButton.data("add-event-attached")!="true")
                         {
                             oAddNewRowButton.click(function () {
-                                oAddNewRowForm.dialog('open');
+                                if (openDialog)  {
+                                    oAddNewRowForm.dialog('open');
+                                }
                             });
                             oAddNewRowButton.data("add-event-attached", "true");
                         }
@@ -1213,7 +1220,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
                     oCancelRowAddingButton.click(fnOnCancelRowAdding);
                 }
                 // if the array contains elements, add them to the dialog
-                if (aAddNewRowFormButtons.length > 0) {
+                if (aAddNewRowFormButtons.length > 0 && openDialog) {
                     oAddNewRowForm.dialog('option', 'buttons', aAddNewRowFormButtons);
                 }
                 //Issue: It cannot find it with this call:
