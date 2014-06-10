@@ -91,15 +91,28 @@ Now the tables to be rendered by the bundle has to be configured. This happens a
 Each table configuration has to have an *id* property. This is used to reference the configurations in later calls
 to the bundle.
 
+#### repository_id and service_id
+
 Additionally each table configuration has to define either a *repository_id* or a *service_id*. The *repository_id* is the
 name of a Doctrine repository for handling the entities to be printed. If you are not using Doctrine (or for some other reason)
 you can define a *service_id* pointing to a service implementing the AutoTablesCrudService interface.
 
-With the property *trans_scope* you can define a new scope for translating the messages used for the table. These are
-the names of the columns and some additional messages like found in the messages.en.yml file of the bundle.
+#### trans_scope
 
-Finally the property *datatables_options* may be used to give some table specific [DataTables](https://datatables.net/)  plugin
+With the property *trans_scope* you can define a new scope for translating the messages used for the table. These are
+the names of the columns and some additional messages like found in the messages.en.yml file of the bundle. By default the value
+from the global configuration is used.
+
+#### datatable_options
+
+The property *datatables_options* may be used to give some table specific [DataTables](https://datatables.net/)  plugin
 configuration, which will extend any configuration in the global section.
+
+#### views
+
+The *views* option may point to a directory with custom templates for overwriting the ones of the bundle.
+
+#### Example
 
 Here is an example of a configuration given for a table *products*:
 
