@@ -206,24 +206,28 @@ class Product
 Now your view has to be modified to render the table for your entities. We are assuming here that you are using
 Twig templates.
 
-The needed assets of the bundle are included with the Twig function *ts_autoTable_assets*. This will
-include both the needed stylesheet and javascript files. Some people prefer to include the stylesheets in the head of the HTML
-document and the javascript files just before the end of the body block. In this case you may use the *ts_autoTable_assets* function
-two times. The first time you would exclude the javascript files by using the option ```{'javascript': false}```. The
-second time you would exclude the stylesheet files by using the option ```{'stylesheet': false}```.
+#### ts_auto_table_stylesheets
 
+The needed stylesheets of the bundle are included with the Twig function *ts_auto_table_stylesheets*.
+
+#### ts_auto_table
+
+The HTML for the table has to be rendered with the Twig function *ts_auto_table*. Here the options
+*entities* with a list of the entities to be rendered and the *tableId* pointing to the corresponding section in the config.yml are needed.
+
+#### ts_auto_table_js
+
+Finally the javascript code for the table has to be rendered. This is done by the Twig function *ts_auto_table_js*.
 By default all needed javascript libraries are loaded excepting the jquery library. This behaviour can be configured by the
 following options: *includeJquery, includeJqueryUi, includeJqueryEditable, includeJqueryDataTables* and *includeJqueryValidate*
 
-Now it's time to render the JavaScript code for your entity's table. This is done by the Twig function *ts_autoTable_js*.
-The call has to include the list of entities to be rendered in the option *entities* and the id of the table configuration
-given by the option *tableId*. The [DataTables](https://datatables.net/) configuration may be extended here with the option *dtOptions*.
+Also the call has to contain the parameters *entities* and *tableId* again.
+The [DataTables](https://datatables.net/) configuration may be extended here with the option *dtOptions*.
 
 Furthermore the *transScope* may be overwritten here and the routes for the CRUD controller actions with the options
 *updateRoute, deleteRoute* and *addRoute*.
 
-Finally the HTML for the table has to be rendered with the Twig function *ts_autoTable*. Here the options
-*entities* and *tableId* are needed again.
+#### Example
 
 In the following example you can see how to build a view displaying the entity *products*:
 
