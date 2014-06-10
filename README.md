@@ -112,6 +112,16 @@ configuration, which will extend any configuration in the global section.
 
 The *views* option may point to a directory with custom templates for overwriting the ones of the bundle.
 
+#### columns
+
+With *columns* you are able to overwrite any setting done by an autotables annotation resp. you are able to define settings
+that hasn't been configured by an annotation. Any column setting in the config.yml overwrites any annotation.
+
+Currently the following things may be configured for a column: *name*, *readOnly*, *type*, *order* and *ignore*.
+
+The parameter *selector* has to be given to select the column to be overwritten. This may be a property like *description*, or
+a method like *getDisplayName()*.
+
 #### Example
 
 Here is an example of a configuration given for a table *products*:
@@ -139,6 +149,15 @@ twentysteps_auto_tables:
             }
           }
         }
+      columns:
+              -
+                selector: 'description'
+                readOnly: true
+                order: 2
+              -
+                selector: 'getDisplayName()'
+                order: 10
+                readOnly: false
 ```
 
 ### Annotation of entities

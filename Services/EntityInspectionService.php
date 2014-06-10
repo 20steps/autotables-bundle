@@ -56,11 +56,11 @@ class EntityInspectionService
     /**
      * Inspects the given entities and returns a list of Entity objects for each of them.
      */
-    public function parseEntities($entities)
+    public function parseEntities($entities, AutoTablesConfiguration $config)
     {
         $entityList = array();
         foreach ($entities as $entity) {
-            $entityList[] = $this->parseEntity($entity);
+            $entityList[] = $this->parseEntity($entity, $config);
         }
         return $entityList;
     }
@@ -69,12 +69,12 @@ class EntityInspectionService
      * Inspects the given entity and returns an Entity object for it.
      * @return Entity
      */
-    public function parseEntity($entity)
+    public function parseEntity($entity, AutoTablesConfiguration $config)
     {
         $reflClass = new \ReflectionClass($entity);
         $entityDescriptor = util::array_get($this->entityDescriptorMap[$reflClass->getName()]);
         if (!$entityDescriptor) {
-            $entityDescriptor = $this->initDescriptors($reflClass, $entity);
+            $entityDescriptor = $this->initDescriptors($reflClass, $entity, $config);
         }
         $columns = array();
         foreach ($entityDescriptor->getColumnDescriptors() as $columnDescriptor) {
@@ -93,7 +93,7 @@ class EntityInspectionService
     public function setValue($entity, $columnDescriptorId, $value, AutoTablesConfiguration $config)
     {
         Ensure::ensureNotNull($entity, 'entity musst not be null');
-        $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId);
+        $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId, $config);
         if ($columnDescriptor->getType() == 'datetime') {
             $format = $this->translator->trans('php.date.format', array(), $config->getTransScope());
             $date = \DateTime::createFromFormat($format, $value);
@@ -107,7 +107,7 @@ class EntityInspectionService
     public function getValue($entity, $columnDescriptorId, AutoTablesConfiguration $config)
     {
         Ensure::ensureNotNull($entity, 'entity musst not be null');
-        $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId);
+        $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId, $config);
         $value = $columnDescriptor->getValue($entity);
         $rtn = $value;
         if ($columnDescriptor->getType() == 'datetime') {
@@ -129,28 +129,28 @@ class EntityInspectionService
         return $id;
     }
 
-    private function getColumnDescriptor($entity, $columnDescriptorId)
+    private function getColumnDescriptor($entity, $columnDescriptorId, AutoTablesConfiguration $config)
     {
         $columnDescriptor = util::array_get($this->columnDescriptorMap[$columnDescriptorId]);
         if (!$columnDescriptor) {
-            $this->initDescriptors(new \ReflectionClass($entity), $entity);
+            $this->initDescriptors(new \ReflectionClass($entity), $entity, $config);
             $columnDescriptor = util::array_get($this->columnDescriptorMap[$columnDescriptorId]);
             Ensure::ensureNotNull($columnDescriptor, 'Failed to load column [%s] for entity of type [%s]', $columnDescriptorId, get_class($entity));
         }
         return $columnDescriptor;
     }
 
-    private function initDescriptors(\ReflectionClass $reflClass, $entity)
+    private function initDescriptors(\ReflectionClass $reflClass, $entity, AutoTablesConfiguration $config)
     {
         $columnDescriptors = array();
-        $this->parsePropertyColumnDescriptors($reflClass, $columnDescriptors);
-        $this->parseMethodColumnDescriptors($reflClass, $columnDescriptors);
+        $this->parsePropertyColumnDescriptors($reflClass, $columnDescriptors, $config);
+        $this->parseMethodColumnDescriptors($reflClass, $columnDescriptors, $config);
         $entityDescriptor = new EntityDescriptor($columnDescriptors, $this->fetchIdProperty($reflClass));
         $this->entityDescriptorMap[$reflClass->getName()] = $entityDescriptor;
         return $entityDescriptor;
     }
 
-    private function parsePropertyColumnDescriptors(\ReflectionClass $reflClass, &$columnDescriptors)
+    private function parsePropertyColumnDescriptors(\ReflectionClass $reflClass, &$columnDescriptors, AutoTablesConfiguration $config)
     {
         foreach ($reflClass->getProperties() as $property) {
             $name = null;
@@ -174,6 +174,16 @@ class EntityInspectionService
                     break;
                 }
             }
+
+            // overwrite by config
+            $propertyOverwrite = util::array_get($config->getColumns()[$property->getName()]);
+            $readOnly = util::array_get($propertyOverwrite['readOnly'], $readOnly);
+            $name = util::array_get($propertyOverwrite['name'], $name);
+            $type = util::array_get($propertyOverwrite['type'], $type);
+            $order = util::array_get($propertyOverwrite['order'], $order);
+            $ignore = util::array_get($propertyOverwrite['ignore'], $ignore);
+
+            // init descriptor
             if (!$ignore && $name && $type) {
                 $columnDescriptor = new PropertyColumnDescriptor('p' . $property->getName(), $name, $type, $order, $readOnly, $property);
                 $this->columnDescriptorMap[$columnDescriptor->getId()] = $columnDescriptor;
@@ -182,7 +192,7 @@ class EntityInspectionService
         }
     }
 
-    private function parseMethodColumnDescriptors(\ReflectionClass $reflClass, &$columnDescriptors)
+    private function parseMethodColumnDescriptors(\ReflectionClass $reflClass, &$columnDescriptors, AutoTablesConfiguration $config)
     {
         foreach ($reflClass->getMethods() as $method) {
             $name = null;
@@ -204,6 +214,16 @@ class EntityInspectionService
                     break;
                 }
             }
+
+            // overwrite by config
+            $propertyOverwrite = util::array_get($config->getColumns()[$method->getName().'()']);
+            $readOnly = util::array_get($propertyOverwrite['readOnly'], $readOnly);
+            $name = util::array_get($propertyOverwrite['name'], $name);
+            $type = util::array_get($propertyOverwrite['type'], $type);
+            $order = util::array_get($propertyOverwrite['order'], $order);
+            $ignore = util::array_get($propertyOverwrite['ignore'], $ignore);
+
+            // init descriptor
             if (!$ignore && $name && $type) {
                 $setterMethod = $reflClass->getMethod('set' . substr($method->getName(), 3));
                 if ($setterMethod) {

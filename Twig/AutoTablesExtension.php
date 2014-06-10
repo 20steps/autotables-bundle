@@ -59,7 +59,7 @@ class AutoTablesExtension extends AbstractExtension
     {
         $config = $this->fetchAutoTablesConfiguration($args);
         $array = array(
-            'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
+            'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities'), $config),
             'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
             'tableId' => $config->getId(),
             'transScope' => $config->getTransScope(),
@@ -76,7 +76,7 @@ class AutoTablesExtension extends AbstractExtension
     {
         $config = $this->fetchAutoTablesConfiguration($args);
         $array = array(
-            'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities')),
+            'entities' => $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities'), $config),
             'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_auto_tables_update'),
             'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
             'addRoute' => $this->getParameter($args, 'addRoute', 'twentysteps_auto_tables_add'),

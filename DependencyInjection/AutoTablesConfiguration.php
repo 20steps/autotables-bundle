@@ -35,6 +35,7 @@ class AutoTablesConfiguration {
     private $dataTablesOptions;
     private $views;
     private $frontendFramework;
+    private $columns;
 
     public function __construct($id, $args, AutoTablesGlobalConfiguration $globalConf) {
         $this->id = $id;
@@ -44,6 +45,7 @@ class AutoTablesConfiguration {
         $this->dataTablesOptions = util::array_get($args['datatables_options'], $globalConf->getDataTablesOptions());
         $this->views = util::array_get($args['views'], '');
         $this->frontendFramework = $globalConf->getFrontendFramework();
+        $this->columns = util::array_get($args['columns'], array());
     }
 
     /**
@@ -97,5 +99,13 @@ class AutoTablesConfiguration {
     public function getFrontendFramework()
     {
         return $this->frontendFramework;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getColumns()
+    {
+        return $this->columns;
     }
 }
