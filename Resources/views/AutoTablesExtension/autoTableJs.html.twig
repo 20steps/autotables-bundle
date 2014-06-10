@@ -68,7 +68,7 @@
                 sAddURL: '{{ path(addRoute) }}',
                 oDeleteParameters: {tableId: '{{ tableId }}'},
                 oUpdateParameters: {tableId: '{{ tableId }}', columnMeta: columnMeta},
-                oReloadAfterAdd: {{ oReloadAfterAdd }}
+                oReloadAfterAdd: {{ reloadAfterAdd }}
             };
             $('#myDtTable').dataTable(dtOpts).makeEditable(dteOpts);
         });

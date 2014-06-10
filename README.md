@@ -227,6 +227,9 @@ The [DataTables](https://datatables.net/) configuration may be extended here wit
 Furthermore the *transScope* may be overwritten here and the routes for the CRUD controller actions with the options
 *updateRoute, deleteRoute* and *addRoute*.
 
+The option *reloadAfterAdd* may be set to *true* to reload the page after an entity has been added. Currently this is needed
+ to refresh any links rendered in custom view templates.
+
 #### Example
 
 In the following example you can see how to build a view displaying the entity *products*:

@@ -85,7 +85,7 @@ class AutoTablesExtension extends AbstractExtension
             'dtTagOpts' => $this->getParameter($args, 'dtOptions', array()),
             'tableId' => $config->getId(),
             'transScope' => $config->getTransScope(),
-            'oReloadAfterAdd' => $this->getParameter($args, 'oReloadAfterAdd', 'null'),
+            'reloadAfterAdd' => $this->getParameter($args, 'reloadAfterAdd', 'null'),
             'includeJavascript' => $this->checkIncludeJavascript(),
             'includeJquery' => $this->getParameter($args, 'includeJquery', FALSE),
             'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', TRUE),
