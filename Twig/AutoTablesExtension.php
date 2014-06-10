@@ -35,12 +35,14 @@ class AutoTablesExtension extends AbstractExtension
     private $entityInspectionService;
     private $container;
     private $requestStack;
+    private $logger;
 
-    public function __construct(EntityInspectionService $entityInspectionService, $container, RequestStack $requestStack)
+    public function __construct(EntityInspectionService $entityInspectionService, $container, RequestStack $requestStack, $logger)
     {
         $this->entityInspectionService = $entityInspectionService;
         $this->container = $container;
         $this->requestStack = $requestStack;
+        $this->logger = $logger;
     }
 
     public function getFunctions()
@@ -48,7 +50,8 @@ class AutoTablesExtension extends AbstractExtension
         return array(
             new \Twig_SimpleFunction('ts_auto_table', array($this, 'renderTable'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('ts_auto_table_stylesheets', array($this, 'renderStylesheets'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ts_auto_table_js', array($this, 'renderTableJs'), array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('ts_auto_table_js', array($this, 'renderTableJs'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ts_auto_table_columns', array($this, 'defineColumns'), array('is_safe' => array('html')))
         );
     }
 
@@ -110,6 +113,19 @@ class AutoTablesExtension extends AbstractExtension
     }
 
     /**
+     * Configures the columns for the given entities. Has to be called before "ts_auto_table" or "ts_auto_table_js".
+     */
+    public function defineColumns($args)
+    {
+        $config = $this->fetchAutoTablesConfiguration($args);
+        $entities = $this->getRequiredParameter($args, 'entities');
+        if (count($entities) > 0) {
+            $this->entityInspectionService->parseEntity($entities[0], $config);
+        }
+        return '';
+    }
+
+    /**
      * Returns the name of the extension.
      *
      * @return string The extension name
@@ -129,7 +145,7 @@ class AutoTablesExtension extends AbstractExtension
         $options = $this->container->getParameter($confKey);
         Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
         $globalConf = $this->fetchAutoTablesGlobalConfiguration();
-        return new AutoTablesConfiguration($tableId, $options, $globalConf);
+        return $this->mergeColumnsConfiguration(new AutoTablesConfiguration($tableId, $options, $globalConf), $args);
     }
 
     /**
@@ -149,5 +165,22 @@ class AutoTablesExtension extends AbstractExtension
             $request->attributes->set($this::JS_INCLUDE_KEY, true);
         }
         return $rtn;
+    }
+
+    private function mergeColumnsConfiguration(AutoTablesConfiguration $config, $args) {
+        $newColArgs = util::array_get($args['columns'], array());
+        foreach ($newColArgs as $newColArg) {
+            $selector = $newColArg['selector'];
+            Ensure::ensureNotEmpty($selector, 'Missing selector in column configuration');
+            $colArg = util::array_get($config->getColumns()[$selector], null);
+            if ($colArg) {
+                // overwrite the settings
+                $config->putColumn($selector, array_merge($colArg, $newColArg));
+            } else {
+                // define a new entry
+                $config->putColumn($selector, $newColArg);
+            }
+        }
+        return $config;
     }
 }

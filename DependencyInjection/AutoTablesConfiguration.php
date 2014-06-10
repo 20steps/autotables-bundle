@@ -108,4 +108,8 @@ class AutoTablesConfiguration {
     {
         return $this->columns;
     }
+
+    public function putColumn($key, $column) {
+        $this->columns[$key] = $column;
+    }
 }
