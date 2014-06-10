@@ -1,5 +1,29 @@
 {% if entities %}
 
+    {% if includeJavascript %}
+        {% block javascripts %}
+            {% if includeJquery %}
+                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.js') }}"></script>
+            {% endif %}
+            {% if includeJqueryUi %}
+                <script src="{{ asset('bundles/twentystepsautotables/js/jquery-ui.js') }}"></script>
+            {% endif %}
+            {% if includeJqueryEditable %}
+                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.jeditable.js') }}"></script>
+            {% endif %}
+            {% if includeJqueryEditableDatePicker %}
+                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.jeditable.datepicker.js') }}"></script>
+            {% endif %}
+            {% if includeJqueryDataTables %}
+                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.dataTables.js') }}"></script>
+            {% endif %}
+            {% if includeJqueryValidate %}
+                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.validate.js') }}"></script>
+            {% endif %}
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.dataTables.editable.js') }}"></script>
+        {% endblock %}
+    {% endif %}
+
     <script type="text/javascript">
         $(document).ready(function () {
             var columnMeta = [];
@@ -43,7 +67,8 @@
                 sDeleteURL: '{{ path(deleteRoute) }}',
                 sAddURL: '{{ path(addRoute) }}',
                 oDeleteParameters: {tableId: '{{ tableId }}'},
-                oUpdateParameters: {tableId: '{{ tableId }}', columnMeta: columnMeta}
+                oUpdateParameters: {tableId: '{{ tableId }}', columnMeta: columnMeta},
+                oReloadAfterAdd: {{ oReloadAfterAdd }}
             };
             $('#myDtTable').dataTable(dtOpts).makeEditable(dteOpts);
         });

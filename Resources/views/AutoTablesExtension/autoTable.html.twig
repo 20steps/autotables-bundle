@@ -24,7 +24,7 @@
             </tbody>
         </table>
 
-        {%  if frontendFramework == 'bootstrap3' %}
+        {%  if frontendFramework == constant('twentysteps\\Bundle\\AutoTablesBundle\\Twig\\FrontendFramework::BOOTSTRAP3') %}
             <button id="btnAddNewRow" class="btn btn-primary" data-toggle="modal" data-target="#formAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
         {%  else  %}
             <button id="btnAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>

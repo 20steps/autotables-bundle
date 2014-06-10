@@ -24,26 +24,18 @@ use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use utilphp\util;
 
 /**
- * Handle for accessing a specific DataTables config entry.
+ * Global configuration options for autotables.
  */
-class AutoTablesConfiguration {
+class AutoTablesGlobalConfiguration {
 
-    private $id;
-    private $serviceId;
-    private $repositoryId;
     private $transScope;
     private $dataTablesOptions;
-    private $views;
     private $frontendFramework;
 
-    public function __construct($id, $args, AutoTablesGlobalConfiguration $globalConf) {
-        $this->id = $id;
-        $this->serviceId = util::array_get($args['service_id'], null);
-        $this->repositoryId = util::array_get($args['repository_id'], null);
-        $this->transScope = util::array_get($args['trans_scope'], $globalConf->getTransScope());
-        $this->dataTablesOptions = util::array_get($args['datatables_options'], $globalConf->getDataTablesOptions());
-        $this->views = util::array_get($args['views'], '');
-        $this->frontendFramework = $globalConf->getFrontendFramework();
+    public function __construct($args) {
+        $this->transScope = util::array_get($args['trans_scope'], 'messages');
+        $this->dataTablesOptions = util::array_get($args['datatables_options'], '{}');
+        $this->frontendFramework = FrontendFramework::fromString(util::array_get($args['frontend_framework'], FrontendFramework::toString(FrontendFramework::STANDARD)));
     }
 
     /**
@@ -57,41 +49,9 @@ class AutoTablesConfiguration {
     /**
      * @return string
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRepositoryId()
-    {
-        return $this->repositoryId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceId()
-    {
-        return $this->serviceId;
-    }
-
-    /**
-     * @return string
-     */
     public function getTransScope()
     {
         return $this->transScope;
-    }
-
-    /**
-     * @return null
-     */
-    public function getViews()
-    {
-        return $this->views;
     }
 
     public function getFrontendFramework()

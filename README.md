@@ -65,8 +65,14 @@ twentysteps_auto_tables:
     ...
 ```
 
-Currently the only global configuration option available is a default configuration of the [DataTables](https://datatables.net/) plugin.
+Possible global configuration options are:
+
+* default_datatables_options: Default configuration of the [DataTables](https://datatables.net/) plugin.
 It is given by a string containing a JSON representation of the options. Any settings given here will be extended by table specific options.
+
+* trans_scope: Default scope for autotables related translations.
+
+* frontend_framework: Frontend framework to be used for rendering. Currently the values "standard" and "bootstrap3" are supported.
 
 ```
 twentysteps_auto_tables:
@@ -74,6 +80,7 @@ twentysteps_auto_tables:
     {
       "sDom": "TC<\\'clear'><'row table-header'<'col-md-3'f><'col-md-4'p>r>t<'row table-footer'<'col-md-9'i><'col-md-3'l>>"
     }
+    trans_scope: 'autoTableMessages'
 ```
 
 ### Table specific configuration

@@ -485,6 +485,10 @@ returns true if plugin should continue with sending AJAX request, false will abo
             ///</summary>
             ///<param name="data" type="int">Column values of the new row that is returned from the server</param>
 
+            if (properties.oReloadAfterAdd) {
+                location.reload();
+            }
+
             // transform into an object
             var values = {}
             for (var i = 0; i < data.length; i++) {

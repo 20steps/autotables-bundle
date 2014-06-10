@@ -5,6 +5,6 @@ services:
 
     twentysteps_bundle.AutoTablesBundle.twig.autotables_extension:
         class: twentysteps\Bundle\AutoTablesBundle\Twig\AutoTablesExtension
-        arguments: [@twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice, @service_container]
+        arguments: [@twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice, @service_container, @request_stack]
         tags:
             - { name: twig.extension }

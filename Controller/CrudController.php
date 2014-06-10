@@ -22,6 +22,7 @@ namespace twentysteps\Bundle\AutoTablesBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesGlobalConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Services\AutoTablesCrudService;
 use twentysteps\Bundle\AutoTablesBundle\Services\RepositoryAutoTablesCrudService;
 use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
@@ -29,6 +30,9 @@ use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfigurat
 
 class CrudController extends Controller
 {
+
+    private $logger;
+
     public function updateAction(Request $request)
     {
         $value = $request->request->get('value');
@@ -94,7 +98,7 @@ class CrudController extends Controller
         if ($entity) {
             $crudService->removeEntity($entity);
         } else {
-            $translator = $request->get('translator');
+            $translator = $this->get('translator');
             $msg = $translator->trans('No entity with id [%id%] found', array('%id%' => $id), $config->getTransScope());
         }
         return new Response($msg);
@@ -120,7 +124,7 @@ class CrudController extends Controller
     private function fetchAutoTablesConfiguration($tableId) {
         $options = $this->container->getParameter('twentysteps_auto_tables.config.'.$tableId);
         Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
-        return new AutoTablesConfiguration($tableId, $options);
+        return new AutoTablesConfiguration($tableId, $options, new AutoTablesGlobalConfiguration($this->container->getParameter('twentysteps_auto_tables.config')));
     }
 
     /**
@@ -128,19 +132,26 @@ class CrudController extends Controller
      */
     private function fetchCrudService(AutoTablesConfiguration $config)
     {
-        $serviceId = $config->getServiceId();
-        if ($serviceId) {
-            $crudService = $this->get($serviceId);
+        if ($config->getServiceId()) {
+            $this->getLogger()->info(sprintf('Create CrudService from serviceId [%s]', $config->getServiceId()));
+            $crudService = $this->get($config->getServiceId());
             Ensure::ensureNotNull($crudService, 'No service [%s] found', $crudService);
-            Ensure::ensureTrue($crudService instanceof AutoTablesCrudService, 'Service [%s] has to implement %s', $serviceId, 'AutoTablesCrudService');
+            Ensure::ensureTrue($crudService instanceof AutoTablesCrudService, 'Service [%s] has to implement %s', $config->getServiceId(), 'AutoTablesCrudService');
         } else {
+            $this->getLogger()->info(sprintf('Create CrudService from repositoryId [%s]', $config->getRepositoryId()));
             $doctrine = $this->get('doctrine');
-            $repositoryId = $config->getRepositoryId();
-            Ensure::ensureNotEmpty($repositoryId, 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $config->getId());
-            $repository = $doctrine->getRepository($repositoryId);
-            Ensure::ensureNotNull($repository, 'Repository with id [%s] not found', $repositoryId);
+            Ensure::ensureNotEmpty($config->getRepositoryId(), 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $config->getId());
+            $repository = $doctrine->getRepository($config->getRepositoryId());
+            Ensure::ensureNotNull($repository, 'Repository with id [%s] not found', $config->getRepositoryId());
             $crudService = new RepositoryAutoTablesCrudService($doctrine->getManager(), $repository);
         }
         return $crudService;
+    }
+
+    private function getLogger() {
+        if (!$this->logger) {
+            $this->logger = $this->get('logger');
+        }
+        return $this->logger;
     }
 }

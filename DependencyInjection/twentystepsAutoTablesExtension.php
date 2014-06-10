@@ -58,6 +58,8 @@ class twentystepsAutoTablesExtension extends Extension
         $defaultOpts = util::array_get($config['default_datatables_options']) ?: '{}';
         Ensure::ensureTrue($this->isValidJson($defaultOpts), 'Encountered illegal JSON in config: %s', $defaultOpts);
         $container->setParameter('twentysteps_auto_tables.default_datatables_options', $defaultOpts);
+
+        $container->setParameter('twentysteps_auto_tables.config', $config);
     }
 
     private function isValidJson($json) {

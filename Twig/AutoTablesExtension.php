@@ -19,28 +19,36 @@
 
 namespace twentysteps\Bundle\AutoTablesBundle\Twig;
 
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Tests\ProjectContainer;
+use Symfony\Component\HttpFoundation\RequestStack;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
+use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesGlobalConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Services\EntityInspectionService;
 use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use utilphp\util;
 
 class AutoTablesExtension extends AbstractExtension
 {
+    const JS_INCLUDE_KEY = 'tsAutoTableJsIncluded';
+
     private $entityInspectionService;
     private $container;
+    private $requestStack;
 
-    public function __construct(EntityInspectionService $entityInspectionService, $container)
+    public function __construct(EntityInspectionService $entityInspectionService, $container, RequestStack $requestStack)
     {
         $this->entityInspectionService = $entityInspectionService;
         $this->container = $container;
+        $this->requestStack = $requestStack;
     }
 
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('ts_autoTable_assets', array($this, 'renderAssets'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ts_autoTable', array($this, 'renderTable'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ts_autoTable_js', array($this, 'renderTableJs'), array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('ts_auto_table', array($this, 'renderTable'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ts_auto_table_stylesheets', array($this, 'renderStylesheets'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ts_auto_table_js', array($this, 'renderTableJs'), array('is_safe' => array('html')))
         );
     }
 
@@ -76,7 +84,15 @@ class AutoTablesExtension extends AbstractExtension
             'dtOpts' => $config->getDataTablesOptions(),
             'dtTagOpts' => $this->getParameter($args, 'dtOptions', array()),
             'tableId' => $config->getId(),
-            'transScope' => $config->getTransScope()
+            'transScope' => $config->getTransScope(),
+            'oReloadAfterAdd' => $this->getParameter($args, 'oReloadAfterAdd', 'null'),
+            'includeJavascript' => $this->checkIncludeJavascript(),
+            'includeJquery' => $this->getParameter($args, 'includeJquery', FALSE),
+            'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', TRUE),
+            'includeJqueryEditable' => $this->getParameter($args, 'includeJqueryEditable', TRUE),
+            'includeJqueryEditableDatePicker' => $this->getParameter($args, 'includeJqueryEditableDatePicker', TRUE),
+            'includeJqueryDataTables' => $this->getParameter($args, 'includeJqueryDataTables', TRUE),
+            'includeJqueryValidate' => $this->getParameter($args, 'includeJqueryValidate', TRUE)
         );
         return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableJs.html.twig', $array);
     }
@@ -84,17 +100,11 @@ class AutoTablesExtension extends AbstractExtension
     /**
      * Renders the needed JavaScript and stylesheet includes.
      */
-    public function renderAssets($args = array())
+    public function renderStylesheets()
     {
-        return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableAssets.html.twig',
+        return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableStylesheets.html.twig',
             array(
-                'javascriptAssets' => $this->getParameter($args, 'javascript', TRUE),
-                'stylesheetAssets' => $this->getParameter($args, 'stylesheet', TRUE),
-                'includeJquery' => $this->getParameter($args, 'includeJquery', FALSE),
-                'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', TRUE),
-                'includeJqueryEditable' => $this->getParameter($args, 'includeJqueryEditable', TRUE),
-                'includeJqueryDataTables' => $this->getParameter($args, 'includeJqueryDataTables', TRUE),
-                'includeJqueryValidate' => $this->getParameter($args, 'includeJqueryValidate', TRUE)
+                'includeJqueryUi' => $this->fetchAutoTablesGlobalConfiguration()->getFrontendFramework() != FrontendFramework::BOOTSTRAP3,
             )
         );
     }
@@ -118,6 +128,26 @@ class AutoTablesExtension extends AbstractExtension
         Ensure::ensureTrue($this->container->hasParameter($confKey), 'Missing twentysteps_auto_tables table configuration with id [%s]', $tableId);
         $options = $this->container->getParameter($confKey);
         Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
-        return new AutoTablesConfiguration($tableId, $options);
+        $globalConf = $this->fetchAutoTablesGlobalConfiguration();
+        return new AutoTablesConfiguration($tableId, $options, $globalConf);
+    }
+
+    /**
+     * @return AutoTablesGlobalConfiguration
+     */
+    private function fetchAutoTablesGlobalConfiguration() {
+        return new AutoTablesGlobalConfiguration($this->container->getParameter('twentysteps_auto_tables.config'));
+    }
+
+    /**
+     * Determines whether we have to include the javascript files.
+     */
+    private function checkIncludeJavascript() {
+        $request = $this->requestStack->getCurrentRequest();
+        $rtn = !$request->attributes->has($this::JS_INCLUDE_KEY);
+        if (!$rtn) {
+            $request->attributes->set($this::JS_INCLUDE_KEY, true);
+        }
+        return $rtn;
     }
 }
