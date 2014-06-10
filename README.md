@@ -242,10 +242,32 @@ Twig templates.
 
 The needed stylesheets of the bundle are included with the Twig function *ts_auto_table_stylesheets*.
 
+#### ts_auto_table_options
+
+You have to define at least the *entities* and the *tableId* for the data to be rendered. This is done by the function
+*ts_auto_table_options* like done in the following example:
+
+```
+{{ ts_auto_table_options({
+        'entities': products, 'tableId': 'products',
+        'columns': [
+            {
+                'selector': 'getDisplayName()',
+                'ignore': false
+            },
+            {
+                'selector': 'id',
+                'ignore': false
+            }
+    ]}) }}
+```
+
+As you can see you can also overwrite the configuration of any column here.
+
 #### ts_auto_table
 
-The HTML for the table has to be rendered with the Twig function *ts_auto_table*. Here the options
-*entities* with a list of the entities to be rendered and the *tableId* pointing to the corresponding section in the config.yml are needed.
+The HTML for the table has to be rendered with the Twig function *ts_auto_table*. To be able to render any table here, you
+have to ensure that the function *ts_auto_table_options* is called in advance.
 
 #### ts_auto_table_js
 
@@ -253,7 +275,6 @@ Finally the javascript code for the table has to be rendered. This is done by th
 By default all needed javascript libraries are loaded excepting the jquery library. This behaviour can be configured by the
 following options: *includeJquery, includeJqueryUi, includeJqueryEditable, includeJqueryDataTables* and *includeJqueryValidate*
 
-Also the call has to contain the parameters *entities* and *tableId* again.
 The [DataTables](https://datatables.net/) configuration may be extended here with the option *dtOptions*.
 
 Furthermore the *transScope* may be overwritten here and the routes for the CRUD controller actions with the options
@@ -261,6 +282,8 @@ Furthermore the *transScope* may be overwritten here and the routes for the CRUD
 
 The option *reloadAfterAdd* may be set to *true* to reload the page after an entity has been added. Currently this is needed
  to refresh any links rendered in custom view templates.
+
+And like *ts_auto_table* this function also needs to be preceded by a call to *ts_auto_table_options*.
 
 #### Example
 
@@ -272,7 +295,7 @@ In the following example you can see how to build a view displaying the entity *
 {% block head %}
     <link rel="icon" sizes="16x16" href="{{ asset('favicon.ico') }}"/>
     <link rel="stylesheet" href="{{ asset('bundles/acmedemo/css/demo.css') }}"/>
-    {{ ts_autoTable_assets({'includeJquery': TRUE}) }}
+    {{ ts_auto_table_stylesheets() }}
 {% endblock %}
 
 {% block title 'Product list' %}
@@ -281,16 +304,21 @@ In the following example you can see how to build a view displaying the entity *
     <div class="block">
         List of products
 
-        {{ ts_autoTable({'entities': products, 'tableId': 'products' }) }}
+        {{ ts_auto_table_options({
+                'entities': products, 'tableId': 'products',
+                'columns': [
+                    {
+                        'selector': 'getDisplayName()',
+                        'ignore': false
+                    },
+                    {
+                        'selector': 'id',
+                        'ignore': false
+                    }
+                ]}) }}
 
-        {{ ts_autoTable_js({
-            'entities': products, 'tableId': 'products',
-            'dtOptions': {
-                'oLanguage': {
-                    'sSearch': 'Find'
-                }
-            }
-        }) }}
+        {{ ts_auto_table() }}
+        {{ ts_auto_table_js({'includeJquery': true}) }}
     </div>
 {% endblock %}
 

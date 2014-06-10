@@ -62,5 +62,4 @@ abstract class AbstractExtension extends \Twig_Extension
         $value = util::array_get($args[$key]);
         return is_null($value) ? $defaultValue : $value;
     }
-
-} 
+}
