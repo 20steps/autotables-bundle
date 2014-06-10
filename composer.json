@@ -1,8 +1,8 @@
 {
     "name": "20steps/autotables-bundle",
     "type": "symfony-bundle",
-    "description": "TBD",
-    "keywords": ["datatables", "sf2"],
+    "description": "Symfony bundle for mapping entities into auto generated tables",
+    "keywords": ["datatables", "sf2", "symfony2", "doctrine", "table", "entity"],
     "homepage": "https://github.com/20steps/autotables-bundle",
     "license": "LGPL-3.0+",
     "authors": [
