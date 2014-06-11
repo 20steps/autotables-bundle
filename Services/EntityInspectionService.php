@@ -36,16 +36,14 @@ use Stringy\StaticStringy;
  * Service for inspecting entity classes and returning lists of Column descriptions to
  * be used for DataTables.
  */
-class EntityInspectionService
-{
+class EntityInspectionService {
     private $reader;
     private $entityDescriptorMap;
     private $columnDescriptorMap;
     private $translator;
     private $logger;
 
-    public function __construct($translator, $logger)
-    {
+    public function __construct($translator, $logger) {
         $this->reader = new AnnotationReader();
         $this->entityDescriptorMap = array();
         $this->columnDescriptorMap = array();
@@ -56,8 +54,7 @@ class EntityInspectionService
     /**
      * Inspects the given entities and returns a list of Entity objects for each of them.
      */
-    public function parseEntities($entities, AutoTablesConfiguration $config)
-    {
+    public function parseEntities($entities, AutoTablesConfiguration $config) {
         $entityList = array();
         foreach ($entities as $entity) {
             $entityList[] = $this->parseEntity($entity, $config);
@@ -69,8 +66,7 @@ class EntityInspectionService
      * Inspects the given entity and returns an Entity object for it.
      * @return Entity
      */
-    public function parseEntity($entity, AutoTablesConfiguration $config)
-    {
+    public function parseEntity($entity, AutoTablesConfiguration $config) {
         $reflClass = new \ReflectionClass($entity);
         $entityDescriptor = util::array_get($this->entityDescriptorMap[$reflClass->getName()]);
         if (!$entityDescriptor) {
@@ -90,8 +86,7 @@ class EntityInspectionService
     /**
      * Updates the specified value in the given entity.
      */
-    public function setValue($entity, $columnDescriptorId, $value, AutoTablesConfiguration $config)
-    {
+    public function setValue($entity, $columnDescriptorId, $value, AutoTablesConfiguration $config) {
         Ensure::ensureNotNull($entity, 'entity musst not be null');
         $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId, $config);
         if ($columnDescriptor->getType() == 'datetime') {
@@ -104,8 +99,7 @@ class EntityInspectionService
         }
     }
 
-    public function getValue($entity, $columnDescriptorId, AutoTablesConfiguration $config)
-    {
+    public function getValue($entity, $columnDescriptorId, AutoTablesConfiguration $config) {
         Ensure::ensureNotNull($entity, 'entity musst not be null');
         $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId, $config);
         $value = $columnDescriptor->getValue($entity);
@@ -118,8 +112,7 @@ class EntityInspectionService
     }
 
     // TODO there should be a better solution than using this... We want caching!
-    public function fetchId($entity)
-    {
+    public function fetchId($entity) {
         $id = null;
         $idProperty = $this->fetchIdProperty(new \ReflectionClass($entity));
         if ($idProperty) {
@@ -129,8 +122,7 @@ class EntityInspectionService
         return $id;
     }
 
-    private function getColumnDescriptor($entity, $columnDescriptorId, AutoTablesConfiguration $config)
-    {
+    private function getColumnDescriptor($entity, $columnDescriptorId, AutoTablesConfiguration $config) {
         $columnDescriptor = util::array_get($this->columnDescriptorMap[$columnDescriptorId]);
         if (!$columnDescriptor) {
             $this->initDescriptors(new \ReflectionClass($entity), $entity, $config);
@@ -140,8 +132,7 @@ class EntityInspectionService
         return $columnDescriptor;
     }
 
-    private function initDescriptors(\ReflectionClass $reflClass, $entity, AutoTablesConfiguration $config)
-    {
+    private function initDescriptors(\ReflectionClass $reflClass, $entity, AutoTablesConfiguration $config) {
         $columnDescriptors = array();
         $this->parsePropertyColumnDescriptors($reflClass, $columnDescriptors, $config);
         $this->parseMethodColumnDescriptors($reflClass, $columnDescriptors, $config);
@@ -150,89 +141,43 @@ class EntityInspectionService
         return $entityDescriptor;
     }
 
-    private function parsePropertyColumnDescriptors(\ReflectionClass $reflClass, &$columnDescriptors, AutoTablesConfiguration $config)
-    {
+    private function parsePropertyColumnDescriptors(\ReflectionClass $reflClass, &$columnDescriptors, AutoTablesConfiguration $config) {
         foreach ($reflClass->getProperties() as $property) {
-            $name = null;
-            $type = null;
-            $order = 0;
-            $ignore = false;
-            $readOnly = false;
-            foreach ($this->reader->getPropertyAnnotations($property) as $annot) {
-                if (($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\Column) ||
-                    ($annot instanceof \Doctrine\ORM\Mapping\Column and !$name)
-                ) {
-                    $name = $annot->name ? : $property->getName();
-                    $type = $annot->type ? : $type;
-                    if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\Column) {
-                        $order = $annot->getOrder();
-                        $readOnly = $annot->isReadOnly();
-                        $ignore = $annot->isIgnore();
-                    }
-                }
-            }
-
-            // overwrite by config
-            $propertyOverwrite = util::array_get($config->getColumns()[$property->getName()]);
-            $readOnly = util::array_get($propertyOverwrite['readOnly'], $readOnly);
-            $name = util::array_get($propertyOverwrite['name'], $name);
-            $type = util::array_get($propertyOverwrite['type'], $type);
-            $order = util::array_get($propertyOverwrite['order'], $order);
-            $ignore = util::array_get($propertyOverwrite['ignore'], $ignore);
-
-            // init descriptor
-            if (!$ignore && $name && $type) {
-                $columnDescriptor = new PropertyColumnDescriptor('p' . $property->getName(), $name, $type, $order, $readOnly, $property);
+            $info = new ColumnInfo($property->getName());
+            $info->addORMAnnotation($this->reader->getPropertyAnnotation($property, '\Doctrine\ORM\Mapping\Column'));
+            $info->addAutoTablesAnnotation($this->reader->getPropertyAnnotation($property, '\twentysteps\Bundle\AutoTablesBundle\Annotations\Column'));
+            $info->addAutoTablesConfig($config, $property->getName());
+            if ($info->isUsable()) {
+                $columnDescriptor = new PropertyColumnDescriptor('p' . $property->getName(), $info->getName(), $info->getType(), $info->getOrder(), $info->isReadOnly(), $property);
                 $this->columnDescriptorMap[$columnDescriptor->getId()] = $columnDescriptor;
                 $columnDescriptors[] = $columnDescriptor;
             }
         }
     }
 
-    private function parseMethodColumnDescriptors(\ReflectionClass $reflClass, &$columnDescriptors, AutoTablesConfiguration $config)
-    {
+    private function parseMethodColumnDescriptors(\ReflectionClass $reflClass, &$columnDescriptors, AutoTablesConfiguration $config) {
         foreach ($reflClass->getMethods() as $method) {
-            $name = null;
-            $type = null;
-            $order = 0;
-            $ignore = false;
-            $readOnly = false;
-            foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\Column) {
-                    Ensure::ensureTrue(count($method->getParameters()) == 0, 'Failed to use [%s] as getter method, only parameterless methods supported for @Column', $method->getName());
-                    Ensure::ensureTrue(StaticStringy::startsWith($method->getName(), 'get'), 'Illegal method name [%s], getter methods must start with a get prefix', $method->getName());
-                    $name = $annot->getName() ? : $method->getName();
-                    $type = $annot->getType() ? : $type;
-                    $order = $annot->getOrder() ? : 0;
-                    $readOnly = $annot->isReadOnly();
-                    $ignore = $annot->isIgnore();
-                    break;
-                }
+            $info = new ColumnInfo($method->getName());
+            $annot = $this->reader->getMethodAnnotation($method, '\twentysteps\Bundle\AutoTablesBundle\Annotations\Column');
+            if ($annot) {
+                Ensure::ensureTrue(count($method->getParameters()) == 0, 'Failed to use [%s] as getter method, only parameterless methods supported for @Column', $method->getName());
+                Ensure::ensureTrue(StaticStringy::startsWith($method->getName(), 'get'), 'Illegal method name [%s], getter methods must start with a get prefix', $method->getName());
+                $info->addAutoTablesAnnotation($annot);
+                $info->addAutoTablesConfig($config, $method->getName());
             }
-
-            // overwrite by config
-            $propertyOverwrite = util::array_get($config->getColumns()[$method->getName().'()']);
-            $readOnly = util::array_get($propertyOverwrite['readOnly'], $readOnly);
-            $name = util::array_get($propertyOverwrite['name'], $name);
-            $type = util::array_get($propertyOverwrite['type'], $type);
-            $order = util::array_get($propertyOverwrite['order'], $order);
-            $ignore = util::array_get($propertyOverwrite['ignore'], $ignore);
-
-            // init descriptor
-            if (!$ignore && $name && $type) {
+            if ($info->isUsable()) {
                 $setterMethod = $reflClass->getMethod('set' . substr($method->getName(), 3));
                 if ($setterMethod) {
                     Ensure::ensureEquals(1, count($setterMethod->getParameters()), 'setter method [%s] needs to have exactly one parameter', $setterMethod->getName());
                 }
-                $columnDescriptor = new MethodColumnDescriptor('m' . $method->getName(), $name, $type, $order, $readOnly, $method, $setterMethod);
+                $columnDescriptor = new MethodColumnDescriptor('m' . $method->getName(), $info->getName(), $info->getType(), $info->getOrder(), $info->isReadOnly(), $method, $setterMethod);
                 $this->columnDescriptorMap[$columnDescriptor->getId()] = $columnDescriptor;
                 $columnDescriptors[] = $columnDescriptor;
             }
         }
     }
 
-    private function fetchIdProperty(\ReflectionClass $reflClass)
-    {
+    private function fetchIdProperty(\ReflectionClass $reflClass) {
         $idProperty = null;
         foreach ($reflClass->getProperties() as $property) {
             foreach ($this->reader->getPropertyAnnotations($property) as $annot) {
