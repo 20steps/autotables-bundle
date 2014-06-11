@@ -6,7 +6,9 @@
             <tr>
                 <th>ID</th>
                 {% for column in entities|first.columns %}
-                    <th>{{ column.name|trans({}, transScope) }}</th>
+                    {% if column.visible %}
+                        <th>{{ column.name|trans({}, transScope) }}</th>
+                    {% endif %}
                 {% endfor %}
                 <th>{{ 'action.links.header'|trans({}, transScope) }}</th>
             </tr>
@@ -16,7 +18,9 @@
                 <tr id="{{ entity.id }}">
                     <td class="read_only">{{ entity.id }}</td>
                     {% for column in entity.columns %}
-                        <td id="td_{{ loop.index }}" class="{{ column.readOnly ? 'read_only' : '' }}">{% include [views~':columnValue.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:columnValue.html.twig'] with {column: column, entity: entity.obj} %}</td>
+                        {% if column.visible %}
+                            <td id="td_{{ loop.index }}" class="{{ column.readOnly ? 'read_only' : '' }}">{% include [views~':columnValue.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:columnValue.html.twig'] with {column: column, entity: entity.obj} %}</td>
+                        {% endif %}
                     {% endfor %}
                     <td>{% include [views~':columnActions.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:columnActions.html.twig'] with {'entityId': entity.id, 'entity': entity.obj} %}</td>
                 </tr>

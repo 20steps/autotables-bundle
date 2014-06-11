@@ -52,10 +52,17 @@ final class Column extends Annotation {
 
     /**
      * Simply ignores the annotated property/method if set to true. Ignored columns won't
-     * be displayed in the auto generated tables.
+     * be used in the tables.
      * @var boolean
      */
     public $ignore;
+
+    /**
+     * Selects whether the column should be visible (defaults to true). Not visible columns
+     * will not be displayed in the tables like ignored columns, but they may be initialized for example.
+     * @var boolean
+     */
+    public $visible = true;
 
     /**
      * @var Initializer
@@ -102,5 +109,12 @@ final class Column extends Annotation {
      */
     public function getInitializer() {
         return $this->initializer;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isVisible() {
+        return $this->visible;
     }
 }

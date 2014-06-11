@@ -83,4 +83,8 @@ class Column
     public function isReadOnly() {
         return $this->columnDescriptor->isReadOnly();
     }
+
+    public function isVisible() {
+        return $this->columnDescriptor->isVisible();
+    }
 }

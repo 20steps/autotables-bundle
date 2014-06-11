@@ -78,7 +78,9 @@ class CrudController extends Controller
         $columns = array();
         $columns[] = $entityDesc->getId();
         foreach ($entityDesc->getColumns() as $column) {
-            $columns[] = $entityInspector->getValue($entity, $column->getColumnDescriptorId(), $config);
+            if ($column->isVisible()) {
+                $columns[] = $entityInspector->getValue($entity, $column->getColumnDescriptorId(), $config);
+            }
         }
 
         $response = new Response(json_encode($columns));

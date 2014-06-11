@@ -1,7 +1,7 @@
 services:
     twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice:
         class: twentysteps\Bundle\AutoTablesBundle\Services\EntityInspectionService
-        arguments: [@translator, @logger]
+        arguments: [@translator, @logger, @request_stack, @doctrine]
 
     twentysteps_bundle.AutoTablesBundle.twig.autotables_extension:
         class: twentysteps\Bundle\AutoTablesBundle\Twig\AutoTablesExtension

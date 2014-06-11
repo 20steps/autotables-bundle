@@ -58,6 +58,11 @@ abstract class AbstractColumnDescriptor {
     private $ignore = false;
 
     /**
+     * @var boolean
+     */
+    private $visible = true;
+
+    /**
      * @var InitializerInfo
      */
     private $initializer;
@@ -78,6 +83,9 @@ abstract class AbstractColumnDescriptor {
         if ($column) {
             $this->name = $column->getName() ? : $this->name;
             $this->type = $column->getType() ? : $this->type;
+            if (!is_null($column->isVisible())) {
+                $this->visible = $column->isVisible();
+            }
             $this->order = $column->getOrder();
             $this->readOnly = $column->isReadOnly();
             $this->ignore = $column->isIgnore();
@@ -98,6 +106,7 @@ abstract class AbstractColumnDescriptor {
             $this->type = util::array_get($columnOverwrite['type'], $this->type);
             $this->order = util::array_get($columnOverwrite['order'], $this->order);
             $this->ignore = util::array_get($columnOverwrite['ignore'], $this->ignore);
+            $this->visible = util::array_get($columnOverwrite['visible'], $this->visible);
         }
     }
 
@@ -150,6 +159,13 @@ abstract class AbstractColumnDescriptor {
      */
     public function isReadOnly() {
         return $this->readOnly;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isVisible() {
+        return $this->visible;
     }
 
     /**

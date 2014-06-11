@@ -21,6 +21,7 @@ namespace twentysteps\Bundle\AutoTablesBundle\Services;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\HttpFoundation\RequestStack;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Model\AbstractColumnDescriptor;
 use twentysteps\Bundle\AutoTablesBundle\Model\Column;
@@ -38,18 +39,23 @@ use Stringy\StaticStringy;
  * be used for DataTables.
  */
 class EntityInspectionService {
+
     private $reader;
     private $entityDescriptorMap;
     private $columnDescriptorMap;
     private $translator;
     private $logger;
+    private $requestStack;
+    private $doctrine;
 
-    public function __construct($translator, $logger) {
+    public function __construct($translator, $logger, RequestStack $requestStack, $doctrine) {
         $this->reader = new AnnotationReader();
         $this->entityDescriptorMap = array();
         $this->columnDescriptorMap = array();
         $this->translator = $translator;
         $this->logger = $logger;
+        $this->requestStack = $requestStack;
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -87,9 +93,26 @@ class EntityInspectionService {
         $entityDescriptor = $this->fetchEntityDescriptor($entity, $config);
         foreach ($entityDescriptor->getColumnDescriptors() as $column) {
             if ($column->getInitializer()) {
+                $value = null;
                 if ($column->getInitializer()->getValue()) {
-                    $this->setValue($entity, $column->getId(), $column->getInitializer()->getValue(), $config);
+                    $value = $column->getInitializer()->getValue();
+                } else if ($column->getInitializer()->getRepository()) {
+                    $id = $column->getInitializer()->getId();
+                    if (!$id) {
+                        // search the id in the request
+                        $request = $this->requestStack->getCurrentRequest();
+                        if ($request) {
+                            $id = $request->get('id'.$column->getId());
+                        }
+                    }
+                    Ensure::ensureNotNull($id, 'Missing id for column [%s] in [%s]', $column->getName(), $config->getId());
+                    $repository = $this->doctrine->getRepository($column->getInitializer()->getRepository());
+                    Ensure::ensureNotNull($repository, 'Repository with id [%s] not found for [%s]', $column->getInitializer()->getRepository(), $config->getId());
+                    $value = $repository->find($id);
+                    //$this->logger->info(sprintf('Inject [%s] for [%s]', print_r($value, true), $column->getName()));
                 }
+                $this->setValue($entity, $column->getId(), $value, $config);
+                //$this->logger->info(sprintf('Entity is [%s]', print_r($entity, true)));
             }
         }
     }

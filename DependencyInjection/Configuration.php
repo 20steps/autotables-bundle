@@ -60,6 +60,7 @@ class Configuration implements ConfigurationInterface
                                         ->scalarNode('type')->end()
                                         ->integerNode('order')->end()
                                         ->booleanNode('ignore')->end()
+                                        ->booleanNode('visible')->end()
                                     ->end()
                                 ->end()
                             ->end()

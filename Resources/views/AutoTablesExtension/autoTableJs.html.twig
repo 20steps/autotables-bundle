@@ -29,19 +29,23 @@
             var columnMeta = [];
             columnMeta.push({});
             {% for column in entities|first.columns %}
-                columnMeta.push({columnDescriptorId: '{{ column.columnDescriptorId }}', mData: {{ loop.index }}});
-            {%  endfor %}
+                {% if column.visible %}
+                    columnMeta.push({columnDescriptorId: '{{ column.columnDescriptorId }}', mData: {{ loop.index }}});
+                {% endif %}
+            {% endfor %}
             columnMeta.push({});
 
             var dataTablesColumns = [];
             dataTablesColumns.push({ "bVisible": false});
             {% for column in entities|first.columns %}
-                {% if column.type == 'datetime' %}
-                    dataTablesColumns.push({type: 'datepicker', datepicker: {
-                        dateFormat: "{{ 'date.format'|trans({}, transScope) }}"
-                    }});
-                {%  else %}
-                    dataTablesColumns.push({type: 'text'});
+                {% if column.visible %}
+                    {% if column.type == 'datetime' %}
+                        dataTablesColumns.push({type: 'datepicker', datepicker: {
+                            dateFormat: "{{ 'date.format'|trans({}, transScope) }}"
+                        }});
+                    {%  else %}
+                        dataTablesColumns.push({type: 'text'});
+                    {% endif %}
                 {% endif %}
             {%  endfor %}
             dataTablesColumns.push( // Delete-Link
