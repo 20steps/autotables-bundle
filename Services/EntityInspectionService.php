@@ -92,7 +92,9 @@ class EntityInspectionService {
     public function initializeEntity($entity, AutoTablesConfiguration $config) {
         $entityDescriptor = $this->fetchEntityDescriptor($entity, $config);
         foreach ($entityDescriptor->getColumnDescriptors() as $column) {
+            $this->logger->info(sprintf('initialize column [%s]', $column->getName()));
             if ($column->getInitializer()) {
+                $this->logger->info(sprintf('initialize column has initializer'));
                 $value = null;
                 if ($column->getInitializer()->getValue()) {
                     $value = $column->getInitializer()->getValue();

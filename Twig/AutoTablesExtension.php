@@ -116,6 +116,7 @@ class AutoTablesExtension extends AbstractExtension {
         $request = $this->requestStack->getCurrentRequest();
         if ($request) {
             $config = $this->fetchAutoTablesConfiguration($args);
+            $this->logger->info(sprintf('Merged to config [%s]', print_r($config, true)));
             $entities = $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities'), $config);
             $request->attributes->set('tsAutoTablesConfig', $config);
             $request->attributes->set('tsAutoTablesEntities', $entities);
