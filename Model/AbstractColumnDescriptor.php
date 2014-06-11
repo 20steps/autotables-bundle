@@ -19,9 +19,13 @@
 
 namespace twentysteps\Bundle\AutoTablesBundle\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+use twentysteps\Bundle\AutoTablesBundle\Annotations as AUT;
+use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
+use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
+use utilphp\util;
 
-abstract class AbstractColumnDescriptor
-{
+abstract class AbstractColumnDescriptor {
 
     /**
      * @var string
@@ -41,60 +45,118 @@ abstract class AbstractColumnDescriptor
     /**
      * @var int
      */
-    private $order;
+    private $order = 10000;
 
     /**
      * @var boolean
      */
-    private $readOnly;
+    private $readOnly = false;
 
-    protected function __construct($id, $name, $type, $order, $readOnly)
-    {
+    /**
+     * @var boolean
+     */
+    private $ignore = false;
+
+    /**
+     * @var InitializerInfo
+     */
+    private $initializer;
+
+    protected function __construct($id, $name) {
         $this->id = $id;
         $this->name = $name;
-        $this->type = $type;
-        $this->order = $order;
-        $this->readOnly = $readOnly;
+    }
+
+    public function addORMAnnotation(ORM\Column $column = null) {
+        if ($column) {
+            $this->name = $column->name ? : $this->name;
+            $this->type = $column->type ? : $this->type;
+        }
+    }
+
+    public function addAutoTablesAnnotation(AUT\Column $column = null) {
+        if ($column) {
+            $this->name = $column->getName() ? : $this->name;
+            $this->type = $column->getType() ? : $this->type;
+            $this->order = $column->getOrder();
+            $this->readOnly = $column->isReadOnly();
+            $this->ignore = $column->isIgnore();
+            if ($column->getInitializer()) {
+                if (!$this->initializer) {
+                    $this->initializer = new InitializerInfo();
+                }
+                $this->initializer->addInitializerAnnotation($column->getInitializer());
+            }
+        }
+    }
+
+    public function addAutoTablesConfig(AutoTablesConfiguration $config, $selector) {
+        $columnOverwrite = util::array_get($config->getColumns()[$selector]);
+        if ($columnOverwrite) {
+            $this->readOnly = util::array_get($columnOverwrite['readOnly'], $this->readOnly);
+            $this->name = util::array_get($columnOverwrite['name'], $this->name);
+            $this->type = util::array_get($columnOverwrite['type'], $this->type);
+            $this->order = util::array_get($columnOverwrite['order'], $this->order);
+            $this->ignore = util::array_get($columnOverwrite['ignore'], $this->ignore);
+        }
+    }
+
+    /**
+     * Returns true, if the column should be used in auto generated tables.
+     */
+    public function isUsable() {
+        return !$this->ignore && $this->name && $this->type;
+    }
+
+    /**
+     * Throws an exception if the settings are inconsistent.
+     */
+    public function validate() {
+        if ($this->initializer) {
+            Ensure::ensureFalse($this->initializer->getRepository() && $this->initializer->getValue(), 'It makes no sense to define initializer repository and value simultaneously for column [%s]', $this->name);
+        }
     }
 
     /**
      * @return string
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
     /**
      * @return int
      */
-    public function getOrder()
-    {
+    public function getOrder() {
         return $this->order;
     }
 
     /**
      * @return string
      */
-    public function getType()
-    {
+    public function getType() {
         return $this->type;
     }
 
     /**
      * @return boolean
      */
-    public function isReadOnly()
-    {
+    public function isReadOnly() {
         return $this->readOnly;
+    }
+
+    /**
+     * @return \twentysteps\Bundle\AutoTablesBundle\Model\InitializerInfo
+     */
+    public function getInitializer() {
+        return $this->initializer;
     }
 
     public abstract function getValue($entity);

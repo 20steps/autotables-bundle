@@ -22,7 +22,6 @@ namespace twentysteps\Bundle\AutoTablesBundle\Model;
 
 class PropertyColumnDescriptor extends AbstractColumnDescriptor
 {
-
     /**
      * @var \ReflectionProperty
      */
@@ -33,9 +32,9 @@ class PropertyColumnDescriptor extends AbstractColumnDescriptor
      */
     private $order;
 
-    public function __construct($columnId, $name, $type, $order, $readOnly, \ReflectionProperty $property)
+    public function __construct(\ReflectionProperty $property)
     {
-        parent::__construct($columnId, $name, $type, $order, $readOnly);
+        parent::__construct('p' . $property->getName(), $property->getName());
         $this->property = $property;
         $this->property->setAccessible(TRUE);
     }

@@ -58,6 +58,11 @@ final class Column extends Annotation {
     public $ignore;
 
     /**
+     * @var Initializer
+     */
+    public $initializer;
+
+    /**
      * @return string
      */
     public function getType() {
@@ -90,5 +95,12 @@ final class Column extends Annotation {
      */
     public function isIgnore() {
         return $this->ignore;
+    }
+
+    /**
+     * @return Initializer
+     */
+    public function getInitializer() {
+        return $this->initializer;
     }
 }

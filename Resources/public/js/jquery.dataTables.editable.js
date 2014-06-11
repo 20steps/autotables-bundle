@@ -494,6 +494,8 @@ returns true if plugin should continue with sending AJAX request, false will abo
             for (var i = 0; i < data.length; i++) {
                 values[i] = data[i];
             }
+            // FIXME add the actions column, what else may be done???
+            values[data.length] = '';
 
             properties.fnEndProcessingMode();
 
@@ -1149,7 +1151,9 @@ returns true if plugin should continue with sending AJAX request, false will abo
                 var iColumnCount = oSettings.aoColumns.length;
                 for (i = 0; i < iColumnCount; i++) {
                     if ($("[rel=" + i + "]", oAddNewRowForm).length == 0)
-                        properties.fnShowError("In the form that is used for adding new records cannot be found an input element with rel=" + i + " that will be bound to the value in the column " + i + ". See http://code.google.com/p/jquery-datatables-editable/wiki/AddingNewRecords#Add_new_record_form for more details", "init");
+                        // TODO it's probably read-only, can we check it here?
+                        continue;
+                        // properties.fnShowError("In the form that is used for adding new records cannot be found an input element with rel=" + i + " that will be bound to the value in the column " + i + ". See http://code.google.com/p/jquery-datatables-editable/wiki/AddingNewRecords#Add_new_record_form for more details", "init");
                 }
 
                 var openDialog = oAddNewRowForm.attr('data-disable-popup') != "true";

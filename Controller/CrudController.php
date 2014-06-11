@@ -61,6 +61,7 @@ class CrudController extends Controller
         $crudService = $this->fetchCrudService($config);
         $entityInspector = $this->get('twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice');
         $entity = $crudService->createEntity();
+        $entityInspector->initializeEntity($entity, $config);
         foreach ($request->request->keys() as $paramName) {
             if ($this->isColumnParameter($paramName)) {
                 $entityInspector->setValue($entity, $paramName, $request->request->get($paramName), $config);

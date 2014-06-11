@@ -35,16 +35,23 @@ class MethodColumnDescriptor extends AbstractColumnDescriptor
      */
     private $setterMethod;
 
-    public function __construct($columnId, $name, $type, $order, $readOnly, \ReflectionMethod $getterMethod, \ReflectionMethod $setterMethod)
+    public function __construct(\ReflectionMethod $getterMethod)
     {
-        parent::__construct($columnId, $name, $type, $order, $readOnly);
+        parent::__construct('p' . $getterMethod->getName(), $getterMethod->getName());
         $this->getterMethod = $getterMethod;
         $this->getterMethod->setAccessible(TRUE);
+    }
+
+    /**
+     * @param \ReflectionMethod $setterMethod
+     */
+    public function setSetterMethod($setterMethod) {
         $this->setterMethod = $setterMethod;
         if ($this->setterMethod) {
             $this->setterMethod->setAccessible(TRUE);
         }
     }
+
 
     public function getValue($entity)
     {
