@@ -39,8 +39,8 @@ class AutoTablesConfiguration {
 
     public function __construct($id, $args, AutoTablesGlobalConfiguration $globalConf) {
         $this->id = $id;
-        $this->serviceId = util::array_get($args['service_id'], null);
-        $this->repositoryId = util::array_get($args['repository_id'], null);
+        $this->serviceId = util::array_get($args['service'], null);
+        $this->repositoryId = util::array_get($args['repository'], null);
         $this->transScope = util::array_get($args['trans_scope'], $globalConf->getTransScope());
         $this->dataTablesOptions = util::array_get($args['datatables_options'], $globalConf->getDataTablesOptions());
         $this->views = util::array_get($args['views'], '');

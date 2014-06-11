@@ -91,11 +91,11 @@ Now the tables to be rendered by the bundle has to be configured. This happens a
 Each table configuration has to have an *id* property. This is used to reference the configurations in later calls
 to the bundle.
 
-#### repository_id and service_id
+#### repository and service
 
-Additionally each table configuration has to define either a *repository_id* or a *service_id*. The *repository_id* is the
+Additionally each table configuration has to define either a *repository* or a *service*. The *repository* is the
 name of a Doctrine repository for handling the entities to be printed. If you are not using Doctrine (or for some other reason)
-you can define a *service_id* pointing to a service implementing the AutoTablesCrudService interface.
+you can define a *service* pointing to a service implementing the AutoTablesCrudService interface.
 
 #### trans_scope
 
@@ -135,7 +135,7 @@ twentysteps_auto_tables:
   tables:
     -
       id: "products"
-      repository_id: 'AcmeStoreBundle:Product'
+      repository: 'AcmeStoreBundle:Product'
       trans_scope: 'autoTables'
       datatables_options: >
         {
