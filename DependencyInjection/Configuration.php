@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
                                         ->integerNode('order')->end()
                                         ->booleanNode('ignore')->end()
                                         ->booleanNode('visible')->end()
-                                        ->arrayNode('connection')
+                                        ->arrayNode('initializer')
                                             ->children()
                                                 ->scalarNode('repository')->end()
                                                 ->scalarNode('id')->end()
