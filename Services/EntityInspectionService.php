@@ -92,9 +92,7 @@ class EntityInspectionService {
     public function initializeEntity($entity, AutoTablesConfiguration $config) {
         $entityDescriptor = $this->fetchEntityDescriptor($entity, $config);
         foreach ($entityDescriptor->getColumnDescriptors() as $column) {
-            $this->logger->info(sprintf('initialize column [%s]', $column->getName()));
             if ($column->getInitializer()) {
-                $this->logger->info(sprintf('initialize column has initializer'));
                 $value = null;
                 if ($column->getInitializer()->getValue()) {
                     $value = $column->getInitializer()->getValue();
@@ -111,10 +109,8 @@ class EntityInspectionService {
                     $repository = $this->doctrine->getRepository($column->getInitializer()->getRepository());
                     Ensure::ensureNotNull($repository, 'Repository with id [%s] not found for [%s]', $column->getInitializer()->getRepository(), $config->getId());
                     $value = $repository->find($id);
-                    //$this->logger->info(sprintf('Inject [%s] for [%s]', print_r($value, true), $column->getName()));
                 }
                 $this->setValue($entity, $column->getId(), $value, $config);
-                //$this->logger->info(sprintf('Entity is [%s]', print_r($entity, true)));
             }
         }
     }
@@ -128,7 +124,6 @@ class EntityInspectionService {
         if ($columnDescriptor->getType() == 'datetime') {
             $format = $this->translator->trans('php.date.format', array(), $config->getTransScope());
             $date = \DateTime::createFromFormat($format, $value);
-            //$this->logger->info(sprintf('Created date [%s] from value [%s] with format [%s]', $date, $value, $format));
             $columnDescriptor->setValue($entity, $date);
         } else {
             $columnDescriptor->setValue($entity, $value);

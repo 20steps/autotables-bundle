@@ -122,6 +122,13 @@ Currently the following things may be configured for a column: *name*, *readOnly
 The parameter *selector* has to be given to select the column to be overwritten. This may be a property like *description*, or
 a method like *getDisplayName()*.
 
+For columns that should be auto initialized while using the add entry form, you may configure an *initializer* section.
+This section may contain the values *repository*, *value* and *id*.
+
+The property *value* simply selects a constant value to be injected into each new entity with this column. By selecting a
+repository one is able to inject an object found by a given id. The id may be passed by a constant value here in the
+ config.xml or later in the Twig view while using the function *ts_auto_table_options*.
+
 #### Example
 
 Here is an example of a configuration given for a table *products*:
@@ -155,6 +162,11 @@ twentysteps_auto_tables:
                 readOnly: true
                 order: 2
               -
+                selector: 'client'
+                visible: false
+                initializer:
+                    repository: 'AcmeStoreBundle:Client'
+              -
                 selector: 'getDisplayName()'
                 order: 10
                 readOnly: false
@@ -172,6 +184,25 @@ a setter of the same name has to be created (getFoo/setFoo). It's even possible 
 
 If you want to avoid rendering the column in the auto generated table, you should set the *ignore* flag of the annotation to true.
 In this case the property resp. method is ignored by the bundle.
+
+Like mentioned in the configuration section, any column may be initialized automatically while using the add entry form.
+This may be configured with the *Initializer* annotation like described in the configuration section or shown in the following examples:
+
+```
+/**
+ * @ORM\ManyToOne(targetEntity="Client", inversedBy="products")
+ * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+ * @AUT\Column(type="mixed", visible=false, initializer=@AUT\Initializer(repository="AcmeStoreBundle:Client"))
+ */
+private $client;
+
+/**
+ * @ORM\Column(type="string", length=100)
+ * @AUT\Column(visible=false, initializer=@AUT\Initializer(value="bar"))
+ */
+private $foo;
+
+```
 
 The following code block shows a complete example of a properly annotated entity for AutoTablesBundle:
 
@@ -252,11 +283,17 @@ You have to define at least the *entities* and the *tableId* for the data to be 
         'columns': [
             {
                 'selector': 'getDisplayName()',
-                'ignore': false
+                'visible': true
             },
             {
+                'selector': 'client',
+                'initializer': {
+                    'id': client.id
+                }
+            }
+            {
                 'selector': 'id',
-                'ignore': false
+                'visible': false
             }
     ]}) }}
 ```
