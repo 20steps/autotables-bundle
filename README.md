@@ -263,9 +263,9 @@ You have to define at least the *entities* and the *tableId* for the data to be 
 
 As you can see you can also overwrite the configuration of any column here.
 
-#### ts_auto_table
+#### ts_auto_table_html
 
-The HTML for the table has to be rendered with the Twig function *ts_auto_table*. To be able to render any table here, you
+The HTML for the table has to be rendered with the Twig function *ts_auto_table_html*. To be able to render any table here, you
 have to ensure that the function *ts_auto_table_options* is called in advance.
 
 #### ts_auto_table_js
@@ -282,7 +282,7 @@ Furthermore the *transScope* may be overwritten here and the routes for the CRUD
 The option *reloadAfterAdd* may be set to *true* to reload the page after an entity has been added. Currently this is needed
  to refresh any links rendered in custom view templates.
 
-And like *ts_auto_table* this function also needs to be preceded by a call to *ts_auto_table_options*.
+And like *ts_auto_table_html* this function also needs to be preceded by a call to *ts_auto_table_options*.
 
 #### Example
 
@@ -316,7 +316,7 @@ In the following example you can see how to build a view displaying the entity *
                     }
                 ]}) }}
 
-        {{ ts_auto_table() }}
+        {{ ts_auto_table_html() }}
         {{ ts_auto_table_js({'includeJquery': true}) }}
     </div>
 {% endblock %}

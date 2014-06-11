@@ -45,7 +45,7 @@ class AutoTablesExtension extends AbstractExtension {
 
     public function getFunctions() {
         return array(
-            new \Twig_SimpleFunction('ts_auto_table', array($this, 'renderTable'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('ts_auto_table_html', array($this, 'renderTable'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('ts_auto_table_stylesheets', array($this, 'renderStylesheets'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('ts_auto_table_js', array($this, 'renderTableJs'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('ts_auto_table_options', array($this, 'defineOptions'), array('is_safe' => array('html')))
