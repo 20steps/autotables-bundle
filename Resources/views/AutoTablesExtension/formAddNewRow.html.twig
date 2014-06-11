@@ -11,6 +11,8 @@
                        class="required"
                        rel="{{ loop.index }}"/>
                 <br/>
+             {%  elseif not column.visible and column.initializer.id %}
+                 <input type="hidden" name="id{{ column.columnDescriptorId }}" value="{{ column.initializer.id }}"/>
             {%  endif %}
         {% endfor %}
         <span rel="{{ ((entities|first.columns)|length) + 1 }}" style="display:none"><a class="table-action-deletelink"

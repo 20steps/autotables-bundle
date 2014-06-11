@@ -107,6 +107,13 @@ abstract class AbstractColumnDescriptor {
             $this->order = util::array_get($columnOverwrite['order'], $this->order);
             $this->ignore = util::array_get($columnOverwrite['ignore'], $this->ignore);
             $this->visible = util::array_get($columnOverwrite['visible'], $this->visible);
+            $initializer = util::array_get($columnOverwrite['initializer'], null);
+            if ($initializer) {
+                if (!$this->initializer) {
+                    $this->initializer = new InitializerInfo();
+                }
+                $this->initializer->addInitializerConfig($initializer);
+            }
         }
     }
 

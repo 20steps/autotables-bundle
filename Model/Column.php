@@ -87,4 +87,8 @@ class Column
     public function isVisible() {
         return $this->columnDescriptor->isVisible();
     }
+
+    public function getInitializer() {
+        return $this->columnDescriptor->getInitializer();
+    }
 }

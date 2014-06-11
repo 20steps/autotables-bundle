@@ -21,6 +21,7 @@
 namespace twentysteps\Bundle\AutoTablesBundle\Model;
 
 use twentysteps\Bundle\AutoTablesBundle\Annotations as AUT;
+use utilphp\util;
 
 /**
  * Gathers information about a column's initializer.
@@ -39,6 +40,13 @@ class InitializerInfo {
         }
     }
 
+    public function addInitializerConfig($args) {
+        if ($args) {
+            $this->repository = util::array_get($args['repository'], $this->repository);
+            $this->id = util::array_get($args['id'], $this->id);
+            $this->value = util::array_get($args['value'], $this->value);
+        }
+    }
     /**
      * @return mixed
      */
