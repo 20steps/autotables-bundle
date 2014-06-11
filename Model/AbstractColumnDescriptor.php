@@ -40,7 +40,7 @@ abstract class AbstractColumnDescriptor {
     /**
      * @var string
      */
-    private $type;
+    private $type = 'mixed';
 
     /**
      * @var int
