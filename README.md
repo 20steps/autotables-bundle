@@ -165,14 +165,13 @@ twentysteps_auto_tables:
 The information needed to render any column into a table is taken from annotations found in the entity.
 The bundle searches for Doctrine annotations like *@Doctrine\ORM\Mapping\Column* and *@Doctrine\ORM\Mapping\Id*.
 If you want to give a different name, set an order value or for some other reason you can use the bundle's
-annotation *twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnMeta*. Even getter methods may be annotated
+annotation *twentysteps\Bundle\AutoTablesBundle\Annotations\Column*. Even getter methods may be annotated
 with this annotation, to create a column displaying the value returned by the getter. To be able to update the value in this case,
 a setter of the same name has to be created (getFoo/setFoo). It's even possible to disable the editing of a column by using the
 *readOnly* property of the annotation.
 
-If you want to prevent that a Doctrine property is displayed in the table of the entity you can annotate the property
-with the annotation  *twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnIgnore*. In this case the property
-is ignored by the bundle.
+If you want to avoid rendering the column in the auto generated table, you should set the *ignore* flag of the annotation to true.
+In this case the property resp. method is ignored by the bundle.
 
 The following code block shows a complete example of a properly annotated entity for AutoTablesBundle:
 
@@ -182,7 +181,7 @@ The following code block shows a complete example of a properly annotated entity
 namespace Acme\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use twentysteps\Bundle\AutoTablesBundle\Annotations as ATB;
+use twentysteps\Bundle\AutoTablesBundle\Annotations as AUT;
 
 /**
  * Product
@@ -196,30 +195,30 @@ class Product
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @ATB\ColumnIgnore
+     * @AUT\Column(ignore=true)
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @ATB\ColumnIgnore
+     * @AUT\Column(ignore=true)
      */
     protected $name;
 
     /**
      * @ORM\Column(type="decimal", scale=2)
-     * @ATB\ColumnMeta(name="col_prize", order = 2, readOnly = true)
+     * @AUT\Column(name="col_prize", order = 2, readOnly = true)
      */
     protected $price;
 
     /**
      * @ORM\Column(type="text")
-     * @ATB\ColumnMeta(name="col_description", order = 3)
+     * @AUT\Column(name="col_description", order = 3)
      */
     protected $description;
 
     /**
-     * @ATB\ColumnMeta(name="col_name", type="string", order=1)
+     * @AUT\Column(name="col_name", type="string", order=1)
      * @return string
      */
     public function getDisplayName()

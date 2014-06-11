@@ -25,8 +25,7 @@ use Doctrine\Common\Annotations\Annotation;
  * @Annotation
  * @Target({"METHOD","PROPERTY"})
  */
-final class ColumnMeta extends Annotation
-{
+final class Column extends Annotation {
     /**
      * Sets the type of the annotated column.
      * @var string
@@ -52,34 +51,44 @@ final class ColumnMeta extends Annotation
     public $readOnly;
 
     /**
+     * Simply ignores the annotated property/method if set to true. Ignored columns won't
+     * be displayed in the auto generated tables.
+     * @var boolean
+     */
+    public $ignore;
+
+    /**
      * @return string
      */
-    public function getType()
-    {
+    public function getType() {
         return $this->type;
     }
 
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
     /**
      * @return int
      */
-    public function getOrder()
-    {
+    public function getOrder() {
         return $this->order;
     }
 
     /**
      * @return boolean
      */
-    public function isReadOnly()
-    {
+    public function isReadOnly() {
         return $this->readOnly;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIgnore() {
+        return $this->ignore;
     }
 }

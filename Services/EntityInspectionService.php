@@ -159,19 +159,16 @@ class EntityInspectionService
             $ignore = false;
             $readOnly = false;
             foreach ($this->reader->getPropertyAnnotations($property) as $annot) {
-                if (($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnMeta) ||
+                if (($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\Column) ||
                     ($annot instanceof \Doctrine\ORM\Mapping\Column and !$name)
                 ) {
                     $name = $annot->name ? : $property->getName();
                     $type = $annot->type ? : $type;
-                    if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnMeta) {
+                    if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\Column) {
                         $order = $annot->getOrder();
                         $readOnly = $annot->isReadOnly();
+                        $ignore = $annot->isIgnore();
                     }
-                }
-                if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnIgnore) {
-                    $ignore = true;
-                    break;
                 }
             }
 
@@ -201,16 +198,14 @@ class EntityInspectionService
             $ignore = false;
             $readOnly = false;
             foreach ($this->reader->getMethodAnnotations($method) as $annot) {
-                if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnMeta) {
-                    Ensure::ensureTrue(count($method->getParameters()) == 0, 'Failed to use [%s] as getter method, only parameterless methods supported for @ColumnMeta', $method->getName());
+                if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\Column) {
+                    Ensure::ensureTrue(count($method->getParameters()) == 0, 'Failed to use [%s] as getter method, only parameterless methods supported for @Column', $method->getName());
                     Ensure::ensureTrue(StaticStringy::startsWith($method->getName(), 'get'), 'Illegal method name [%s], getter methods must start with a get prefix', $method->getName());
                     $name = $annot->getName() ? : $method->getName();
                     $type = $annot->getType() ? : $type;
                     $order = $annot->getOrder() ? : 0;
                     $readOnly = $annot->isReadOnly();
-                }
-                if ($annot instanceof \twentysteps\Bundle\AutoTablesBundle\Annotations\ColumnIgnore) {
-                    $ignore = true;
+                    $ignore = $annot->isIgnore();
                     break;
                 }
             }
