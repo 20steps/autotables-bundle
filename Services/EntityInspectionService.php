@@ -201,17 +201,19 @@ class EntityInspectionService {
 
     private function parseMethodColumnDescriptors(\ReflectionClass $reflClass, &$columnDescriptors, AutoTablesConfiguration $config) {
         foreach ($reflClass->getMethods() as $method) {
-            $column = new MethodColumnDescriptor($method);
+            $column = null;
             $annot = $this->reader->getMethodAnnotation($method, '\twentysteps\Bundle\AutoTablesBundle\Annotations\Column');
             if ($annot) {
+                $column = new MethodColumnDescriptor($method);
                 Ensure::ensureTrue(count($method->getParameters()) == 0, 'Failed to use [%s] as getter method, only parameterless methods supported for @Column', $method->getName());
                 Ensure::ensureTrue(StaticStringy::startsWith($method->getName(), 'get'), 'Illegal method name [%s], getter methods must start with a get prefix', $method->getName());
                 $column->addAutoTablesAnnotation($annot);
                 $column->addAutoTablesConfig($config, $method->getName());
             }
-            if ($column->isUsable()) {
-                $setterMethod = $reflClass->getMethod('set' . substr($method->getName(), 3));
-                if ($setterMethod) {
+            if ($column && $column->isUsable()) {
+                $methodName = 'set' . substr($method->getName(), 3);
+                if ($reflClass->hasMethod($methodName)) {
+                    $setterMethod = $reflClass->getMethod($methodName);
                     Ensure::ensureEquals(1, count($setterMethod->getParameters()), 'setter method [%s] needs to have exactly one parameter', $setterMethod->getName());
                     $column->setSetterMethod($setterMethod);
                 }
