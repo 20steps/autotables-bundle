@@ -311,13 +311,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
                             /*(sNewCellValue == null) || (sNewCellValue == sValue) ||*/
                             (sNewCellValue != null) ||
                             properties.sSuccessResponse == sValue) {
-                            /*if(sNewCellDisplayValue == null)
-                            {*/
-                                //sNewCellDisplayValue = sValue;
-                                oTable.fnUpdate(sValue, aPos[0], aPos[2], bRefreshTable);
-                            /*}else{
-                                oTable.fnUpdate(sNewCellDisplayValue, aPos[0], aPos[2], bRefreshTable);
-                            }*/
+                            oTable.fnUpdate(sValue, aPos[0], aPos[2], bRefreshTable);
                             $("td.last-updated-cell", oTable).removeClass("last-updated-cell");
                             $(this).addClass("last-updated-cell");
                             status = "success";

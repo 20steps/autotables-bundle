@@ -320,8 +320,10 @@ The [DataTables](https://datatables.net/) configuration may be extended here wit
 Furthermore the *transScope* may be overwritten here and the routes for the CRUD controller actions with the options
 *updateRoute, deleteRoute* and *addRoute*.
 
-The option *reloadAfterAdd* may be set to *true* to reload the page after an entity has been added. Currently this is needed
+The option *reloadAfterAdd* (default true) may be set to *true* to reload the page after an entity has been added. Currently this is needed
  to refresh any links rendered in custom view templates.
+
+There is also an option *reloadAfterUpdate* (default false), with the same effect.
 
 And like *ts_auto_table_html* this function also needs to be preceded by a call to *ts_auto_table_options*.
 

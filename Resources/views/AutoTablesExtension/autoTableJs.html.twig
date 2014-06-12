@@ -81,6 +81,13 @@
             oReloadAfterAdd: {{ reloadAfterAdd }},
             fnOnDeleting: function (tr, id, fnDeleteRow) {
                 return confirm("{{ "Are you sure that you want to delete this entry? This operation can't be undone"|trans({}, transScope) }}");
+            },
+            fnOnEdited: function(status) {
+                {% if reloadAfterUpdate %}
+                if (status == "success") {
+                    location.reload();
+                }
+                {% endif %}
             }
         };
         $('#myDtTable').dataTable(dtOpts).makeEditable(dteOpts);
