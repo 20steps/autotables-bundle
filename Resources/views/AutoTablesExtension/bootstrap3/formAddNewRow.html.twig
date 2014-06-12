@@ -27,7 +27,7 @@
                                    rel="{{ loop.index }}"/>
                                 {% endif %}
                             <br/>
-                        {% elseif not column.visible and column.initializer.id %}
+                        {% elseif not column.visible and column.initializer and column.initializer.id %}
                             <input type="hidden" name="id{{ column.id }}"
                                    value="{{ column.initializer.id }}"/>
                         {% endif %}

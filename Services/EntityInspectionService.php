@@ -190,7 +190,7 @@ class EntityInspectionService {
     private function getColumnDescriptor($entity, $columnDescriptorId, AutoTablesConfiguration $config) {
         $columnDescriptor = util::array_get($this->columnDescriptorMap[$columnDescriptorId]);
         if (!$columnDescriptor) {
-            $this->initDescriptors(new \ReflectionClass($entity), $entity, $config);
+            $this->initDescriptors(new \ReflectionClass($entity), $config);
             $columnDescriptor = util::array_get($this->columnDescriptorMap[$columnDescriptorId]);
             Ensure::ensureNotNull($columnDescriptor, 'Failed to load column [%s] for entity of type [%s]', $columnDescriptorId, get_class($entity));
         }
