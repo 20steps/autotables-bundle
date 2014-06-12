@@ -35,7 +35,7 @@ class AutoTablesGlobalConfiguration {
     public function __construct($args) {
         $this->transScope = util::array_get($args['trans_scope'], 'messages');
         $this->dataTablesOptions = util::array_get($args['datatables_options'], '{}');
-        $this->frontendFramework = FrontendFramework::fromString(util::array_get($args['frontend_framework'], FrontendFramework::toString(FrontendFramework::STANDARD)));
+        $this->frontendFramework = FrontendFramework::fromString(util::array_get($args['frontend_framework'], FrontendFramework::toString(FrontendFramework::JQUERY_UI)));
     }
 
     /**

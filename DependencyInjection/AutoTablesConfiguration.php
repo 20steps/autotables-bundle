@@ -51,61 +51,53 @@ class AutoTablesConfiguration {
     /**
      * @return string
      */
-    public function getDataTablesOptions()
-    {
+    public function getDataTablesOptions() {
         return $this->dataTablesOptions;
     }
 
     /**
      * @return string
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
     /**
      * @return string
      */
-    public function getRepositoryId()
-    {
+    public function getRepositoryId() {
         return $this->repositoryId;
     }
 
     /**
      * @return string
      */
-    public function getServiceId()
-    {
+    public function getServiceId() {
         return $this->serviceId;
     }
 
     /**
      * @return string
      */
-    public function getTransScope()
-    {
+    public function getTransScope() {
         return $this->transScope;
     }
 
     /**
      * @return null
      */
-    public function getViews()
-    {
+    public function getViews() {
         return $this->views;
     }
 
-    public function getFrontendFramework()
-    {
+    public function getFrontendFramework() {
         return $this->frontendFramework;
     }
 
     /**
      * @return mixed
      */
-    public function getColumns()
-    {
+    public function getColumns() {
         return $this->columns;
     }
 

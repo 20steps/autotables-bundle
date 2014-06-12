@@ -28,7 +28,7 @@ namespace twentysteps\Bundle\AutoTablesBundle\Twig;
  */
 final class FrontendFramework {
 
-    const STANDARD = 0;
+    const JQUERY_UI = 0;
     const BOOTSTRAP3 = 1;
 
     private function __construct() {
@@ -38,8 +38,8 @@ final class FrontendFramework {
     public static function fromString($str) {
         $rtn = null;
         switch ($str) {
-            case "standard":
-                $rtn = FrontendFramework::STANDARD;
+            case "jquery-ui":
+                $rtn = FrontendFramework::JQUERY_UI;
                 break;
             case "bootstrap3":
                 $rtn = FrontendFramework::BOOTSTRAP3;
@@ -53,8 +53,8 @@ final class FrontendFramework {
     public static function toString($val) {
         $rtn = null;
         switch ($val) {
-            case FrontendFramework::STANDARD:
-                $rtn = 'standard';
+            case FrontendFramework::JQUERY_UI:
+                $rtn = 'jquery-ui';
                 break;
             case FrontendFramework::BOOTSTRAP3:
                 $rtn = 'bootstrap3';

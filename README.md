@@ -17,6 +17,8 @@ The AutoTables Bundle is licensed under the LGPL license version 3.0 (http://www
 * Displaying columns of either properties or methods
 * Modifying columns for either properties or methods
 * Declaring columns as read-only
+* Auto-initialization feature for newly added entities supporting constant values and ManyToOne-Mappings
+* JQuery-UI and Bootstrap3 support
 * Many customization options
 
 ## Installation
@@ -74,7 +76,7 @@ It is given by a string containing a JSON representation of the options. Any set
 
 * trans_scope: Default scope for autotables related translations.
 
-* frontend_framework: Frontend framework to be used for rendering. Currently the values "standard" and "bootstrap3" are supported.
+* frontend_framework: Frontend framework to be used for rendering. Currently the values "jquery-ui" (the default) and "bootstrap3" are supported.
 
 ```
 twentysteps_auto_tables:
@@ -363,3 +365,5 @@ In the following example you can see how to build a view displaying the entity *
 ## Author
 
 Marc Ewert (marc.ewert@20steps.de)
+
+sponsored by: <a href="http://20steps.de">20steps - Digital Full Service Boutique</a>
