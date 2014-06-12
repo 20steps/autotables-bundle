@@ -1,20 +1,16 @@
-{% if entities %}
-
     <form id="formAddNewRow" class="hide" action="#" title="{{ 'Add_entry_title'|trans({}, transScope) }}">
         <input type="hidden" name="tableId" value="{{ tableId }}"/>
         <input type="hidden" name="id" id="id" rel="0" value="DATAROWID"/>
-        {% for column in entities|first.columns %}
+        {% for column in entityDescriptor.columnDescriptors %}
             {%  if not column.readOnly and column.visible %}
-                <label for="{{ column.columnDescriptorId }}">{{ column.name|trans({}, transScope) }}</label>
-                <input type="text" name="{{ column.columnDescriptorId }}"
-                       id="{{ column.columnDescriptorId }}"
+                <label for="{{ column.id }}">{{ column.name|trans({}, transScope) }}</label>
+                <input type="text" name="{{ column.id }}"
+                       id="{{ column.id }}"
                        class="required"
                        rel="{{ loop.index }}"/>
                 <br/>
              {%  elseif not column.visible and column.initializer.id %}
-                 <input type="hidden" name="id{{ column.columnDescriptorId }}" value="{{ column.initializer.id }}"/>
+                 <input type="hidden" name="id{{ column.id }}" value="{{ column.initializer.id }}"/>
             {%  endif %}
         {% endfor %}
     </form>
-
-{% endif %}

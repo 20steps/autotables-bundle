@@ -28,13 +28,11 @@ use twentysteps\Bundle\AutoTablesBundle\Services\RepositoryAutoTablesCrudService
 use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
 
-class CrudController extends Controller
-{
+class CrudController extends Controller {
 
     private $logger;
 
-    public function updateAction(Request $request)
-    {
+    public function updateAction(Request $request) {
         $value = $request->request->get('value');
         $id = $request->request->get('id');
         $columnId = $request->request->get('columnId');
@@ -54,8 +52,7 @@ class CrudController extends Controller
         return new Response($entityInspector->getValue($entity, $columnDescriptorId, $config));
     }
 
-    public function addAction(Request $request)
-    {
+    public function addAction(Request $request) {
         $tableId = $this->fetchtableId($request);
         $config = $this->fetchAutoTablesConfiguration($tableId);
         $crudService = $this->fetchCrudService($config);
@@ -89,8 +86,7 @@ class CrudController extends Controller
         //return new Response($id);
     }
 
-    public function removeAction(Request $request)
-    {
+    public function removeAction(Request $request) {
         $tableId = $this->fetchtableId($request);
         $config = $this->fetchAutoTablesConfiguration($tableId);
         $crudService = $this->fetchCrudService($config);
@@ -107,8 +103,7 @@ class CrudController extends Controller
         return new Response($msg);
     }
 
-    private function isColumnParameter($paramName)
-    {
+    private function isColumnParameter($paramName) {
         return $paramName[0] == 'm' || $paramName[0] == 'p';
     }
 
@@ -125,7 +120,7 @@ class CrudController extends Controller
      * @return AutoTablesConfiguration
      */
     private function fetchAutoTablesConfiguration($tableId) {
-        $options = $this->container->getParameter('twentysteps_auto_tables.config.'.$tableId);
+        $options = $this->container->getParameter('twentysteps_auto_tables.config.' . $tableId);
         Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
         return new AutoTablesConfiguration($tableId, $options, new AutoTablesGlobalConfiguration($this->container->getParameter('twentysteps_auto_tables.config')));
     }
@@ -133,22 +128,8 @@ class CrudController extends Controller
     /**
      * @return AutoTablesCrudService
      */
-    private function fetchCrudService(AutoTablesConfiguration $config)
-    {
-        if ($config->getServiceId()) {
-            $this->getLogger()->info(sprintf('Create CrudService from serviceId [%s]', $config->getServiceId()));
-            $crudService = $this->get($config->getServiceId());
-            Ensure::ensureNotNull($crudService, 'No service [%s] found', $crudService);
-            Ensure::ensureTrue($crudService instanceof AutoTablesCrudService, 'Service [%s] has to implement %s', $config->getServiceId(), 'AutoTablesCrudService');
-        } else {
-            $this->getLogger()->info(sprintf('Create CrudService from repositoryId [%s]', $config->getRepositoryId()));
-            $doctrine = $this->get('doctrine');
-            Ensure::ensureNotEmpty($config->getRepositoryId(), 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $config->getId());
-            $repository = $doctrine->getRepository($config->getRepositoryId());
-            Ensure::ensureNotNull($repository, 'Repository with id [%s] not found', $config->getRepositoryId());
-            $crudService = new RepositoryAutoTablesCrudService($doctrine->getManager(), $repository);
-        }
-        return $crudService;
+    private function fetchCrudService(AutoTablesConfiguration $config) {
+        return $this->get('twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice')->fetchCrudService($config);
     }
 
     private function getLogger() {

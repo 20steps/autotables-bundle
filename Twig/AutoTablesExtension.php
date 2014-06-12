@@ -56,17 +56,14 @@ class AutoTablesExtension extends AbstractExtension {
      * Prints a table with the given entities.
      */
     public function renderTable($args = array()) {
-        $entities = $this->fetchCurrentEntities();
-        $config = $this->fetchCurrentConfig();
-        $array = array(
-            'entities' => $entities,
-            'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
-            'tableId' => $config->getId(),
-            'transScope' => $config->getTransScope(),
-            'views' => $config->getViews(),
-            'frontendFramework' => $config->getFrontendFramework(),
-            'frontendFrameworkName' => FrontendFramework::toString($config->getFrontendFramework())
-        );
+        $array = array();
+        $config = $this->fillModel($array);
+        $array['deleteRoute'] = $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove');
+        $array['tableId'] = $config->getId();
+        $array['transScope'] = $config->getTransScope();
+        $array['views'] = $config->getViews();
+        $array['frontendFramework'] = $config->getFrontendFramework();
+        $array['frontendFrameworkName'] = FrontendFramework::toString($config->getFrontendFramework());
         return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTable.html.twig', $array);
     }
 
@@ -74,28 +71,26 @@ class AutoTablesExtension extends AbstractExtension {
      * Prints the JavaScript code needed for the datatables of the given entities.
      */
     public function renderTableJs($args = array()) {
-        $entities = $this->fetchCurrentEntities();
-        $config = $this->fetchCurrentConfig();
-        $array = array(
-            'entities' => $entities,
-            'updateRoute' => $this->getParameter($args, 'updateRoute', 'twentysteps_auto_tables_update'),
-            'deleteRoute' => $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove'),
-            'addRoute' => $this->getParameter($args, 'addRoute', 'twentysteps_auto_tables_add'),
-            'dtDefaultOpts' => $this->container->getParameter('twentysteps_auto_tables.default_datatables_options'),
-            'dtOpts' => $config->getDataTablesOptions(),
-            'dtTagOpts' => $this->getParameter($args, 'dtOptions', array()),
-            'tableId' => $config->getId(),
-            'transScope' => $config->getTransScope(),
-            'reloadAfterAdd' => $this->getParameter($args, 'reloadAfterAdd', 'true'),
-            'includeJavascript' => $this->checkIncludeJavascript(),
-            'includeBootstrap3' => $this->getParameter($args, 'includeBootstrap3', $config->getFrontendFramework() == FrontendFramework::BOOTSTRAP3),
-            'includeJquery' => $this->getParameter($args, 'includeJquery', FALSE),
-            'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', $config->getFrontendFramework() == FrontendFramework::JQUERY_UI),
-            'includeJqueryEditable' => $this->getParameter($args, 'includeJqueryEditable', TRUE),
-            'includeJqueryEditableDatePicker' => $this->getParameter($args, 'includeJqueryEditableDatePicker', TRUE),
-            'includeJqueryDataTables' => $this->getParameter($args, 'includeJqueryDataTables', TRUE),
-            'includeJqueryValidate' => $this->getParameter($args, 'includeJqueryValidate', TRUE)
-        );
+        $array = array();
+        $config = $this->fillModel($array);
+        $array['updateRoute'] = $this->getParameter($args, 'updateRoute', 'twentysteps_auto_tables_update');
+        $array['deleteRoute'] = $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove');
+        $array['addRoute'] = $this->getParameter($args, 'addRoute', 'twentysteps_auto_tables_add');
+        $array['dtDefaultOpts'] = $this->container->getParameter('twentysteps_auto_tables.default_datatables_options');
+        $array['dtOpts'] = $config->getDataTablesOptions();
+        $array['dtTagOpts'] = $this->getParameter($args, 'dtOptions', array());
+        $array['tableId'] = $config->getId();
+        $array['transScope'] = $config->getTransScope();
+        $array['reloadAfterAdd'] = $this->getParameter($args, 'reloadAfterAdd', 'true');
+        $array['includeJavascript'] = $this->checkIncludeJavascript();
+        $array['includeBootstrap3'] = $this->getParameter($args, 'includeBootstrap3', $config->getFrontendFramework() == FrontendFramework::BOOTSTRAP3);
+        $array['includeJquery'] = $this->getParameter($args, 'includeJquery', FALSE);
+        $array['includeJqueryUi'] = $this->getParameter($args, 'includeJqueryUi', $config->getFrontendFramework() == FrontendFramework::JQUERY_UI);
+        $array['includeJqueryEditable'] = $this->getParameter($args, 'includeJqueryEditable', TRUE);
+        $array['includeJqueryEditableDatePicker'] = $this->getParameter($args, 'includeJqueryEditableDatePicker', TRUE);
+        $array['includeJqueryDataTables'] = $this->getParameter($args, 'includeJqueryDataTables', TRUE);
+        $array['includeJqueryValidate'] = $this->getParameter($args, 'includeJqueryValidate', TRUE);
+        $array['useJqueryUi'] = $this->getParameter($args, 'includeJqueryUi', $config->getFrontendFramework() == FrontendFramework::JQUERY_UI);
         return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableJs.html.twig', $array);
     }
 
@@ -115,15 +110,14 @@ class AutoTablesExtension extends AbstractExtension {
     /**
      * Define options to be used for "ts_auto_table" and "ts_auto_table_js".
      */
-    public
-    function defineOptions($args) {
+    public function defineOptions($args) {
         $request = $this->requestStack->getCurrentRequest();
         if ($request) {
             $config = $this->fetchAutoTablesConfiguration($args);
-            $this->logger->info(sprintf('Merged to config [%s]', print_r($config, true)));
-            $entities = $this->entityInspectionService->parseEntities($this->getRequiredParameter($args, 'entities'), $config);
+            $entities = $this->entityInspectionService->parseEntities($this->getParameter($args, 'entities', array()), $config);
             $request->attributes->set('tsAutoTablesConfig', $config);
             $request->attributes->set('tsAutoTablesEntities', $entities);
+            $request->attributes->set('tsAutoTablesEntityDescriptor', $this->entityInspectionService->fetchEntityDescriptor($config));
         }
         return '';
     }
@@ -133,16 +127,14 @@ class AutoTablesExtension extends AbstractExtension {
      *
      * @return string The extension name
      */
-    public
-    function getName() {
+    public function getName() {
         return 'datatables_extension';
     }
 
     /**
      * @return AutoTablesConfiguration
      */
-    private
-    function fetchAutoTablesConfiguration($args) {
+    private function fetchAutoTablesConfiguration($args) {
         $tableId = $this->getRequiredParameter($args, 'tableId');
         $confKey = 'twentysteps_auto_tables.config.' . $tableId;
         Ensure::ensureTrue($this->container->hasParameter($confKey), 'Missing twentysteps_auto_tables table configuration with id [%s]', $tableId);
@@ -155,16 +147,14 @@ class AutoTablesExtension extends AbstractExtension {
     /**
      * @return AutoTablesGlobalConfiguration
      */
-    private
-    function fetchAutoTablesGlobalConfiguration() {
+    private function fetchAutoTablesGlobalConfiguration() {
         return new AutoTablesGlobalConfiguration($this->container->getParameter('twentysteps_auto_tables.config'));
     }
 
     /**
      * Determines whether we have to include the javascript files.
      */
-    private
-    function checkIncludeJavascript() {
+    private function checkIncludeJavascript() {
         $request = $this->requestStack->getCurrentRequest();
         $rtn = !$request->attributes->has($this::JS_INCLUDE_KEY);
         if (!$rtn) {
@@ -173,8 +163,7 @@ class AutoTablesExtension extends AbstractExtension {
         return $rtn;
     }
 
-    private
-    function mergeColumnsConfiguration(AutoTablesConfiguration $config, $args) {
+    private function mergeColumnsConfiguration(AutoTablesConfiguration $config, $args) {
         $newColArgs = util::array_get($args['columns'], array());
         foreach ($newColArgs as $newColArg) {
             $selector = $newColArg['selector'];
@@ -191,29 +180,21 @@ class AutoTablesExtension extends AbstractExtension {
         return $config;
     }
 
-    private
-    function fetchCurrentEntities() {
-        $entities = null;
-        $request = $this->requestStack->getCurrentRequest();
-        if ($request) {
-            $entities = $request->get('tsAutoTablesEntities');
-        }
-        Ensure::ensureNotNull($entities, 'Missing entities, did you forget to use ts_auto_table_options?');
-        return $entities;
-    }
-
     /**
      * @return AutoTablesConfiguration
      */
-    private function fetchCurrentConfig() {
+    private function fillModel(&$array) {
         $config = null;
+        $entityDescriptor = null;
         $request = $this->requestStack->getCurrentRequest();
         if ($request) {
             $config = $request->get('tsAutoTablesConfig');
+            $entityDescriptor = $request->get('tsAutoTablesEntityDescriptor');
+            $array['entities'] = $request->get('tsAutoTablesEntities');
+            $array['entityDescriptor'] = $entityDescriptor;
         }
-        Ensure::ensureNotNull($config, 'Missing entities, did you forget to use ts_auto_table_options?');
+        Ensure::ensureNotNull($config, 'Missing config, did you forget to use ts_auto_table_options?');
+        Ensure::ensureNotNull($entityDescriptor, 'Missing entityDescriptor, did you forget to use ts_auto_table_options?');
         return $config;
     }
-
-
 }

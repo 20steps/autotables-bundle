@@ -1,41 +1,40 @@
-{% if entities %}
-
-    <div id="auto-table-{{ tableId }}" class="auto-table">
-        <table id='myDtTable'>
-            <thead>
-            <tr>
-                <th>ID</th>
-                {% for column in entities|first.columns %}
+<div id="auto-table-{{ tableId }}" class="auto-table">
+    <table id='myDtTable'>
+        <thead>
+        <tr>
+            <th>ID</th>
+            {% for column in entityDescriptor.columnDescriptors %}
+                {% if column.visible %}
+                    <th>{{ column.name|trans({}, transScope) }}</th>
+                {% endif %}
+            {% endfor %}
+            <th>{{ 'action.links.header'|trans({}, transScope) }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr id="{{ entity.id }}">
+                <td class="read_only">{{ entity.id }}</td>
+                {% for column in entity.columns %}
                     {% if column.visible %}
-                        <th>{{ column.name|trans({}, transScope) }}</th>
+                        <td id="td_{{ loop.index }}"
+                            class="{{ column.readOnly ? 'read_only' : '' }}">{% include [views~':columnValue.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:columnValue.html.twig'] with {column: column, entity: entity.obj} %}</td>
                     {% endif %}
                 {% endfor %}
-                <th>{{ 'action.links.header'|trans({}, transScope) }}</th>
+                <td>{% include [views~':columnActions.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:columnActions.html.twig'] with {'entityId': entity.id, 'entity': entity.obj} %}</td>
             </tr>
-            </thead>
-            <tbody>
-            {% for entity in entities %}
-                <tr id="{{ entity.id }}">
-                    <td class="read_only">{{ entity.id }}</td>
-                    {% for column in entity.columns %}
-                        {% if column.visible %}
-                            <td id="td_{{ loop.index }}" class="{{ column.readOnly ? 'read_only' : '' }}">{% include [views~':columnValue.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:columnValue.html.twig'] with {column: column, entity: entity.obj} %}</td>
-                        {% endif %}
-                    {% endfor %}
-                    <td>{% include [views~':columnActions.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:columnActions.html.twig'] with {'entityId': entity.id, 'entity': entity.obj} %}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% endfor %}
+        </tbody>
+    </table>
 
-        {%  if frontendFramework == constant('twentysteps\\Bundle\\AutoTablesBundle\\Twig\\FrontendFramework::BOOTSTRAP3') %}
-            <button id="btnAddNewRow" class="btn btn-primary" data-toggle="modal" data-target="#formAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
-        {%  else  %}
-            <button id="btnAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
-        {%  endif %}
+    {% if frontendFramework == constant('twentysteps\\Bundle\\AutoTablesBundle\\Twig\\FrontendFramework::BOOTSTRAP3') %}
+        <button id="btnAddNewRow" class="btn btn-primary" data-toggle="modal"
+                data-target="#formAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
+    {% else %}
+        <button id="btnAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
+    {% endif %}
 
 
-    </div>
+</div>
 
-    {% include [views~':formAddNewRow.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:'~frontendFrameworkName~'/formAddNewRow.html.twig'] %}
-{% endif %}
+{% include [views~':formAddNewRow.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:'~frontendFrameworkName~'/formAddNewRow.html.twig'] %}

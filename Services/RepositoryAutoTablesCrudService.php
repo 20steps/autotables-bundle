@@ -38,6 +38,14 @@ class RepositoryAutoTablesCrudService implements AutoTablesCrudService {
         $this->reflClass = new \ReflectionClass($repository->getClassName());
     }
 
+    /**
+     * Returns the class name for the entity.
+     */
+    public function getEntityClassName() {
+        return $this->repository->getClassName();
+    }
+
+
     public function createEntity()
     {
         return $this->reflClass->newInstance();

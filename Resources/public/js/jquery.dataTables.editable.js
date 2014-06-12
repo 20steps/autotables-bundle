@@ -487,6 +487,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
 
             if (properties.oReloadAfterAdd) {
                 location.reload();
+                return;
             }
 
             // transform into an object
@@ -529,7 +530,9 @@ returns true if plugin should continue with sending AJAX request, false will abo
                     oTable.fnDraw(false);
                 }*/
                 //Close the dialog
-                oAddNewRowForm.dialog('close');
+                if (properties.oUseJqueryUi) {
+                    oAddNewRowForm.dialog('close');
+                }
                 $(oAddNewRowForm)[0].reset();
                 $(".error", $(oAddNewRowForm)).html("");
 
@@ -560,7 +563,9 @@ returns true if plugin should continue with sending AJAX request, false will abo
             $(".error", $(oAddNewRowForm)).hide();  // Hides the error element
 
             //Close the dialog
-            oAddNewRowForm.dialog('close');
+            if (properties.oUseJqueryUi) {
+                oAddNewRowForm.dialog('close');
+            }
             event.stopPropagation();
             event.preventDefault();
         }
@@ -1030,7 +1035,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
 
             fnSetDisplayStart();
             $(nActionForm).dialog('close');
-            return;       
+            return;
 
         }
         
@@ -1038,7 +1043,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
         oTable = this;
 
         var defaults = {
-
+            oUseJqueryUi: true,
             sUpdateURL: "UpdateData",
             sAddURL: "AddData",
             sDeleteURL: "DeleteData",

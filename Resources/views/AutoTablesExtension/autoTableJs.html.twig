@@ -1,86 +1,84 @@
-{% if entities %}
-
-    {% if includeJavascript %}
-        {% block javascripts %}
-            {% if includeJquery %}
-                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.js') }}"></script>
-            {% endif %}
-            {% if includeJqueryUi %}
-                <script src="{{ asset('bundles/twentystepsautotables/js/jquery-ui.js') }}"></script>
-            {% endif %}
-            {% if includeBootstrap3 %}
-                <script src="{{ asset('bundles/twentystepsautotables/js/bootstrap-3.1.1.min.js') }}"></script>
-            {% endif %}
-            {% if includeJqueryEditable %}
-                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.jeditable.js') }}"></script>
-            {% endif %}
-            {% if includeJqueryEditableDatePicker %}
-                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.jeditable.datepicker.js') }}"></script>
-            {% endif %}
-            {% if includeJqueryDataTables %}
-                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.dataTables.js') }}"></script>
-            {% endif %}
-            {% if includeJqueryValidate %}
-                <script src="{{ asset('bundles/twentystepsautotables/js/jquery.validate.js') }}"></script>
-            {% endif %}
-            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.dataTables.editable.js') }}"></script>
-        {% endblock %}
-    {% endif %}
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var columnMeta = [];
-            columnMeta.push({});
-            {% for column in entities|first.columns %}
-                {% if column.visible %}
-                    columnMeta.push({columnDescriptorId: '{{ column.columnDescriptorId }}', mData: {{ loop.index }}});
-                {% endif %}
-            {% endfor %}
-            columnMeta.push({});
-
-            var dataTablesColumns = [];
-            dataTablesColumns.push({ "bVisible": false});
-            {% for column in entities|first.columns %}
-                {% if column.visible %}
-                    {% if column.type == 'datetime' %}
-                        dataTablesColumns.push({type: 'datepicker', datepicker: {
-                            dateFormat: "{{ 'date.format'|trans({}, transScope) }}"
-                        }});
-                    {%  else %}
-                        dataTablesColumns.push({type: 'text'});
-                    {% endif %}
-                {% endif %}
-            {%  endfor %}
-            dataTablesColumns.push( // Delete-Link
-                    { "sName": "ID",
-                        "bSearchable": false,
-                        "bSortable": false
-            {#
-                        "mRender": function (foo, bar, dataSource) {
-                            var id = dataSource[0];
-                            //return {{ include('twentystepsAutoTablesBundle:AutoTablesExtension:columnActions.html.twig', {tableId: tableId, deleteRoute: deleteRoute, transScope: transScope}) }};
-                            //"<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?tableId={{ tableId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans({}, transScope) }}</a>";
-
-                        }
-                #}
-                    });
-
-            var dtOpts = $.extend(true, {aoColumns: dataTablesColumns}, {{ dtDefaultOpts|raw }}, {{ dtOpts|raw }}, {{ dtTagOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
-            var dteOpts = {
-                aoColumns: dataTablesColumns,
-                submitButtonText: "{{ 'Save'|trans({}, transScope) }}",
-                cancelButtonText: "{{ 'Cancel'|trans({}, transScope) }}",
-                sUpdateURL: '{{ path(updateRoute) }}',
-                sDeleteURL: '{{ path(deleteRoute) }}',
-                sAddURL: '{{ path(addRoute) }}',
-                oDeleteParameters: {tableId: '{{ tableId }}'},
-                oUpdateParameters: {tableId: '{{ tableId }}', columnMeta: columnMeta},
-                oReloadAfterAdd: {{ reloadAfterAdd }}
-            };
-            $('#myDtTable').dataTable(dtOpts).makeEditable(dteOpts);
-        });
-    </script>
-
+{% if includeJavascript %}
+    {% block javascripts %}
+        {% if includeJquery %}
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.js') }}"></script>
+        {% endif %}
+        {% if includeJqueryUi %}
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery-ui.js') }}"></script>
+        {% endif %}
+        {% if includeBootstrap3 %}
+            <script src="{{ asset('bundles/twentystepsautotables/js/bootstrap-3.1.1.min.js') }}"></script>
+        {% endif %}
+        {% if includeJqueryEditable %}
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.jeditable.js') }}"></script>
+        {% endif %}
+        {% if includeJqueryEditableDatePicker %}
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.jeditable.datepicker.js') }}"></script>
+        {% endif %}
+        {% if includeJqueryDataTables %}
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.dataTables.js') }}"></script>
+        {% endif %}
+        {% if includeJqueryValidate %}
+            <script src="{{ asset('bundles/twentystepsautotables/js/jquery.validate.js') }}"></script>
+        {% endif %}
+        <script src="{{ asset('bundles/twentystepsautotables/js/jquery.dataTables.editable.js') }}"></script>
+    {% endblock %}
 {% endif %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var columnMeta = [];
+        columnMeta.push({});
+        {% for column in entityDescriptor.columnDescriptors %}
+            {% if column.visible %}
+                columnMeta.push({columnDescriptorId: '{{ column.id }}', mData: {{ loop.index }}});
+            {% endif %}
+        {% endfor %}
+        columnMeta.push({});
+
+        var dataTablesColumns = [];
+        dataTablesColumns.push({ "bVisible": false});
+        {% for column in entityDescriptor.columnDescriptors %}
+            {% if column.visible %}
+                {% if column.type == 'datetime' %}
+                    dataTablesColumns.push({type: 'datepicker', datepicker: {
+                        dateFormat: "{{ 'date.format'|trans({}, transScope) }}"
+                    }});
+                {%  else %}
+                    dataTablesColumns.push({type: 'text'});
+                {% endif %}
+            {% endif %}
+        {%  endfor %}
+        dataTablesColumns.push( // Delete-Link
+                { "sName": "ID",
+                    "bSearchable": false,
+                    "bSortable": false
+                    {#
+                                "mRender": function (foo, bar, dataSource) {
+                                    var id = dataSource[0];
+                                    //return {{ include('twentystepsAutoTablesBundle:AutoTablesExtension:columnActions.html.twig', {tableId: tableId, deleteRoute: deleteRoute, transScope: transScope}) }};
+                                    //"<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?tableId={{ tableId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans({}, transScope) }}</a>";
+
+                                }
+                        #}
+                });
+
+        var dtOpts = $.extend(true, {aoColumns: dataTablesColumns}, {{ dtDefaultOpts|raw }}, {{ dtOpts|raw }}, {{ dtTagOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
+        var dteOpts = {
+            aoColumns: dataTablesColumns,
+            oUseJqueryUi: {{  useJqueryUi ? 'true' : 'false' }},
+            submitButtonText: "{{ 'Save'|trans({}, transScope) }}",
+            cancelButtonText: "{{ 'Cancel'|trans({}, transScope) }}",
+            sUpdateURL: '{{ path(updateRoute) }}',
+            sDeleteURL: '{{ path(deleteRoute) }}',
+            sAddURL: '{{ path(addRoute) }}',
+            oDeleteParameters: {tableId: '{{ tableId }}'},
+            oUpdateParameters: {tableId: '{{ tableId }}', columnMeta: columnMeta},
+            oReloadAfterAdd: {{ reloadAfterAdd }}
+        };
+        $('#myDtTable').dataTable(dtOpts).makeEditable(dteOpts);
+    });
+</script>
+
 
 

@@ -23,8 +23,13 @@ namespace twentysteps\Bundle\AutoTablesBundle\Services;
  * Access point for the AutoTablesBundle to perform any needed CRUD operation for a given
  * entity type.
  */
-interface AutoTablesCrudService
-{
+interface AutoTablesCrudService {
+
+    /**
+     * Returns the class name for the entity.
+     */
+    public function getEntityClassName();
+
     /**
      * Simply returns a fresh entity for inserting values.
      */

@@ -74,7 +74,7 @@ class EntityInspectionService {
      * @return Entity
      */
     public function parseEntity($entity, AutoTablesConfiguration $config) {
-        $entityDescriptor = $entityDescriptor = $this->fetchEntityDescriptor($entity, $config);
+        $entityDescriptor = $entityDescriptor = $this->fetchEntityDescriptor($config);
         $columns = array();
         foreach ($entityDescriptor->getColumnDescriptors() as $columnDescriptor) {
             /* @var $columnDescriptor AbstractColumnDescriptor */
@@ -90,7 +90,7 @@ class EntityInspectionService {
      * Executes any initializer configured for the given entity.
      */
     public function initializeEntity($entity, AutoTablesConfiguration $config) {
-        $entityDescriptor = $this->fetchEntityDescriptor($entity, $config);
+        $entityDescriptor = $this->fetchEntityDescriptor($config);
         foreach ($entityDescriptor->getColumnDescriptors() as $column) {
             if ($column->getInitializer()) {
                 $value = null;
@@ -113,6 +113,27 @@ class EntityInspectionService {
                 $this->setValue($entity, $column->getId(), $value, $config);
             }
         }
+    }
+
+    /**
+     * Returns the CrudService according to the given config.
+     * @return AutoTablesCrudService
+     */
+    public function fetchCrudService(AutoTablesConfiguration $config)
+    {
+        if ($config->getServiceId()) {
+            $this->logger->info(sprintf('Create CrudService from serviceId [%s]', $config->getServiceId()));
+            $crudService = $this->get($config->getServiceId());
+            Ensure::ensureNotNull($crudService, 'No service [%s] found', $crudService);
+            Ensure::ensureTrue($crudService instanceof AutoTablesCrudService, 'Service [%s] has to implement %s', $config->getServiceId(), 'AutoTablesCrudService');
+        } else {
+            $this->logger->info(sprintf('Create CrudService from repositoryId [%s]', $config->getRepositoryId()));
+            Ensure::ensureNotEmpty($config->getRepositoryId(), 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $config->getId());
+            $repository = $this->doctrine->getRepository($config->getRepositoryId());
+            Ensure::ensureNotNull($repository, 'Repository with id [%s] not found', $config->getRepositoryId());
+            $crudService = new RepositoryAutoTablesCrudService($this->doctrine->getManager(), $repository);
+        }
+        return $crudService;
     }
 
     /**
@@ -153,13 +174,18 @@ class EntityInspectionService {
         return $id;
     }
 
-    private function fetchEntityDescriptor($entity, AutoTablesConfiguration $config) {
-        $reflClass = new \ReflectionClass($entity);
+    /**
+     * Returns the EntityDescriptor for the class found in the config.
+     * @return EntityDescriptor
+     */
+    public function fetchEntityDescriptor(AutoTablesConfiguration $config) {
+        $reflClass = new \ReflectionClass($this->fetchCrudService($config)->getEntityClassName());
         $entityDescriptor = util::array_get($this->entityDescriptorMap[$reflClass->getName()]);
         if (!$entityDescriptor) {
-            $entityDescriptor = $this->initDescriptors($reflClass, $entity, $config);
+            $entityDescriptor = $this->initDescriptors($reflClass, $config);
         }
         Ensure::ensureNotNull($entityDescriptor, 'Failed to fetch entity descriptor for [%s]', $config->getId());
+        //$this->logger->info(sprintf('Fetched EntityDescriptor [%s]', var_export($entityDescriptor)));
         return $entityDescriptor;
     }
 
@@ -173,7 +199,7 @@ class EntityInspectionService {
         return $columnDescriptor;
     }
 
-    private function initDescriptors(\ReflectionClass $reflClass, $entity, AutoTablesConfiguration $config) {
+    private function initDescriptors(\ReflectionClass $reflClass, AutoTablesConfiguration $config) {
         $columnDescriptors = array();
         $this->parsePropertyColumnDescriptors($reflClass, $columnDescriptors, $config);
         $this->parseMethodColumnDescriptors($reflClass, $columnDescriptors, $config);
