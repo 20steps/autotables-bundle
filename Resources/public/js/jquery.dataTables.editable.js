@@ -304,7 +304,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
                         status = "failure";
                     } else {
                     
-                        if (properties.sSuccessResponse == "IGNORE" || 
+                        if (properties.sSuccessResponse == "ok" || properties.sSuccessResponse == "IGNORE" ||
                             (     properties.aoColumns != null
                                 && properties.aoColumns[aPos[2]] != null 
                                 && properties.aoColumns[aPos[2]].sSuccessResponse == "IGNORE") || 
@@ -348,7 +348,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
                     properties.fnOnEdited("failure");
                 },
                 
-                "onreset": function(){ 
+                "onreset": function(){
                         if (properties.bUseKeyTable) {
                                 var keys = oTable.keys;
                                 /* Unblock KeyTable, but only after this 'esc' key event has finished. Otherwise
