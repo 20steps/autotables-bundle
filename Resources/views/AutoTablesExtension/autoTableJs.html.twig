@@ -16,6 +16,7 @@
             <script src="{{ asset('bundles/twentystepsautotables/js/jquery.jeditable.datepicker.js') }}"></script>
         {% endif %}
         {% if includeJqueryEditableBootstrapDatePicker %}
+            <script src="{{ asset('bundles/twentystepsautotables/js/bootstrap-datepicker.min.js') }}"></script>
             <script src="{{ asset('bundles/twentystepsautotables/js/jquery.jeditable.datepicker.bootstrap.js') }}"></script>
         {% endif %}
         {% if includeJqueryDataTables %}
@@ -80,6 +81,9 @@
             oReloadAfterAdd: {{ reloadAfterAdd }}
         };
         $('#myDtTable').dataTable(dtOpts).makeEditable(dteOpts);
+        {%  if useBootstrap %}
+            $('.date-picker').datepicker();
+        {% endif %}
     });
 </script>
 

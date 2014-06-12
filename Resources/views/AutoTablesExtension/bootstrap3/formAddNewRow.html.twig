@@ -13,10 +13,19 @@
                     {% for column in entityDescriptor.columnDescriptors %}
                         {% if not column.readOnly and column.visible %}
                             <label for="{{ column.id }}">{{ column.name|trans({}, transScope) }}</label>
-                            <input type="text" name="{{ column.id }}"
+
+                            {%  if column.type == 'datetime' %}
+                                <input type="text" name="{{ column.id }}"
+                                       id="{{ column.id }}"
+                                       class="form-control date-picker required"
+                                       data-date-format="{{ 'date.format'|trans({}, transScope) }}"
+                                       rel="{{ loop.index }}"/>
+                            {%  else %}
+                                <input type="text" name="{{ column.id }}"
                                    id="{{ column.id }}"
                                    class="required"
                                    rel="{{ loop.index }}"/>
+                                {% endif %}
                             <br/>
                         {% elseif not column.visible and column.initializer.id %}
                             <input type="hidden" name="id{{ column.id }}"

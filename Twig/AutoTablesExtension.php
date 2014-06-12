@@ -91,7 +91,8 @@ class AutoTablesExtension extends AbstractExtension {
         $array['includeJqueryEditableBootstrapDatePicker'] = $this->getParameter($args, 'includeJqueryEditableBootstrapDatePicker', $config->getFrontendFramework() == FrontendFramework::BOOTSTRAP3);
         $array['includeJqueryDataTables'] = $this->getParameter($args, 'includeJqueryDataTables', TRUE);
         $array['includeJqueryValidate'] = $this->getParameter($args, 'includeJqueryValidate', TRUE);
-        $array['useJqueryUi'] = $this->getParameter($args, 'includeJqueryUi', $config->getFrontendFramework() == FrontendFramework::JQUERY_UI);
+        $array['useJqueryUi'] = $config->getFrontendFramework() == FrontendFramework::JQUERY_UI;
+        $array['useBootstrap'] = $config->getFrontendFramework() == FrontendFramework::BOOTSTRAP3;
         return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableJs.html.twig', $array);
     }
 
