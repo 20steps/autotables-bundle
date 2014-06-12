@@ -1,5 +1,1 @@
-{% if column.type == 'datetime' %}
-    {{ column.value|date('php.date.format'|trans({}, transScope)) }}
-{%  else %}
-    {{  column.value }}
-{% endif %}
+{% if column.type == 'datetime' %}{{ column.value|date('php.date.format'|trans({}, transScope)) }}{%  else %}{{  column.value }}{% endif %}

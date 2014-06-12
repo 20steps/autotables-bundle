@@ -394,6 +394,7 @@ returns true if plugin should continue with sending AJAX request, false will abo
                             if (!$(this).hasClass(properties.sReadOnlyCellClass)) {
                                 //console.log('call editable with id: ' + $(this).attr('id'));
                                 //console.log(oColumnSettings);
+                                oColumnSettings.data = $(this).attr('data-value');
                                 $(this).editable(sUpdateURL, oColumnSettings);
                             }
                         });

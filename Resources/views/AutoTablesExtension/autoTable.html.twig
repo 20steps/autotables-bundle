@@ -17,7 +17,7 @@
                 <td class="read_only">{{ entity.id }}</td>
                 {% for column in entity.columns %}
                     {% if column.visible %}
-                        <td id="td_{{ loop.index }}"
+                        <td id="td_{{ loop.index }}" data-value="{{ include('twentystepsAutoTablesBundle:AutoTablesExtension:columnValue.html.twig',  {column: column, entity: entity.obj}) }}"
                             class="{{ column.readOnly ? 'read_only' : '' }}">{% include [views~':columnValue.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:columnValue.html.twig'] with {column: column, entity: entity.obj} %}</td>
                     {% endif %}
                 {% endfor %}
