@@ -5,3 +5,4 @@
 'php.date.format': d.m.Y
 'date.format': dd.mm.yy
 action.links.header: Aktionen
+"Are you sure that you want to delete this entry? This operation can't be undone": Möchten Sie wirklich diesen Eintrag löschen? Diese Operation kann nicht zurückgenommen werden.
