@@ -60,7 +60,7 @@
 (function($) {
 
     $.fn.editable = function(target, options) {
-            
+
         if ('disable' == target) {
             $(this).data('disabled.editable', true);
             return;
@@ -123,7 +123,7 @@
             }
             
             $(this).bind(settings.event, function(e) {
-                
+
                 /* Abort if element is disabled. */
                 if (true === $(this).data('disabled.editable')) {
                     return;

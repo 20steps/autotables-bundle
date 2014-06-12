@@ -80,9 +80,7 @@ class EntityInspectionService {
             /* @var $columnDescriptor AbstractColumnDescriptor */
             $columns[] = new Column($columnDescriptor, $columnDescriptor->getValue($entity));
         }
-        usort($columns, function (Column $a, Column $b) {
-            return $a->getOrder() - $b->getOrder();
-        });
+        $this->orderSort($columns);
         return new Entity($entityDescriptor->fetchId($entity), $entityDescriptor, $columns, $entity);
     }
 
@@ -203,6 +201,7 @@ class EntityInspectionService {
         $columnDescriptors = array();
         $this->parsePropertyColumnDescriptors($reflClass, $columnDescriptors, $config);
         $this->parseMethodColumnDescriptors($reflClass, $columnDescriptors, $config);
+        $this->orderSort($columnDescriptors);
         $entityDescriptor = new EntityDescriptor($columnDescriptors, $this->fetchIdProperty($reflClass));
         $this->entityDescriptorMap[$reflClass->getName()] = $entityDescriptor;
         return $entityDescriptor;
@@ -258,5 +257,11 @@ class EntityInspectionService {
             }
         }
         return $idProperty;
+    }
+
+    private function orderSort($array) {
+        usort($array, function ($a, $b) {
+            return $a->getOrder() - $b->getOrder();
+        });
     }
 }

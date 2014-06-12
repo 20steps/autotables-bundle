@@ -87,7 +87,8 @@ class AutoTablesExtension extends AbstractExtension {
         $array['includeJquery'] = $this->getParameter($args, 'includeJquery', FALSE);
         $array['includeJqueryUi'] = $this->getParameter($args, 'includeJqueryUi', $config->getFrontendFramework() == FrontendFramework::JQUERY_UI);
         $array['includeJqueryEditable'] = $this->getParameter($args, 'includeJqueryEditable', TRUE);
-        $array['includeJqueryEditableDatePicker'] = $this->getParameter($args, 'includeJqueryEditableDatePicker', TRUE);
+        $array['includeJqueryEditableDatePicker'] = $this->getParameter($args, 'includeJqueryEditableDatePicker', $config->getFrontendFramework() == FrontendFramework::JQUERY_UI);
+        $array['includeJqueryEditableBootstrapDatePicker'] = $this->getParameter($args, 'includeJqueryEditableBootstrapDatePicker', $config->getFrontendFramework() == FrontendFramework::BOOTSTRAP3);
         $array['includeJqueryDataTables'] = $this->getParameter($args, 'includeJqueryDataTables', TRUE);
         $array['includeJqueryValidate'] = $this->getParameter($args, 'includeJqueryValidate', TRUE);
         $array['useJqueryUi'] = $this->getParameter($args, 'includeJqueryUi', $config->getFrontendFramework() == FrontendFramework::JQUERY_UI);
