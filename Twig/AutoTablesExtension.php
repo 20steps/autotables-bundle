@@ -64,7 +64,8 @@ class AutoTablesExtension extends AbstractExtension {
             'tableId' => $config->getId(),
             'transScope' => $config->getTransScope(),
             'views' => $config->getViews(),
-            'frontendFramework' => $config->getFrontendFramework()
+            'frontendFramework' => $config->getFrontendFramework(),
+            'frontendFrameworkName' => FrontendFramework::toString($config->getFrontendFramework())
         );
         return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTable.html.twig', $array);
     }
@@ -85,10 +86,11 @@ class AutoTablesExtension extends AbstractExtension {
             'dtTagOpts' => $this->getParameter($args, 'dtOptions', array()),
             'tableId' => $config->getId(),
             'transScope' => $config->getTransScope(),
-            'reloadAfterAdd' => $this->getParameter($args, 'reloadAfterAdd', 'null'),
+            'reloadAfterAdd' => $this->getParameter($args, 'reloadAfterAdd', 'true'),
             'includeJavascript' => $this->checkIncludeJavascript(),
+            'includeBootstrap3' => $this->getParameter($args, 'includeBootstrap3', $config->getFrontendFramework() == FrontendFramework::BOOTSTRAP3),
             'includeJquery' => $this->getParameter($args, 'includeJquery', FALSE),
-            'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', TRUE),
+            'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', $config->getFrontendFramework() == FrontendFramework::JQUERY_UI),
             'includeJqueryEditable' => $this->getParameter($args, 'includeJqueryEditable', TRUE),
             'includeJqueryEditableDatePicker' => $this->getParameter($args, 'includeJqueryEditableDatePicker', TRUE),
             'includeJqueryDataTables' => $this->getParameter($args, 'includeJqueryDataTables', TRUE),
@@ -100,10 +102,12 @@ class AutoTablesExtension extends AbstractExtension {
     /**
      * Renders the needed JavaScript and stylesheet includes.
      */
-    public function renderStylesheets() {
+    public function renderStylesheets($args = array()) {
+        $frontendFramework = $this->fetchAutoTablesGlobalConfiguration()->getFrontendFramework();
         return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableStylesheets.html.twig',
             array(
-                'includeJqueryUi' => $this->fetchAutoTablesGlobalConfiguration()->getFrontendFramework() != FrontendFramework::BOOTSTRAP3,
+                'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', $frontendFramework == FrontendFramework::JQUERY_UI),
+                'includeBootstrap3' => $this->getParameter($args, 'includeBootstrap3', $frontendFramework == FrontendFramework::BOOTSTRAP3)
             )
         );
     }
@@ -198,8 +202,10 @@ class AutoTablesExtension extends AbstractExtension {
         return $entities;
     }
 
-    private
-    function fetchCurrentConfig() {
+    /**
+     * @return AutoTablesConfiguration
+     */
+    private function fetchCurrentConfig() {
         $config = null;
         $request = $this->requestStack->getCurrentRequest();
         if ($request) {

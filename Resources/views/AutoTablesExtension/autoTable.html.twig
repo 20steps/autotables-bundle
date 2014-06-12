@@ -34,7 +34,8 @@
             <button id="btnAddNewRow">{{ 'Add_entry_button'|trans({}, transScope) }}</button>
         {%  endif %}
 
-        {% include [views~':formAddNewRow.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:formAddNewRow.html.twig'] %}
+
     </div>
 
+    {% include [views~':formAddNewRow.html.twig','twentystepsAutoTablesBundle:AutoTablesExtension:'~frontendFrameworkName~'/formAddNewRow.html.twig'] %}
 {% endif %}

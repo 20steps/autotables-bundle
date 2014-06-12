@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('default_datatables_options')->end()
+                ->enumNode('frontend_framework')->values(array('bootstrap3', 'jquery-ui'))->end()
                 ->arrayNode('tables')
                     ->prototype('array')
                         ->children()
@@ -49,7 +50,6 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('trans_scope')->end()
                             ->scalarNode('datatables_options')->end()
                             ->scalarNode('views')->end()
-                            ->scalarNode('frontendFramework')->end()
                             ->arrayNode('columns')
                                 ->useAttributeAsKey('selector')
                                 ->prototype('array')

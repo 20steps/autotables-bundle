@@ -2,6 +2,10 @@
     {% if includeJqueryUi %}
         <link rel="stylesheet" href="{{ asset('bundles/twentystepsautotables/css/jquery-ui.css') }}" />
     {% endif %}
+    {% if includeBootstrap3 %}
+        <link rel="stylesheet" href="{{ asset('bundles/twentystepsautotables/css/bootstrap-3.1.1.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('bundles/twentystepsautotables/css/bootstrap-theme-3.1.1.min.css') }}" />
+    {% endif %}
     <link rel="stylesheet" href="{{ asset('bundles/twentystepsautotables/css/jquery.dataTables.css') }}" />
 {% endblock %}
 

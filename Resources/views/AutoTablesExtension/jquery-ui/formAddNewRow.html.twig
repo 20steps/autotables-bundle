@@ -1,6 +1,6 @@
 {% if entities %}
 
-    <form id="formAddNewRow" class="hide" action="#" title="{{ 'Add entry'|trans() }}">
+    <form id="formAddNewRow" class="hide" action="#" title="{{ 'Add_entry_title'|trans({}, transScope) }}">
         <input type="hidden" name="tableId" value="{{ tableId }}"/>
         <input type="hidden" name="id" id="id" rel="0" value="DATAROWID"/>
         {% for column in entities|first.columns %}
@@ -15,8 +15,6 @@
                  <input type="hidden" name="id{{ column.columnDescriptorId }}" value="{{ column.initializer.id }}"/>
             {%  endif %}
         {% endfor %}
-        <span rel="{{ ((entities|first.columns)|length) + 1 }}" style="display:none"><a class="table-action-deletelink"
-                                                                                        href="#"></a></span>
     </form>
 
 {% endif %}

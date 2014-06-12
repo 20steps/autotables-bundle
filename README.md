@@ -272,7 +272,9 @@ Twig templates.
 
 #### ts_auto_table_stylesheets
 
-The needed stylesheets of the bundle are included with the Twig function *ts_auto_table_stylesheets*.
+The needed stylesheets of the bundle are included with the Twig function *ts_auto_table_stylesheets*. The stylesheets of
+the selected frontend framework may be included here, if the corresponding option is set to true: *includeJqueryUi* resp.
+*includeBootstrap3*.
 
 #### ts_auto_table_options
 
@@ -311,7 +313,7 @@ have to ensure that the function *ts_auto_table_options* is called in advance.
 
 Finally the javascript code for the table has to be rendered. This is done by the Twig function *ts_auto_table_js*.
 By default all needed javascript libraries are loaded excepting the jquery library. This behaviour can be configured by the
-following options: *includeJquery, includeJqueryUi, includeJqueryEditable, includeJqueryDataTables* and *includeJqueryValidate*
+following options: *includeBootstrap3*, *includeJquery, includeJqueryUi, includeJqueryEditable, includeJqueryDataTables* and *includeJqueryValidate*
 
 The [DataTables](https://datatables.net/) configuration may be extended here with the option *dtOptions*.
 
