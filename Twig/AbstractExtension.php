@@ -19,7 +19,6 @@
 
 namespace twentysteps\Bundle\AutoTablesBundle\Twig;
 use InvalidArgumentException;
-use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use utilphp\util;
 
 /**

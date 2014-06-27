@@ -16,7 +16,8 @@
         "symfony/framework-bundle": "~2.3",
         "misd/guzzle-bundle": "~1.0",
         "brandonwamboldt/utilphp": "dev-master",
-        "danielstjules/stringy": ">=1.5.1"
+        "danielstjules/stringy": ">=1.5.1",
+        "20steps/commons-ensure-bundle": "dev-master"
     },
     "autoload": {
         "psr-0": {

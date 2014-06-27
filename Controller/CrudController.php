@@ -25,8 +25,8 @@ use Symfony\Component\HttpFoundation\Request;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesGlobalConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Services\AutoTablesCrudService;
 use twentysteps\Bundle\AutoTablesBundle\Services\RepositoryAutoTablesCrudService;
-use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
+use twentysteps\Commons\EnsureBundle\Ensure;
 
 class CrudController extends Controller {
 

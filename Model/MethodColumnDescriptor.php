@@ -19,9 +19,6 @@
 
 namespace twentysteps\Bundle\AutoTablesBundle\Model;
 
-
-use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
-
 class MethodColumnDescriptor extends AbstractColumnDescriptor
 {
 

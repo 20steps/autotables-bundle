@@ -30,7 +30,7 @@ use twentysteps\Bundle\AutoTablesBundle\Model\Entity;
 use twentysteps\Bundle\AutoTablesBundle\Model\EntityDescriptor;
 use twentysteps\Bundle\AutoTablesBundle\Model\MethodColumnDescriptor;
 use twentysteps\Bundle\AutoTablesBundle\Model\PropertyColumnDescriptor;
-use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
+use twentysteps\Commons\EnsureBundle\Ensure;
 use utilphp\util;
 use Stringy\StaticStringy;
 

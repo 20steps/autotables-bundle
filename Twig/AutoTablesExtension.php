@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesGlobalConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Services\EntityInspectionService;
-use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
+use twentysteps\Commons\EnsureBundle\Ensure;
 use utilphp\util;
 
 class AutoTablesExtension extends AbstractExtension {

@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
+use twentysteps\Commons\EnsureBundle\Ensure;
 use utilphp\util;
 
 /**

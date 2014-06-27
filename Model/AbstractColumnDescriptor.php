@@ -22,7 +22,7 @@ namespace twentysteps\Bundle\AutoTablesBundle\Model;
 use Doctrine\ORM\Mapping as ORM;
 use twentysteps\Bundle\AutoTablesBundle\Annotations as AUT;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
-use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
+use twentysteps\Commons\EnsureBundle\Ensure;
 use utilphp\util;
 
 abstract class AbstractColumnDescriptor {

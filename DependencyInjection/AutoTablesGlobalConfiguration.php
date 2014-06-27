@@ -20,7 +20,6 @@
 namespace twentysteps\Bundle\AutoTablesBundle\DependencyInjection;
 
 use twentysteps\Bundle\AutoTablesBundle\Twig\FrontendFramework;
-use twentysteps\Bundle\AutoTablesBundle\Util\Ensure;
 use utilphp\util;
 
 /**
