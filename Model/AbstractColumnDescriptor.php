@@ -129,7 +129,7 @@ abstract class AbstractColumnDescriptor {
      */
     public function validate() {
         if ($this->initializer) {
-            Ensure::ensureFalse($this->initializer->getRepository() && $this->initializer->getValue(), 'It makes no sense to define initializer repository and value simultaneously for column [%s]', $this->name);
+            Ensure::isFalse($this->initializer->getRepository() && $this->initializer->getValue(), 'It makes no sense to define initializer repository and value simultaneously for column [%s]', $this->name);
         }
     }
 

@@ -48,15 +48,15 @@ class twentystepsAutoTablesExtension extends Extension
         if ($tables) {
             foreach($tables as $tableDef) {
                 $id = util::array_get($tableDef['id']);
-                Ensure::ensureNotEmpty($id, "Missing [id] option in twentysteps_auto_tables table definition");
+                Ensure::isNotEmpty($id, "Missing [id] option in twentysteps_auto_tables table definition");
                 $json = util::array_get($tableDef['dataTablesOptions']) ?: '{}';
-                Ensure::ensureTrue($this->isValidJson($json), 'Encountered illegal JSON for twentysteps_auto_tables table with id [%s] in config: %s', $id,  $json);
+                Ensure::isTrue($this->isValidJson($json), 'Encountered illegal JSON for twentysteps_auto_tables table with id [%s] in config: %s', $id,  $json);
                 $container->setParameter('twentysteps_auto_tables.config.'.$id, $tableDef);
             }
         }
 
         $defaultOpts = util::array_get($config['default_datatables_options']) ?: '{}';
-        Ensure::ensureTrue($this->isValidJson($defaultOpts), 'Encountered illegal JSON in config: %s', $defaultOpts);
+        Ensure::isTrue($this->isValidJson($defaultOpts), 'Encountered illegal JSON in config: %s', $defaultOpts);
         $container->setParameter('twentysteps_auto_tables.default_datatables_options', $defaultOpts);
 
         $container->setParameter('twentysteps_auto_tables.config', $config);

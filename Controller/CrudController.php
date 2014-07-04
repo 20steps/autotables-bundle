@@ -24,7 +24,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesGlobalConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Services\AutoTablesCrudService;
-use twentysteps\Bundle\AutoTablesBundle\Services\RepositoryAutoTablesCrudService;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
 use twentysteps\Commons\EnsureBundle\Ensure;
 
@@ -45,7 +44,7 @@ class CrudController extends Controller {
         $config = $this->fetchAutoTablesConfiguration($tableId);
         $crudService = $this->fetchCrudService($config);
         $entity = $crudService->findEntity($id);
-        Ensure::ensureNotNull($entity, 'Entity with id [%s] not found', $id);
+        Ensure::isNotNull($entity, 'Entity with id [%s] not found', $id);
         $entityInspector = $this->get('twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice');
         $entityInspector->setValue($entity, $columnDescriptorId, $value, $config);
         $crudService->persistEntity($entity);
@@ -112,7 +111,7 @@ class CrudController extends Controller {
         if (!$tableId) {
             $tableId = $request->query->get('tableId');
         }
-        Ensure::ensureNotEmpty($tableId, 'tableId must not be empty');
+        Ensure::isNotEmpty($tableId, 'tableId must not be empty');
         return $tableId;
     }
 
@@ -121,7 +120,7 @@ class CrudController extends Controller {
      */
     private function fetchAutoTablesConfiguration($tableId) {
         $options = $this->container->getParameter('twentysteps_auto_tables.config.' . $tableId);
-        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
+        Ensure::isNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
         return new AutoTablesConfiguration($tableId, $options, new AutoTablesGlobalConfiguration($this->container->getParameter('twentysteps_auto_tables.config')));
     }
 

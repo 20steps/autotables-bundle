@@ -140,9 +140,9 @@ class AutoTablesExtension extends AbstractExtension {
     private function fetchAutoTablesConfiguration($args) {
         $tableId = $this->getRequiredParameter($args, 'tableId');
         $confKey = 'twentysteps_auto_tables.config.' . $tableId;
-        Ensure::ensureTrue($this->container->hasParameter($confKey), 'Missing twentysteps_auto_tables table configuration with id [%s]', $tableId);
+        Ensure::isTrue($this->container->hasParameter($confKey), 'Missing twentysteps_auto_tables table configuration with id [%s]', $tableId);
         $options = $this->container->getParameter($confKey);
-        Ensure::ensureNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
+        Ensure::isNotNull($options, 'Missing configuration for twentysteps_auto_tables table [%s]', $tableId);
         $globalConf = $this->fetchAutoTablesGlobalConfiguration();
         return $this->mergeColumnsConfiguration(new AutoTablesConfiguration($tableId, $options, $globalConf), $args);
     }
@@ -170,7 +170,7 @@ class AutoTablesExtension extends AbstractExtension {
         $newColArgs = util::array_get($args['columns'], array());
         foreach ($newColArgs as $newColArg) {
             $selector = $newColArg['selector'];
-            Ensure::ensureNotEmpty($selector, 'Missing selector in column configuration');
+            Ensure::isNotEmpty($selector, 'Missing selector in column configuration');
             $colArg = util::array_get($config->getColumns()[$selector], null);
             if ($colArg) {
                 // overwrite the settings
@@ -196,8 +196,8 @@ class AutoTablesExtension extends AbstractExtension {
             $array['entities'] = $request->get('tsAutoTablesEntities');
             $array['entityDescriptor'] = $entityDescriptor;
         }
-        Ensure::ensureNotNull($config, 'Missing config, did you forget to use ts_auto_table_options?');
-        Ensure::ensureNotNull($entityDescriptor, 'Missing entityDescriptor, did you forget to use ts_auto_table_options?');
+        Ensure::isNotNull($config, 'Missing config, did you forget to use ts_auto_table_options?');
+        Ensure::isNotNull($entityDescriptor, 'Missing entityDescriptor, did you forget to use ts_auto_table_options?');
         return $config;
     }
 }

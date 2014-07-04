@@ -103,9 +103,9 @@ class EntityInspectionService {
                             $id = $request->get('id'.$column->getId());
                         }
                     }
-                    Ensure::ensureNotNull($id, 'Missing id for column [%s] in [%s]', $column->getName(), $config->getId());
+                    Ensure::isNotNull($id, 'Missing id for column [%s] in [%s]', $column->getName(), $config->getId());
                     $repository = $this->doctrine->getRepository($column->getInitializer()->getRepository());
-                    Ensure::ensureNotNull($repository, 'Repository with id [%s] not found for [%s]', $column->getInitializer()->getRepository(), $config->getId());
+                    Ensure::isNotNull($repository, 'Repository with id [%s] not found for [%s]', $column->getInitializer()->getRepository(), $config->getId());
                     $value = $repository->find($id);
                 }
                 $this->setValue($entity, $column->getId(), $value, $config);
@@ -122,13 +122,13 @@ class EntityInspectionService {
         if ($config->getServiceId()) {
             $this->logger->info(sprintf('Create CrudService from serviceId [%s]', $config->getServiceId()));
             $crudService = $this->get($config->getServiceId());
-            Ensure::ensureNotNull($crudService, 'No service [%s] found', $crudService);
-            Ensure::ensureTrue($crudService instanceof AutoTablesCrudService, 'Service [%s] has to implement %s', $config->getServiceId(), 'AutoTablesCrudService');
+            Ensure::isNotNull($crudService, 'No service [%s] found', $crudService);
+            Ensure::isTrue($crudService instanceof AutoTablesCrudService, 'Service [%s] has to implement %s', $config->getServiceId(), 'AutoTablesCrudService');
         } else {
             $this->logger->info(sprintf('Create CrudService from repositoryId [%s]', $config->getRepositoryId()));
-            Ensure::ensureNotEmpty($config->getRepositoryId(), 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $config->getId());
+            Ensure::isNotEmpty($config->getRepositoryId(), 'Neither [serviceId] nor [repositoryId] defined for datatables of type [%s]', $config->getId());
             $repository = $this->doctrine->getRepository($config->getRepositoryId());
-            Ensure::ensureNotNull($repository, 'Repository with id [%s] not found', $config->getRepositoryId());
+            Ensure::isNotNull($repository, 'Repository with id [%s] not found', $config->getRepositoryId());
             $crudService = new RepositoryAutoTablesCrudService($this->doctrine->getManager(), $repository);
         }
         return $crudService;
@@ -138,7 +138,7 @@ class EntityInspectionService {
      * Updates the specified value in the given entity.
      */
     public function setValue($entity, $columnDescriptorId, $value, AutoTablesConfiguration $config) {
-        Ensure::ensureNotNull($entity, 'entity musst not be null');
+        Ensure::isNotNull($entity, 'entity musst not be null');
         $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId, $config);
         if ($columnDescriptor->getType() == 'datetime') {
             $format = $this->translator->trans('php.date.format', array(), $config->getTransScope());
@@ -150,7 +150,7 @@ class EntityInspectionService {
     }
 
     public function getValue($entity, $columnDescriptorId, AutoTablesConfiguration $config) {
-        Ensure::ensureNotNull($entity, 'entity musst not be null');
+        Ensure::isNotNull($entity, 'entity musst not be null');
         $columnDescriptor = $this->getColumnDescriptor($entity, $columnDescriptorId, $config);
         $value = $columnDescriptor->getValue($entity);
         $rtn = $value;
@@ -182,7 +182,7 @@ class EntityInspectionService {
         if (!$entityDescriptor) {
             $entityDescriptor = $this->initDescriptors($reflClass, $config);
         }
-        Ensure::ensureNotNull($entityDescriptor, 'Failed to fetch entity descriptor for [%s]', $config->getId());
+        Ensure::isNotNull($entityDescriptor, 'Failed to fetch entity descriptor for [%s]', $config->getId());
         //$this->logger->info(sprintf('Fetched EntityDescriptor [%s]', var_export($entityDescriptor)));
         return $entityDescriptor;
     }
@@ -192,7 +192,7 @@ class EntityInspectionService {
         if (!$columnDescriptor) {
             $this->initDescriptors(new \ReflectionClass($entity), $config);
             $columnDescriptor = util::array_get($this->columnDescriptorMap[$columnDescriptorId]);
-            Ensure::ensureNotNull($columnDescriptor, 'Failed to load column [%s] for entity of type [%s]', $columnDescriptorId, get_class($entity));
+            Ensure::isNotNull($columnDescriptor, 'Failed to load column [%s] for entity of type [%s]', $columnDescriptorId, get_class($entity));
         }
         return $columnDescriptor;
     }
@@ -227,8 +227,8 @@ class EntityInspectionService {
             $annot = $this->reader->getMethodAnnotation($method, '\twentysteps\Bundle\AutoTablesBundle\Annotations\Column');
             if ($annot) {
                 $column = new MethodColumnDescriptor($method);
-                Ensure::ensureTrue(count($method->getParameters()) == 0, 'Failed to use [%s] as getter method, only parameterless methods supported for @Column', $method->getName());
-                Ensure::ensureTrue(StaticStringy::startsWith($method->getName(), 'get'), 'Illegal method name [%s], getter methods must start with a get prefix', $method->getName());
+                Ensure::isTrue(count($method->getParameters()) == 0, 'Failed to use [%s] as getter method, only parameterless methods supported for @Column', $method->getName());
+                Ensure::isTrue(StaticStringy::startsWith($method->getName(), 'get'), 'Illegal method name [%s], getter methods must start with a get prefix', $method->getName());
                 $column->addAutoTablesAnnotation($annot);
                 $column->addAutoTablesConfig($config, $method->getName());
             }
@@ -236,7 +236,7 @@ class EntityInspectionService {
                 $methodName = 'set' . substr($method->getName(), 3);
                 if ($reflClass->hasMethod($methodName)) {
                     $setterMethod = $reflClass->getMethod($methodName);
-                    Ensure::ensureEquals(1, count($setterMethod->getParameters()), 'setter method [%s] needs to have exactly one parameter', $setterMethod->getName());
+                    Ensure::isEqual(1, count($setterMethod->getParameters()), 'setter method [%s] needs to have exactly one parameter', $setterMethod->getName());
                     $column->setSetterMethod($setterMethod);
                 }
                 $column->validate();
