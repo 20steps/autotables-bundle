@@ -84,7 +84,7 @@ class AutoTablesExtension extends AbstractExtension {
         $array['reloadAfterAdd'] = $this->getParameter($args, 'reloadAfterAdd', true);
         $array['reloadAfterUpdate'] = $this->getParameter($args, 'reloadAfterUpdate', false);
         $array['includeJavascript'] = $this->checkIncludeJavascript();
-        $array['includeBootstrap3'] = $this->getParameter($args, 'includeBootstrap3', $config->getFrontendFramework() == FrontendFramework::BOOTSTRAP3);
+        $array['includeBootstrap3'] = $this->getParameter($args, 'includeBootstrap3', false);
         $array['includeJquery'] = $this->getParameter($args, 'includeJquery', FALSE);
         $array['includeJqueryUi'] = $this->getParameter($args, 'includeJqueryUi', $config->getFrontendFramework() == FrontendFramework::JQUERY_UI);
         $array['includeJqueryEditable'] = $this->getParameter($args, 'includeJqueryEditable', TRUE);
