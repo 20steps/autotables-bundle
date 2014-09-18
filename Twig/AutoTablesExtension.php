@@ -105,7 +105,7 @@ class AutoTablesExtension extends AbstractExtension {
         return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableStylesheets.html.twig',
             array(
                 'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', $frontendFramework == FrontendFramework::JQUERY_UI),
-                'includeBootstrap3' => $this->getParameter($args, 'includeBootstrap3', $frontendFramework == FrontendFramework::BOOTSTRAP3)
+                'includeBootstrap3' => $this->getParameter($args, 'includeBootstrap3', false)
             )
         );
     }
