@@ -259,7 +259,7 @@ class EntityInspectionService {
         return $idProperty;
     }
 
-    private function orderSort($array) {
+    private function orderSort(&$array) {
         usort($array, function ($a, $b) {
             return $a->getOrder() - $b->getOrder();
         });
