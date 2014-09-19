@@ -27,11 +27,6 @@ class PropertyColumnDescriptor extends AbstractColumnDescriptor
      */
     private $property;
 
-    /**
-     * @var int
-     */
-    private $order;
-
     public function __construct(\ReflectionProperty $property)
     {
         parent::__construct('p' . $property->getName(), $property->getName());
