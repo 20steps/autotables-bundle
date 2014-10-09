@@ -84,15 +84,15 @@ abstract class AbstractColumnDescriptor {
 
     public function addORMAnnotation(ORM\Column $column = null) {
         if ($column) {
-            $this->name = $column->name ? : $this->name;
-            $this->type = $column->type ? : $this->type;
+            $this->name = $column->name ?: $this->name;
+            $this->type = $column->type ?: $this->type;
         }
     }
 
     public function addAutoTablesAnnotation(AUT\Column $column = null) {
         if ($column) {
-            $this->name = $column->getName() ? : $this->name;
-            $this->type = $column->getType() ? : $this->type;
+            $this->name = $column->getName() ?: $this->name;
+            $this->type = $column->getType() ?: $this->type;
             if (!is_null($column->isVisible())) {
                 $this->visible = $column->isVisible();
             }
@@ -214,6 +214,19 @@ abstract class AbstractColumnDescriptor {
 
     public function setValues($values) {
         $this->values = $values;
+    }
+
+    /**
+     * Returns the viewType specific data string for the editable plugin.
+     */
+    public function getEditableDataString() {
+        $valuePairs = array();
+        if ($this->values) {
+            foreach ($this->values as $value) {
+                $valuePairs[] = '\''.$value['label'].'\':\''.$value['value'].'\'';
+            }
+        }
+        return '{'.join(', ',$valuePairs).'}';
     }
 
     public abstract function getValue($entity);

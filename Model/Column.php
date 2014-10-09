@@ -65,6 +65,14 @@ class Column
     }
 
     /**
+     * @return string
+     */
+    public function getViewType()
+    {
+        return $this->columnDescriptor->getViewType();
+    }
+
+    /**
      * @return mixed
      */
     public function getValue()

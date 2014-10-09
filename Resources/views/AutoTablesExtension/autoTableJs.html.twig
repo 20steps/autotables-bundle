@@ -48,7 +48,9 @@
                     dataTablesColumns.push({type: 'datepicker', datepicker: {
                         dateFormat: "{{ 'date.format'|trans({}, transScope) }}"
                     }});
-                {%  else %}
+                {% elseif column.viewType == 'dropdown' %}
+                    dataTablesColumns.push({type: 'select', data: "{{ column.editableDataString|raw }}"});
+                {% else %}
                     dataTablesColumns.push({type: 'text'});
                 {% endif %}
             {% endif %}
