@@ -19,8 +19,6 @@
 
 namespace twentysteps\Bundle\AutoTablesBundle\Twig;
 
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\Tests\ProjectContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesGlobalConfiguration;

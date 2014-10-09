@@ -43,6 +43,11 @@ abstract class AbstractColumnDescriptor {
     private $type = 'mixed';
 
     /**
+     * @var string
+     */
+    private $viewType = 'text';
+
+    /**
      * @var int
      */
     private $order = 10000;
@@ -66,6 +71,11 @@ abstract class AbstractColumnDescriptor {
      * @var InitializerInfo
      */
     private $initializer;
+
+    /**
+     * @var mixed
+     */
+    private $values;
 
     protected function __construct($id, $name) {
         $this->id = $id;
@@ -107,6 +117,8 @@ abstract class AbstractColumnDescriptor {
             $this->order = util::array_get($columnOverwrite['order'], $this->order);
             $this->ignore = util::array_get($columnOverwrite['ignore'], $this->ignore);
             $this->visible = util::array_get($columnOverwrite['visible'], $this->visible);
+            $this->viewType = util::array_get($columnOverwrite['viewType'], $this->viewType);
+            $this->values = util::array_get($columnOverwrite['values'], $this->values);
             $initializer = util::array_get($columnOverwrite['initializer'], null);
             if ($initializer) {
                 if (!$this->initializer) {
@@ -180,6 +192,28 @@ abstract class AbstractColumnDescriptor {
      */
     public function getInitializer() {
         return $this->initializer;
+    }
+
+    /**
+     * @return string
+     */
+    public function getViewType() {
+        return $this->viewType;
+    }
+
+    public function setViewType($viewType) {
+        $this->viewType = $viewType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValues() {
+        return $this->values;
+    }
+
+    public function setValues($values) {
+        $this->values = $values;
     }
 
     public abstract function getValue($entity);

@@ -20,7 +20,6 @@
 namespace twentysteps\Bundle\AutoTablesBundle\Services;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\RequestStack;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Model\AbstractColumnDescriptor;

@@ -46,6 +46,11 @@ class Column
         return $this->columnDescriptor->getId();
     }
 
+    public function getColumnDescriptor()
+    {
+        return $this->columnDescriptor;
+    }
+
     public function getName()
     {
         return $this->columnDescriptor->getName();
