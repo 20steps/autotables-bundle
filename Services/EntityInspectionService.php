@@ -255,6 +255,9 @@ class EntityInspectionService {
                 }
             }
         }
+	 if ($idProperty === null && $reflClass->getParentClass() !== null) {
+            $idProperty = $this->fetchIdProperty($reflClass->getParentClass());
+	}
         return $idProperty;
     }
 
