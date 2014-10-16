@@ -263,7 +263,7 @@ class EntityInspectionService {
 
     private function orderSort(&$array) {
         usort($array, function ($a, $b) {
-            $cmp = $b->getOrder() - $a->getOrder();
+            $cmp = $a->getOrder() - $b->getOrder();
             return $cmp == 0 ? strcmp($a->getName(), $b->getName()) : $cmp;
         });
     }
