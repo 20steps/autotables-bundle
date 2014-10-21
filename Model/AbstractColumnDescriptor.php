@@ -84,7 +84,7 @@ abstract class AbstractColumnDescriptor {
 
     public function addORMAnnotation(ORM\Column $column = null) {
         if ($column) {
-            $this->name = $column->name ?: $this->name;
+            //$this->name = $column->name ?: $this->name;
             $this->type = $column->type ?: $this->type;
         }
     }

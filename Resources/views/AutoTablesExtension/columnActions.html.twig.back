@@ -1,4 +1,0 @@
-// JavaScript code declaring a string with the action links of an entity row
-// The entity's id is contained in the variable entityId
-
-"<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?tableId={{ tableId }}&id=" + id + "'>{{ 'Delete'|trans({}, transScope) }}</a>"

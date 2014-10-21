@@ -20,6 +20,7 @@
 namespace twentysteps\Bundle\AutoTablesBundle\Twig;
 
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\DependencyInjection\AutoTablesGlobalConfiguration;
 use twentysteps\Bundle\AutoTablesBundle\Services\EntityInspectionService;
@@ -33,11 +34,13 @@ class AutoTablesExtension extends AbstractExtension {
     private $container;
     private $requestStack;
     private $logger;
+    private $router;
 
-    public function __construct(EntityInspectionService $entityInspectionService, $container, RequestStack $requestStack, $logger) {
+    public function __construct(EntityInspectionService $entityInspectionService, RouterInterface $router, $container, RequestStack $requestStack, $logger) {
         $this->entityInspectionService = $entityInspectionService;
         $this->container = $container;
         $this->requestStack = $requestStack;
+        $this->router = $router;
         $this->logger = $logger;
     }
 
@@ -56,7 +59,7 @@ class AutoTablesExtension extends AbstractExtension {
     public function renderTable($args = array()) {
         $array = array();
         $config = $this->fillModel($array);
-        $array['deleteRoute'] = $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove');
+        $array['deleteUrl'] = $this->fetchUrl($args, 'delete', $config->getDeleteRoute());
         $array['tableId'] = $config->getId();
         $array['transScope'] = $config->getTransScope();
         $array['views'] = $config->getViews();
@@ -71,9 +74,9 @@ class AutoTablesExtension extends AbstractExtension {
     public function renderTableJs($args = array()) {
         $array = array();
         $config = $this->fillModel($array);
-        $array['updateRoute'] = $this->getParameter($args, 'updateRoute', 'twentysteps_auto_tables_update');
-        $array['deleteRoute'] = $this->getParameter($args, 'deleteRoute', 'twentysteps_auto_tables_remove');
-        $array['addRoute'] = $this->getParameter($args, 'addRoute', 'twentysteps_auto_tables_add');
+        $array['updateUrl'] =  $this->fetchUrl($args, 'update', $config->getUpdateRoute());
+        $array['deleteUrl'] = $this->fetchUrl($args, 'delete', $config->getDeleteRoute());
+        $array['addUrl'] = $this->fetchUrl($args, 'add', $config->getAddRoute());
         $array['dtDefaultOpts'] = $this->container->getParameter('twentysteps_auto_tables.default_datatables_options');
         $array['dtOpts'] = $config->getDataTablesOptions();
         $array['dtTagOpts'] = $this->getParameter($args, 'dtOptions', array());
@@ -197,5 +200,10 @@ class AutoTablesExtension extends AbstractExtension {
         Ensure::isNotNull($config, 'Missing config, did you forget to use ts_auto_table_options?');
         Ensure::isNotNull($entityDescriptor, 'Missing entityDescriptor, did you forget to use ts_auto_table_options?');
         return $config;
+    }
+
+    private function fetchUrl($args, $prefix, $defaultRoute) {
+        $url = $this->getParameter($args, $prefix.'Url', null);
+        return $url !== null ? $url : $this->router->generate($this->getParameter($args, $prefix.'Route', $defaultRoute));
     }
 }

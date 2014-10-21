@@ -46,7 +46,7 @@ class PropertyColumnDescriptor extends AbstractColumnDescriptor
     public function setValue($entity, $value)
     {
         if ($this->property) {
-            $value = $this->property->setValue($entity, $value);
+            $this->property->setValue($entity, $value);
         }
     }
 } 

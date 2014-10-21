@@ -59,14 +59,6 @@
                 { "sName": "ID",
                     "bSearchable": false,
                     "bSortable": false
-                    {#
-                                "mRender": function (foo, bar, dataSource) {
-                                    var id = dataSource[0];
-                                    //return {{ include('twentystepsAutoTablesBundle:AutoTablesExtension:columnActions.html.twig', {tableId: tableId, deleteRoute: deleteRoute, transScope: transScope}) }};
-                                    //"<a class='table-action-deletelink' href='{{ path(deleteRoute) }}?tableId={{ tableId }}&id=" + dataSource[0] + "'>{{ 'Delete'|trans({}, transScope) }}</a>";
-
-                                }
-                        #}
                 });
 
         var dtOpts = $.extend(true, {aoColumns: dataTablesColumns}, {{ dtDefaultOpts|raw }}, {{ dtOpts|raw }}, {{ dtTagOpts|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
@@ -75,9 +67,9 @@
             oUseJqueryUi: {{  useJqueryUi ? 'true' : 'false' }},
             submitButtonText: "{{ 'Save'|trans({}, transScope) }}",
             cancelButtonText: "{{ 'Cancel'|trans({}, transScope) }}",
-            sUpdateURL: '{{ path(updateRoute) }}',
-            sDeleteURL: '{{ path(deleteRoute) }}',
-            sAddURL: '{{ path(addRoute) }}',
+            sUpdateURL: '{{ updateUrl }}',
+            sDeleteURL: '{{ deleteUrl }}',
+            sAddURL: '{{ addUrl }}',
             oDeleteParameters: {tableId: '{{ tableId }}'},
             oUpdateParameters: {tableId: '{{ tableId }}', columnMeta: columnMeta},
             oReloadAfterAdd: {{ reloadAfterAdd }},

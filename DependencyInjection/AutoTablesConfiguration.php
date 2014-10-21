@@ -19,7 +19,6 @@
 
 namespace twentysteps\Bundle\AutoTablesBundle\DependencyInjection;
 
-use twentysteps\Bundle\AutoTablesBundle\Twig\FrontendFramework;
 use utilphp\util;
 
 /**
@@ -35,6 +34,9 @@ class AutoTablesConfiguration {
     private $views;
     private $frontendFramework;
     private $columns;
+    private $updateRoute;
+    private $addRoute;
+    private $deleteRoute;
 
     public function __construct($id, $args, AutoTablesGlobalConfiguration $globalConf) {
         $this->id = $id;
@@ -45,6 +47,9 @@ class AutoTablesConfiguration {
         $this->views = util::array_get($args['views'], '');
         $this->frontendFramework = $globalConf->getFrontendFramework();
         $this->columns = util::array_get($args['columns'], array());
+        $this->updateRoute = util::array_get($args['updateRoute'], 'twentysteps_auto_tables_update');
+        $this->addRoute = util::array_get($args['addRoute'], 'twentysteps_auto_tables_add');
+        $this->deleteRoute = util::array_get($args['deleteRoute'], 'twentysteps_auto_tables_remove');
     }
 
     /**
@@ -102,5 +107,26 @@ class AutoTablesConfiguration {
 
     public function putColumn($key, $column) {
         $this->columns[$key] = $column;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdateRoute() {
+        return $this->updateRoute;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddRoute() {
+        return $this->addRoute;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeleteRoute() {
+        return $this->deleteRoute;
     }
 }
