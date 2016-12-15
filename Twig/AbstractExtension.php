@@ -27,16 +27,9 @@ use utilphp\util;
 abstract class AbstractExtension extends \Twig_Extension
 {
 
-    private $environment;
-
-    public function initRuntime(\Twig_Environment $environment)
+    public function render(\Twig_Environment $env, $templateName, $context)
     {
-        $this->environment = $environment;
-    }
-
-    public function render($templateName, $context)
-    {
-        return $this->environment->render($templateName, $context);
+        return $env->render($templateName, $context);
     }
 
     /**

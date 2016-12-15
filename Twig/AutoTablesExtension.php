@@ -45,18 +45,22 @@ class AutoTablesExtension extends AbstractExtension {
     }
 
     public function getFunctions() {
+	    $options = array(
+	        'is_safe' => array('html'),
+	        'needs_environment' => true,
+	    );
         return array(
-            new \Twig_SimpleFunction('ts_auto_table_html', array($this, 'renderTable'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ts_auto_table_stylesheets', array($this, 'renderStylesheets'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ts_auto_table_js', array($this, 'renderTableJs'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('ts_auto_table_options', array($this, 'defineOptions'), array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('ts_auto_table_html', array($this, 'renderTable'), $options),
+            new \Twig_SimpleFunction('ts_auto_table_stylesheets', array($this, 'renderStylesheets'), $options),
+            new \Twig_SimpleFunction('ts_auto_table_js', array($this, 'renderTableJs'), $options),
+            new \Twig_SimpleFunction('ts_auto_table_options', array($this, 'defineOptions'), $options)
         );
     }
 
     /**
      * Prints a table with the given entities.
      */
-    public function renderTable($args = array()) {
+    public function renderTable(\Twig_Environment $env, $args = array()) {
         $array = array();
         $config = $this->fillModel($array);
         $array['deleteUrl'] = $this->fetchUrl($args, 'delete', $config->getDeleteRoute());
@@ -65,13 +69,13 @@ class AutoTablesExtension extends AbstractExtension {
         $array['views'] = $config->getViews();
         $array['frontendFramework'] = $config->getFrontendFramework();
         $array['frontendFrameworkName'] = FrontendFramework::toString($config->getFrontendFramework());
-        return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTable.html.twig', $array);
+        return $this->render($env, 'twentystepsAutoTablesBundle:AutoTablesExtension:autoTable.html.twig', $array);
     }
 
     /**
      * Prints the JavaScript code needed for the datatables of the given entities.
      */
-    public function renderTableJs($args = array()) {
+    public function renderTableJs(\Twig_Environment $env, $args = array()) {
         $array = array();
         $config = $this->fillModel($array);
         $array['updateUrl'] =  $this->fetchUrl($args, 'update', $config->getUpdateRoute());
@@ -95,15 +99,15 @@ class AutoTablesExtension extends AbstractExtension {
         $array['includeJqueryValidate'] = $this->getParameter($args, 'includeJqueryValidate', TRUE);
         $array['useJqueryUi'] = $config->getFrontendFramework() == FrontendFramework::JQUERY_UI;
         $array['useBootstrap'] = $config->getFrontendFramework() == FrontendFramework::BOOTSTRAP3;
-        return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableJs.html.twig', $array);
+        return $this->render($env, 'twentystepsAutoTablesBundle:AutoTablesExtension:autoTableJs.html.twig', $array);
     }
 
     /**
      * Renders the needed JavaScript and stylesheet includes.
      */
-    public function renderStylesheets($args = array()) {
+    public function renderStylesheets(\Twig_Environment $env, $args = array()) {
         $frontendFramework = $this->fetchAutoTablesGlobalConfiguration()->getFrontendFramework();
-        return $this->render('twentystepsAutoTablesBundle:AutoTablesExtension:autoTableStylesheets.html.twig',
+        return $this->render($env, 'twentystepsAutoTablesBundle:AutoTablesExtension:autoTableStylesheets.html.twig',
             array(
                 'includeJqueryUi' => $this->getParameter($args, 'includeJqueryUi', $frontendFramework == FrontendFramework::JQUERY_UI),
                 'includeBootstrap3' => $this->getParameter($args, 'includeBootstrap3', false)
@@ -114,7 +118,7 @@ class AutoTablesExtension extends AbstractExtension {
     /**
      * Define options to be used for "ts_auto_table" and "ts_auto_table_js".
      */
-    public function defineOptions($args) {
+    public function defineOptions(\Twig_Environment $env, $args) {
         $request = $this->requestStack->getCurrentRequest();
         if ($request) {
             $config = $this->fetchAutoTablesConfiguration($args);
