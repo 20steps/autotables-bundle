@@ -19,7 +19,6 @@
     ],
     "require": {
         "symfony/framework-bundle": "^2.3|^3.0",
-        "misd/guzzle-bundle": "~1.0",
         "brandonwamboldt/utilphp": "^1.0",
         "danielstjules/stringy": "^1.10",
         "20steps/commons-ensure-bundle": "^1.0"
