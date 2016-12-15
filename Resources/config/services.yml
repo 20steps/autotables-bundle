@@ -1,10 +1,10 @@
 services:
     twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice:
         class: twentysteps\Bundle\AutoTablesBundle\Services\EntityInspectionService
-        arguments: [@translator, @logger, @request_stack, @doctrine]
+        arguments: [ '@translator', '@logger', '@request_stack', '@doctrine' ]
 
     twentysteps_bundle.AutoTablesBundle.twig.autotables_extension:
         class: twentysteps\Bundle\AutoTablesBundle\Twig\AutoTablesExtension
-        arguments: [@twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice, @router, @service_container, @request_stack, @logger]
+        arguments: [ '@twentysteps_bundle.AutoTablesBundle.services.entityinspectionservice', '@router', '@service_container', '@request_stack', '@logger']
         tags:
             - { name: twig.extension }
