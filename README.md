@@ -368,6 +368,8 @@ In the following example you can see how to build a view displaying the entity *
 
 ## Author
 
-Marc Ewert (marc.ewert@20steps.de)
+* Marc Ewert (marc.ewert@20steps.de)
+* Helmut Hoffer von Ankershoffen (hhva@20steps.de)
 
-sponsored by: <a href="http://20steps.de">20steps - Digital Full Service Boutique</a>
+## Sponsored by
+<a href="http://20steps.de">20steps - Digital Full Service Boutique</a>

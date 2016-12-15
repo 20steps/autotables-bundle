@@ -2,7 +2,7 @@
     "name": "20steps/autotables-bundle",
     "type": "symfony-bundle",
     "description": "Symfony bundle for mapping entities into auto generated tables",
-    "keywords": ["datatables", "sf2", "symfony2", "doctrine", "table", "entity"],
+    "keywords": ["datatables", "sf2", "symfony2", "sf3", "symfony3", "doctrine", "table", "entity", "20steps"],
     "homepage": "https://github.com/20steps/autotables-bundle",
     "license": "LGPL-3.0+",
     "authors": [
@@ -10,13 +10,18 @@
             "name": "Marc Ewert",
             "email": "marc.ewert@20steps.de",
             "homepage": "http://20steps.de"
+        },
+        {
+            "name": "Helmut Hoffer von Ankershoffen",
+            "email": "hhva@20steps.de",
+            "homepage": "http://20steps.de"
         }
     ],
     "require": {
-        "symfony/framework-bundle": "~2.3",
+        "symfony/framework-bundle": "^2.3|^3.0",
         "misd/guzzle-bundle": "~1.0",
-        "brandonwamboldt/utilphp": "~1.0.6",
-        "danielstjules/stringy": ">=1.5.1",
+        "brandonwamboldt/utilphp": "^1.0",
+        "danielstjules/stringy": "^1.10",
         "20steps/commons-ensure-bundle": "^1.0"
     },
     "autoload": {
