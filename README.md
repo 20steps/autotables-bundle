@@ -1,5 +1,8 @@
 # 20steps/autotables-bundle (twentystepsAutoTablesBundle)
 
+[![Dependency Status](https://www.versioneye.com/user/projects/58543a5e81ffdc00411f15be/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/58543a5e81ffdc00411f15be)
+[![Packagist version](https://img.shields.io/packagist/v/20steps/autotables-bundle.svg)](https://packagist.org/packages/20steps/autotables-bundle)
+
 ## About
 
 The 20steps AutoTables Bundle provides an easy way for displaying entities in Symfony2 applications in auto-generated and editable tables. The tables are rendered by [DataTables](https://datatables.net/) and are made editable with a patched version of [jquery.datatables.editable](https://code.google.com/p/jquery-datatables-editable/).
